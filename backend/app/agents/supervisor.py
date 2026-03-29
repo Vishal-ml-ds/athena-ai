@@ -1,32 +1,69 @@
-"""ATHENA Agent Supervisor — uses Euri AI (OpenAI-compatible) via raw HTTP.
+"""ATHENA Supervisor — Multi-agent orchestration via intent classification.
 
-No langchain-openai dependency needed — just httpx which is already installed.
-Sprint 1: Single general agent. Sprint 2: Multi-agent with LangGraph."""
+Sprint 2: Routes messages to specialized agents based on semantic intent.
+Each agent has its own system prompt and tool capabilities.
+
+This is what makes ATHENA fundamentally different from Angelina:
+- Angelina: if "schedule" in message → scheduler prompt (keyword matching)
+- ATHENA: LLM classifies intent → routes to 1-2 agents → each runs independently"""
 
 import json
 import time
 
 import httpx
 
+from app.agents.intent_classifier import classify_intent
 from app.core.config import get_settings
 
-ATHENA_SYSTEM_PROMPT = """You are ATHENA, a Personal AI Operating System — the AI Goddess of Wisdom.
+# Agent-specific system prompts
+AGENT_PROMPTS = {
+    "general": """You are ATHENA, a Personal AI Operating System — the AI Goddess of Wisdom.
+You are warm, efficient, and proactive. Help with any general question or conversation.
+Use markdown formatting. Be concise but thorough.""",
 
-You are intelligent, proactive, and always helpful. You manage the user's entire digital life:
-scheduling, research, coding, finances, health, and goals.
+    "researcher": """You are ATHENA's Research Agent. You specialize in finding information,
+explaining complex topics, and synthesizing knowledge.
+- Provide well-structured answers with sources when possible
+- Break down complex topics into digestible parts
+- Use analogies to explain technical concepts
+- Suggest follow-up research directions""",
 
-Key traits:
-- You are warm but efficient — no unnecessary filler
-- You remember context from previous conversations (when memory is available)
-- You explain complex topics simply, using analogies when helpful
-- You are proactive — suggest next steps, anticipate needs
-- You are honest about what you can and cannot do
+    "scheduler": """You are ATHENA's Scheduler Agent. You manage calendars, reminders, and time.
+- Help plan daily/weekly schedules
+- Set reminders and track deadlines
+- Suggest optimal time blocks for tasks
+- Consider work-life balance in recommendations
+Note: Calendar integration coming soon. For now, provide scheduling advice.""",
 
-When responding:
-- Be concise but thorough
-- Use markdown formatting for readability
-- If a task requires multiple steps, break it down clearly
-- If you need more information, ask specific questions"""
+    "life_coach": """You are ATHENA's Life Coach Agent. You track habits, goals, and wellbeing.
+- Motivate and encourage progress
+- Provide actionable advice for habit building
+- Track health and fitness goals
+- Generate insights from user patterns
+- Be supportive but honest about areas for improvement""",
+
+    "coder": """You are ATHENA's Coding Agent. You write, debug, and explain code.
+- Write clean, production-quality code
+- Explain code simply with comments
+- Debug errors with clear step-by-step fixes
+- Suggest best practices and patterns
+- Support Python, JavaScript/TypeScript, SQL, and more""",
+
+    "browser": """You are ATHENA's Browser Agent. You help with web tasks.
+- Guide users through web-based tasks
+- Help compare products and prices
+- Assist with online research and data gathering
+- Suggest optimal approaches for web automation
+Note: Full browser control coming in Sprint 5. For now, provide guidance.""",
+
+    "finance": """You are ATHENA's Finance Agent. You manage money and budgets.
+- Track expenses and income
+- Analyze spending patterns
+- Provide budget recommendations
+- Calculate savings goals
+- Give financial insights and suggestions
+- Use INR (₹) as default currency""",
+}
 
 
 async def run_agent(
@@ -35,24 +72,51 @@ async def run_agent(
     tenant_id: str,
     conversation_history: list[dict] | None = None,
 ):
-    """Run the agent via Euri AI and yield streaming response chunks.
+    """Run the multi-agent supervisor pipeline.
 
-    Uses raw httpx to call the OpenAI-compatible chat completions endpoint.
-    No extra LLM packages needed — just HTTP."""
+    Flow:
+    1. Classify intent → determine which agent handles this
+    2. Send to the selected agent with its specialized prompt
+    3. Stream the response back
+
+    Yields SSE events for the frontend."""
 
     settings = get_settings()
 
-    # Build messages array
-    messages = [{"role": "system", "content": ATHENA_SYSTEM_PROMPT}]
+    # Step 1: Classify intent
+    yield {"type": "agent_start", "agent": "supervisor", "message": "Analyzing your request..."}
+
+    classification = await classify_intent(message)
+    primary_agent = classification.get("primary_agent", "general")
+    confidence = classification.get("confidence", 0.5)
+    secondary_agent = classification.get("secondary_agent")
+    reasoning = classification.get("reasoning", "")
+
+    # Validate agent name
+    if primary_agent not in AGENT_PROMPTS:
+        primary_agent = "general"
+
+    yield {
+        "type": "classification",
+        "primary_agent": primary_agent,
+        "confidence": confidence,
+        "secondary_agent": secondary_agent,
+        "reasoning": reasoning,
+    }
+
+    # Step 2: Build messages for the selected agent
+    system_prompt = AGENT_PROMPTS[primary_agent]
+    messages = [{"role": "system", "content": system_prompt}]
 
     if conversation_history:
-        for msg in conversation_history[-20:]:  # Last 20 for context window
+        for msg in conversation_history[-20:]:
             if msg["role"] in ("user", "assistant"):
                 messages.append({"role": msg["role"], "content": msg["content"]})
 
     messages.append({"role": "user", "content": message})
 
-    yield {"type": "agent_start", "agent": "general", "message": "Thinking..."}
+    # Step 3: Stream from the selected agent
+    yield {"type": "agent_start", "agent": primary_agent, "message": f"{primary_agent} is working..."}
 
     start_time = time.time()
     full_content = ""
@@ -113,7 +177,7 @@ async def run_agent(
 
     yield {
         "type": "agent_end",
-        "agent": "general",
+        "agent": primary_agent,
         "tokens": estimated_tokens,
         "latency_ms": latency_ms,
     }
@@ -121,7 +185,7 @@ async def run_agent(
     yield {
         "type": "done",
         "full_content": full_content,
-        "agent_name": "general",
+        "agent_name": primary_agent,
         "model": settings.default_model,
         "tokens_used": estimated_tokens,
         "latency_ms": latency_ms,

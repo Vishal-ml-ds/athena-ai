@@ -116,6 +116,9 @@ export const useConversationStore = create<ConversationState>((set, get) => ({
 
         if (type === "agent_start") {
           set({ activeAgent: event.agent as string });
+        } else if (type === "classification") {
+          agentName = event.primary_agent as string;
+          set({ activeAgent: agentName });
         } else if (type === "token") {
           fullContent += event.content as string;
           set({ streamingContent: fullContent });

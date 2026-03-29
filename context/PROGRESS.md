@@ -1,31 +1,70 @@
 # ATHENA — Progress Tracker
 
-## Current Phase: Pipeline Documentation
-## Current Sprint: Pre-Sprint (Pipeline)
-## Last Updated: 2026-03-29
+## Current Phase: Sprint 2 — Multi-Agent Core
+## Last Updated: 2026-03-30
 
 ---
 
-## Completed
-- [x] Product research — market analysis, competitor teardown (Angelina)
-- [x] Product decisions — name (ATHENA), stack, architecture, pricing
-- [x] Master plan — 8-sprint plan with full feature breakdown
-- [x] Project structure — directories, CLAUDE.md, git initialized
-- [x] DB Schema — docs/DB_SCHEMA.md (all tables, indexes, RLS)
-- [x] API Spec — docs/API_SPEC.md (all endpoints, models, module structure)
+## Sprint 1: Foundation — COMPLETE
 
-## In Progress
-- [ ] BRD — docs/BRD.md (agent generating)
-- [ ] PRD — docs/PRD.md (agent generating)
-- [ ] Architecture — docs/ARCHITECTURE.md (agent generating)
-- [ ] Eraser Prompts — docs/ERASER_PROMPTS.md
-- [ ] UI/UX Spec — docs/UI_DESIGN_SPEC.md
-- [ ] Presentation — docs/PRESENTATION.md
-- [ ] Sprint planning — context/TASKS.md
-- [ ] Sprint 1 plan — sprints/SPRINT_01.md
+### Backend (FastAPI)
+- [x] Project scaffolding (core/, routers/, services/, agents/, models/)
+- [x] Supabase setup + migrations (tenants, profiles, conversations, messages, RLS)
+- [x] Auth middleware (Supabase get_user token validation)
+- [x] Rate limiting middleware (Redis-backed)
+- [x] Request tracking middleware
+- [x] Conversation CRUD endpoints
+- [x] SSE streaming message endpoint
+- [x] LangGraph-ready agent (currently raw httpx → Euri AI)
+- [x] Euri AI integration (OpenAI-compatible, gpt-4o-mini, free)
 
-## Next Up
-- Start Sprint 1: Foundation (auth, basic chat, single agent, UI shell)
+### Frontend (Next.js 15 + Stitch Designs)
+- [x] 12 screens rebuilt from Stitch exports with "Celestial Intelligence" design system
+- [x] Landing page (hero, features, pricing, CTA, footer)
+- [x] Login + Signup (glassmorphic, Supabase auth)
+- [x] Chat interface (editorial messages, agent badges, streaming, sidebar)
+- [x] Life OS dashboard (habits, goals, finance, health tabs)
+- [x] Voice mode overlay (pulsing orb, waveform, transcript)
+- [x] Weekly report (newsletter style)
+- [x] Memory panel (search, type filters)
+- [x] Documents/RAG page (upload zone, document grid)
+- [x] Browser automation (split panel, action timeline)
+- [x] Knowledge graph (node visualization placeholder)
+- [x] Settings (profile, preferences, integrations, API keys)
+- [x] Design system: Space Grotesk + Inter + JetBrains Mono, glass-card, purple/gold
 
-## Blockers
-- Need to verify: OpenAI API key, Modal account, Supabase project
+### Infrastructure
+- [x] Supabase project (athena-ai) with RLS policies
+- [x] Euri AI key configured (free tier)
+- [x] Backend on port 8005, frontend on port 3002
+- [x] Git repo with feature/sprint-1-foundation branch
+
+### Credentials
+- Email: vishalprasad2442002@gmail.com
+- Password: Athena@2026
+- Backend: http://localhost:8005
+- Frontend: http://localhost:3002
+
+---
+
+## Sprint 2: Multi-Agent Core — IN PROGRESS
+
+### TODO
+- [ ] LangGraph supervisor graph (routes to multiple agents)
+- [ ] Semantic intent classifier (embedding-based, not keywords)
+- [ ] Researcher agent + web search tool (Tavily)
+- [ ] Scheduler agent + mock calendar tools
+- [ ] ReAct loop implementation
+- [ ] Agent execution tracking
+- [ ] Token usage per agent
+- [ ] Frontend: agent indicator in chat
+- [ ] Frontend: execution step visualization
+- [ ] Onboarding flow (3 steps)
+
+---
+
+## Pipeline Docs — ALL COMPLETE
+- [x] BRD, PRD, Architecture, DB Schema, API Spec
+- [x] Eraser Prompts, UI/UX Spec, Presentation
+- [x] Stitch Prompts + 12 exported screens
+- [x] Sprint plans, Task breakdown
