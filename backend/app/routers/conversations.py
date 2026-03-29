@@ -13,6 +13,7 @@ from app.agents.supervisor import run_agent
 from app.core.dependencies import get_supabase_client
 from app.core.exceptions import NotFoundError
 from app.core.security import get_current_user
+from app.services.memory_service import extract_memories, retrieve_memories
 from app.models.common import ApiResponse, PaginationParams, TenantContext
 from app.models.conversation import (
     ConversationResponse,
@@ -209,6 +210,17 @@ async def send_message(
 
     conversation_history = history_result.data
 
+    # Retrieve relevant memories for context injection
+    memories = []
+    try:
+        memories = await retrieve_memories(
+            query=body.content,
+            user_id=str(ctx.user_id),
+            supabase=supabase,
+        )
+    except Exception:
+        pass  # Memory retrieval is non-critical
+
     async def event_stream():
         """Generate SSE events from the agent's streaming response."""
         assistant_message_id = str(uuid.uuid4())
@@ -218,11 +230,17 @@ async def send_message(
         tokens_used = 0
         latency_ms = 0
 
+        # Send memory context to frontend
+        if memories:
+            memory_texts = [m.get("content", "") for m in memories[:3]]
+            yield f"data: {json.dumps({'type': 'memory_used', 'memories': memory_texts})}\n\n"
+
         async for event in run_agent(
             message=body.content,
             user_id=str(ctx.user_id),
             tenant_id=str(ctx.tenant_id),
             conversation_history=conversation_history,
+            memory_context=memories,
         ):
             event_type = event["type"]
 
@@ -253,6 +271,21 @@ async def send_message(
                 supabase.table("conversations").update(
                     {"updated_at": msg_now}
                 ).eq("id", conversation_id).execute()
+
+                # Extract memories from this exchange (async, non-blocking)
+                try:
+                    recent_msgs = [
+                        {"role": "user", "content": body.content},
+                        {"role": "assistant", "content": full_content},
+                    ]
+                    await extract_memories(
+                        conversation_messages=recent_msgs,
+                        user_id=str(ctx.user_id),
+                        tenant_id=str(ctx.tenant_id),
+                        supabase=supabase,
+                    )
+                except Exception:
+                    pass  # Memory extraction is non-critical
 
                 yield f"data: {json.dumps({'type': 'done', 'message_id': assistant_message_id, 'total_tokens': tokens_used})}\n\n"
             else:

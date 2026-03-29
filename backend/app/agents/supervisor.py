@@ -71,6 +71,7 @@ async def run_agent(
     user_id: str,
     tenant_id: str,
     conversation_history: list[dict] | None = None,
+    memory_context: list[dict] | None = None,
 ):
     """Run the multi-agent supervisor pipeline.
 
@@ -104,8 +105,16 @@ async def run_agent(
         "reasoning": reasoning,
     }
 
-    # Step 2: Build messages for the selected agent
+    # Step 2: Build messages for the selected agent with memory context
     system_prompt = AGENT_PROMPTS[primary_agent]
+
+    # Inject memories into system prompt if available
+    if memory_context:
+        memory_texts = "\n".join(
+            f"- {m.get('content', '')}" for m in memory_context[:5]
+        )
+        system_prompt += f"\n\nRelevant memories about this user:\n{memory_texts}\nUse these memories to personalize your response when relevant."
+
     messages = [{"role": "system", "content": system_prompt}]
 
     if conversation_history:

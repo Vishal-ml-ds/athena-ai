@@ -12,7 +12,7 @@ from app.core.config import get_settings
 from app.core.dependencies import close_redis
 from app.core.exceptions import AthenaError, athena_error_handler
 from app.core.middleware import RequestTrackingMiddleware
-from app.routers import auth, conversations, users
+from app.routers import auth, conversations, memories, users
 
 
 @asynccontextmanager
@@ -64,6 +64,7 @@ app.add_exception_handler(AthenaError, athena_error_handler)
 app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(conversations.router)
+app.include_router(memories.router)
 
 
 # --- Health Check ---
