@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ATHENA AI - Interests Setup</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "tertiary-fixed": "#e0e3e5",
+              "on-secondary": "#472a00",
+              "surface": "#0b1326",
+              "on-primary-fixed": "#25005a",
+              "inverse-on-surface": "#283044",
+              "secondary-fixed": "#ffddb8",
+              "secondary": "#ffb95f",
+              "on-tertiary-fixed": "#191c1e",
+              "on-error-container": "#ffdad6",
+              "background": "#0b1326",
+              "surface-container-low": "#131b2e",
+              "outline": "#958da1",
+              "on-surface": "#dae2fd",
+              "on-primary": "#3f008e",
+              "on-tertiary-container": "#e4e6e8",
+              "secondary-container": "#ee9800",
+              "primary": "#d2bbff",
+              "surface-tint": "#d2bbff",
+              "surface-container-highest": "#2d3449",
+              "outline-variant": "#4a4455",
+              "surface-container-high": "#222a3d",
+              "on-surface-variant": "#ccc3d8",
+              "on-secondary-fixed-variant": "#653e00",
+              "on-tertiary-fixed-variant": "#444749",
+              "on-secondary-fixed": "#2a1700",
+              "inverse-primary": "#732ee4",
+              "on-tertiary": "#2d3133",
+              "tertiary": "#c4c7c9",
+              "primary-fixed-dim": "#d2bbff",
+              "inverse-surface": "#dae2fd",
+              "tertiary-container": "#646769",
+              "primary-container": "#7c3aed",
+              "error": "#ffb4ab",
+              "primary-fixed": "#eaddff",
+              "surface-variant": "#2d3449",
+              "on-background": "#dae2fd",
+              "surface-container": "#171f33",
+              "on-primary-fixed-variant": "#5a00c6",
+              "surface-bright": "#31394d",
+              "surface-dim": "#0b1326",
+              "on-secondary-container": "#5b3800",
+              "surface-container-lowest": "#060e20",
+              "tertiary-fixed-dim": "#c4c7c9",
+              "on-primary-container": "#ede0ff",
+              "on-error": "#690005",
+              "secondary-fixed-dim": "#ffb95f",
+              "error-container": "#93000a"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Inter"],
+              "label": ["Inter"],
+              "mono": ["JetBrains Mono"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0b1326;
+            color: #dae2fd;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-card {
+            background: rgba(23, 31, 51, 0.6);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 20px 40px -12px rgba(124, 58, 237, 0.12);
+        }
+        .interest-chip-selected {
+            background-color: #7c3aed;
+            color: #ffffff;
+            border-color: transparent;
+        }
+        .glow-button {
+            background: linear-gradient(135deg, #7c3aed 0%, #d2bbff 100%);
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
+        }
+        .step-inactive {
+            border: 2px solid #4a4455;
+            color: #958da1;
+        }
+        .step-active {
+            background-color: #7c3aed;
+            border: 2px solid #7c3aed;
+            color: #ffffff;
+        }
+        .step-line {
+            height: 2px;
+            background: #4a4455;
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+<!-- Background Decorative Elements -->
+<div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary-container/10 rounded-full blur-[120px]"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-secondary/5 rounded-full blur-[100px]"></div>
+<!-- Onboarding Navigation Shell (TopAppBar logic suppressed for transactional screen) -->
+<main class="w-full max-w-[600px] z-10">
+<div class="glass-card rounded-xl p-8 md:p-12 relative overflow-hidden">
+<!-- Progress Stepper -->
+<div class="flex items-center justify-between mb-12 px-4">
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold step-inactive">1</div>
+<span class="text-[10px] font-mono uppercase tracking-widest text-outline">Identity</span>
+</div>
+<div class="step-line mx-4"></div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold step-inactive">2</div>
+<span class="text-[10px] font-mono uppercase tracking-widest text-outline">Preferences</span>
+</div>
+<div class="step-line mx-4"></div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold step-active shadow-[0_0_15px_rgba(124,58,237,0.5)]">3</div>
+<span class="text-[10px] font-mono uppercase tracking-widest text-primary font-bold">Interests</span>
+</div>
+</div>
+<!-- Header Section -->
+<div class="text-center mb-10">
+<h1 class="font-headline text-3xl md:text-4xl font-bold tracking-tight text-white mb-4">
+                    What should ATHENA focus on?
+                </h1>
+<p class="text-on-surface-variant font-body text-sm max-w-sm mx-auto opacity-80">
+                    Select the domains where you want the AI to exhibit maximum expertise and proactive insight.
+                </p>
+</div>
+<!-- Interests Grid -->
+<div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-12">
+<!-- Selectable Chips -->
+<button class="interest-chip-selected border border-outline-variant/30 rounded-full py-2.5 px-4 text-sm font-medium transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">code</span>
+                    Coding
+                </button>
+<button class="bg-surface-container-lowest hover:bg-surface-container-high border border-outline-variant/30 text-on-surface-variant rounded-full py-2.5 px-4 text-sm font-medium transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">neurology</span>
+                    AI/ML
+                </button>
+<button class="bg-surface-container-lowest hover:bg-surface-container-high border border-outline-variant/30 text-on-surface-variant rounded-full py-2.5 px-4 text-sm font-medium transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+                    Finance
+                </button>
+<button class="bg-surface-container-lowest hover:bg-surface-container-high border border-outline-variant/30 text-on-surface-variant rounded-full py-2.5 px-4 text-sm font-medium transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">favorite</span>
+                    Health
+                </button>
+<button class="interest-chip-selected border border-outline-variant/30 rounded-full py-2.5 px-4 text-sm font-medium transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">bolt</span>
+                    Productivity
+                </button>
+<button class="bg-surface-container-lowest hover:bg-surface-container-high border border-outline-variant/30 text-on-surface-variant rounded-full py-2.5 px-4 text-sm font-medium transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">school</span>
+                    Learning
+                </button>
+<button class="bg-surface-container-lowest hover:bg-surface-container-high border border-outline-variant/30 text-on-surface-variant rounded-full py-2.5 px-4 text-sm font-medium transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">rocket_launch</span>
+                    Startups
+                </button>
+<button class="bg-surface-container-lowest hover:bg-surface-container-high border border-outline-variant/30 text-on-surface-variant rounded-full py-2.5 px-4 text-sm font-medium transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">palette</span>
+                    Design
+                </button>
+<button class="bg-surface-container-lowest hover:bg-surface-container-high border border-outline-variant/30 text-on-surface-variant rounded-full py-2.5 px-4 text-sm font-medium transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">campaign</span>
+                    Marketing
+                </button>
+<button class="bg-surface-container-lowest hover:bg-surface-container-high border border-outline-variant/30 text-on-surface-variant rounded-full py-2.5 px-4 text-sm font-medium transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">edit_note</span>
+                    Writing
+                </button>
+<button class="bg-surface-container-lowest hover:bg-surface-container-high border border-outline-variant/30 text-on-surface-variant rounded-full py-2.5 px-4 text-sm font-medium transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">library_music</span>
+                    Music
+                </button>
+<button class="bg-surface-container-lowest hover:bg-surface-container-high border border-outline-variant/30 text-on-surface-variant rounded-full py-2.5 px-4 text-sm font-medium transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">explore</span>
+                    Travel
+                </button>
+</div>
+<!-- Action Section -->
+<div class="flex flex-col items-center gap-6">
+<button class="glow-button w-full py-4 rounded-lg font-headline font-bold text-white text-lg tracking-wide hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3">
+                    Initialize ATHENA
+                    <span class="material-symbols-outlined">auto_awesome</span>
+</button>
+<p class="font-mono text-[11px] text-outline uppercase tracking-[0.2em]">
+                    You can always change these in Settings
+                </p>
+</div>
+<!-- Footer Logo Anchor -->
+<div class="absolute bottom-4 right-8 flex items-center gap-2 opacity-20 select-none">
+<span class="font-headline font-bold text-xs tracking-tighter text-white">ATHENA OS</span>
+<div class="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse"></div>
+</div>
+</div>
+<!-- Decorative image of the "Pulse" avatar representation -->
+<div class="mt-12 flex justify-center opacity-40">
+<div class="w-16 h-16 rounded-full p-1 bg-gradient-to-tr from-primary to-secondary">
+<div class="w-full h-full bg-surface rounded-full flex items-center justify-center overflow-hidden">
+<img alt="Athena Pulse" class="w-full h-full object-cover mix-blend-screen" data-alt="abstract iridescent fluid motion with vibrant purple and gold highlights on a deep obsidian background, professional digital art" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYn3MYqBzXmeNT1j_L3u86fLgKGKDAix02of9TBux7QCcAkUKgYCz3c_Ov99BVeLYYwmRcs5Wu03UqxHltUwTYTIToxCkX3kKm0JxrW6oeQ2-IrqlIS7a04RhH_CsquCHuToF0ETbDplsaV956JnmolYFaavhmuT6xA3jiIrXkUVxRjDyKJH11D5hcP9ldEm97EGUvp9H7379asEE6Sc_dvYzF-pO6TIiY0_bRUjipncL93rGAhVSUMNNgZKNoJrkpzcrm2qkT5go"/>
+</div>
+</div>
+</div>
+</main>
+</body></html>

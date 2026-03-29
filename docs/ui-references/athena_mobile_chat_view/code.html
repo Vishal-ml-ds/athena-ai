@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        /* Custom Scrollbar for Chat Area */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* AI Streaming Pulse */
+        .streaming-pulse {
+            height: 2px;
+            width: 40px;
+            background: linear-gradient(90deg, #7c3aed, #d2bbff);
+            border-radius: 99px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-surface": "#dae2fd",
+                        "secondary": "#ffb95f",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "on-tertiary-container": "#e4e6e8",
+                        "on-tertiary": "#2d3133",
+                        "inverse-primary": "#732ee4",
+                        "on-primary": "#3f008e",
+                        "error-container": "#93000a",
+                        "tertiary-container": "#646769",
+                        "outline-variant": "#4a4455",
+                        "outline": "#958da1",
+                        "primary-container": "#7c3aed",
+                        "on-primary-fixed-variant": "#5a00c6",
+                        "tertiary-fixed": "#e0e3e5",
+                        "surface-container-low": "#131b2e",
+                        "surface-container-lowest": "#060e20",
+                        "surface": "#0b1326",
+                        "error": "#ffb4ab",
+                        "surface-container": "#171f33",
+                        "surface-variant": "#2d3449",
+                        "primary-fixed": "#eaddff",
+                        "surface-dim": "#0b1326",
+                        "primary": "#d2bbff",
+                        "inverse-surface": "#dae2fd",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "on-background": "#dae2fd",
+                        "background": "#0b1326",
+                        "surface-container-high": "#222a3d",
+                        "on-secondary": "#472a00",
+                        "on-primary-container": "#ede0ff",
+                        "secondary-fixed": "#ffddb8",
+                        "surface-tint": "#d2bbff",
+                        "on-primary-fixed": "#25005a",
+                        "on-tertiary-fixed": "#191c1e",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "on-secondary-container": "#5b3800",
+                        "on-surface-variant": "#ccc3d8",
+                        "secondary-fixed-variant": "#653e00",
+                        "primary-fixed-dim": "#d2bbff",
+                        "on-secondary-fixed": "#2a1700",
+                        "on-error": "#690005",
+                        "on-error-container": "#ffdad6"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Inter"],
+                        "mono": ["JetBrains Mono"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-white overflow-hidden">
+<!-- TopAppBar Section -->
+<header class="fixed top-0 w-full z-50 bg-[#0b1326]/60 backdrop-blur-xl shadow-[0_20px_40px_-12px_rgba(124,58,237,0.12)]">
+<div class="flex justify-between items-center px-6 py-4 w-full h-16">
+<button class="text-white active:scale-95 duration-150 p-1">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="text-xl font-bold tracking-widest text-white uppercase font-headline">ATHENA</h1>
+<div class="relative active:scale-95 duration-150">
+<img alt="User Profile" class="w-8 h-8 rounded-full border border-primary/20 object-cover" data-alt="portrait of a young man with a slight smile in soft cinematic lighting against a dark neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBm2bdmWkLu6LX_6amTWcLzO-wTd7I-OczUygGMLueLmZ3T_XSw-AoRckTFI1Q1vHRgf7t1FeZmubE-cNlB9BZqw5HtfUk7QZUWuJrsooNtdkK1mP8SqfQeeva9tOzAReOs6sMS_jIpf6PsZTlGGq-wub7e8D3sbaT_21vPPx2bZvkRG1BtKLBj6OTlwI16vCajklJAwOXTzijiishnGgnVsdiTOnWU_GpnDceuWsSc0wAl5hj715ZzczrbTUOx1jAREl6L2uECwWs"/>
+</div>
+</div>
+<!-- Separation Logic -->
+<div class="bg-[#131b2e] h-[1px] w-full opacity-20"></div>
+</header>
+<!-- Main Content: Chat Area -->
+<main class="h-screen w-full pt-20 pb-40 px-6 overflow-y-auto hide-scrollbar flex flex-col gap-8">
+<!-- AI Message 1 -->
+<div class="flex flex-col gap-2 max-w-[85%]">
+<div class="flex items-center gap-2">
+<span class="font-headline text-sm font-bold tracking-wider text-primary uppercase">ATHENA</span>
+<span class="bg-[#1e293b] text-[#38bdf8] px-2 py-0.5 rounded-full font-mono text-[10px] uppercase tracking-tighter">Researcher</span>
+</div>
+<div class="text-on-surface text-[15px] leading-relaxed font-body">
+                Greetings. I've analyzed the recent datasets from your requested sector. Would you like a condensed executive summary or the full granular breakdown of the market shifts?
+            </div>
+</div>
+<!-- User Message 1 -->
+<div class="flex flex-col items-end gap-1">
+<div class="bg-primary-container text-white px-4 py-3 rounded-2xl rounded-tr-none max-w-[80%] shadow-lg">
+<p class="text-[15px]">Give me the condensed summary first, focusing on the tech sector volatility.</p>
+</div>
+<span class="text-[10px] text-slate-500 font-mono mt-1">14:02</span>
+</div>
+<!-- AI Message 2 (Streaming Example) -->
+<div class="flex flex-col gap-2 max-w-[85%]">
+<div class="flex items-center gap-2">
+<span class="font-headline text-sm font-bold tracking-wider text-primary uppercase">ATHENA</span>
+<span class="bg-[#1e293b] text-[#4ade80] px-2 py-0.5 rounded-full font-mono text-[10px] uppercase tracking-tighter">Analyst</span>
+</div>
+<div class="text-on-surface text-[15px] leading-relaxed font-body space-y-4">
+<p>Synthesizing current market conditions...</p>
+<div class="bg-surface-container-low p-4 rounded-xl border-l-2 border-secondary/40">
+<p class="text-sm italic text-slate-400">Key Finding: Semi-conductor yields are impacting Q3 projections across 4 major hardware providers.</p>
+</div>
+<p>The volatility is primarily driven by supply chain constraints in Southeast Asia and an unexpected pivot in consumer GPU demand toward enterprise AI clusters.</p>
+<!-- Streaming Indicator -->
+<div class="flex items-center gap-1 mt-2">
+<div class="streaming-pulse animate-pulse"></div>
+</div>
+</div>
+</div>
+<!-- Spacer for input area -->
+<div class="h-4 w-full"></div>
+</main>
+<!-- Bottom Input & Controls Layer -->
+<section class="fixed bottom-20 left-0 w-full z-40 px-4 pb-4">
+<div class="bg-[#131b2e]/80 backdrop-blur-xl rounded-3xl p-2 flex items-center gap-2 shadow-2xl border border-outline-variant/10">
+<!-- Voice/Mic Button -->
+<button class="w-12 h-12 flex items-center justify-center rounded-2xl text-slate-400 hover:text-white hover:bg-surface-container-high transition-all active:scale-90">
+<span class="material-symbols-outlined text-2xl" data-icon="mic">mic</span>
+</button>
+<!-- Text Input Area -->
+<div class="flex-1 px-2">
+<input class="w-full bg-transparent border-none focus:ring-0 text-white placeholder:text-slate-500 font-body text-[15px] py-3" placeholder="Message ATHENA..." type="text"/>
+</div>
+<!-- Send Button -->
+<button class="w-12 h-12 flex items-center justify-center rounded-2xl bg-gradient-to-br from-[#7c3aed] to-[#d2bbff] text-white shadow-[0_4px_15px_rgba(124,58,237,0.4)] active:scale-90 transition-all">
+<span class="material-symbols-outlined font-bold" data-icon="arrow_upward">arrow_upward</span>
+</button>
+</div>
+</section>
+<!-- BottomNavBar Section -->
+<nav class="fixed bottom-0 left-0 w-full h-20 z-50 bg-[#0b1326]/80 backdrop-blur-2xl flex justify-around items-center px-4 pb-safe rounded-t-2xl">
+<!-- Chat (Active) -->
+<a class="flex flex-col items-center justify-center bg-gradient-to-br from-[#7c3aed] to-[#d2bbff] text-white rounded-xl p-3 shadow-[0_0_15px_rgba(124,58,237,0.4)] active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="chat_bubble" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+</a>
+<!-- Life OS -->
+<a class="flex flex-col items-center justify-center text-slate-500 p-3 hover:text-[#d2bbff] transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+</a>
+<!-- Memory -->
+<a class="flex flex-col items-center justify-center text-slate-500 p-3 hover:text-[#d2bbff] transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="memory">memory</span>
+</a>
+<!-- Documents -->
+<a class="flex flex-col items-center justify-center text-slate-500 p-3 hover:text-[#d2bbff] transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+</a>
+<!-- Settings -->
+<a class="flex flex-col items-center justify-center text-slate-500 p-3 hover:text-[#d2bbff] transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</a>
+</nav>
+<!-- Background Decoration (Subtle Nebula) -->
+<div class="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary-container/10 rounded-full blur-[120px] pointer-events-none z-0"></div>
+<div class="fixed bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary/5 rounded-full blur-[100px] pointer-events-none z-0"></div>
+</body></html>
