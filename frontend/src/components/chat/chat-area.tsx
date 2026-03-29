@@ -49,6 +49,7 @@ export function ChatArea() {
     isStreaming,
     streamingContent,
     activeAgent,
+    memoriesUsed,
     sendMessage,
     createConversation,
   } = useConversationStore();
@@ -96,6 +97,16 @@ export function ChatArea() {
                 agentName={msg.agentName}
               />
             ))}
+
+            {/* Memory indicator */}
+            {isStreaming && memoriesUsed.length > 0 && (
+              <div className="flex items-center gap-2 rounded-lg bg-[#ffb95f]/10 px-4 py-2">
+                <Brain className="h-4 w-4 text-[#ffb95f]" />
+                <span className="font-mono text-[10px] uppercase tracking-widest text-[#ffb95f]">
+                  ATHENA remembered: {memoriesUsed[0]}
+                </span>
+              </div>
+            )}
 
             {/* Streaming message */}
             {isStreaming && streamingContent && (

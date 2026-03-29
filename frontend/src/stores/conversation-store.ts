@@ -32,6 +32,7 @@ interface ConversationState {
   isStreaming: boolean;
   streamingContent: string;
   activeAgent: string | null;
+  memoriesUsed: string[];
 
   // Actions
   fetchConversations: () => Promise<void>;
@@ -49,6 +50,7 @@ export const useConversationStore = create<ConversationState>((set, get) => ({
   isStreaming: false,
   streamingContent: "",
   activeAgent: null,
+  memoriesUsed: [],
 
   fetchConversations: async () => {
     set({ isLoading: true });
@@ -105,6 +107,7 @@ export const useConversationStore = create<ConversationState>((set, get) => ({
       isStreaming: true,
       streamingContent: "",
       activeAgent: null,
+      memoriesUsed: [],
     }));
 
     try {
@@ -116,6 +119,8 @@ export const useConversationStore = create<ConversationState>((set, get) => ({
 
         if (type === "agent_start") {
           set({ activeAgent: event.agent as string });
+        } else if (type === "memory_used") {
+          set({ memoriesUsed: (event.memories as string[]) || [] });
         } else if (type === "classification") {
           agentName = event.primary_agent as string;
           set({ activeAgent: agentName });
