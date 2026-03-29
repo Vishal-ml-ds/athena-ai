@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ATHENA — Personal AI Operating System",
+  title: "ATHENA | Personal AI Operating System",
   description: "The AI Goddess That Runs Your Life",
 };
 

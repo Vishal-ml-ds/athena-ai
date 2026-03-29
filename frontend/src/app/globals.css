@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -46,6 +48,35 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* ATHENA Design Tokens */
+  --color-surface-container-high: #222a3d;
+  --color-surface-container-lowest: #060e20;
+  --color-surface-dim: #0b1326;
+  --color-on-surface: #dae2fd;
+  --color-outline-variant: #4a4455;
+  --color-athena-background: #0b1326;
+  --color-surface-variant: #2d3449;
+  --color-athena-secondary: #ffb95f;
+  --color-athena-primary: #d2bbff;
+  --color-surface-container: #171f33;
+  --color-surface-container-highest: #2d3449;
+  --color-surface-container-low: #131b2e;
+  --color-outline: #958da1;
+  --color-on-surface-variant: #ccc3d8;
+  --color-primary-container: #7c3aed;
+  --color-athena-surface: #0b1326;
+  --color-on-primary-container: #ede0ff;
+  --color-surface-bright: #31394d;
+  --color-inverse-primary: #732ee4;
+  --color-secondary-container: #ee9800;
+  --color-on-primary: #3f008e;
+  --color-on-secondary: #472a00;
+
+  /* Font Families */
+  --font-headline: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono-jb: 'JetBrains Mono', monospace;
 }
 
 :root {
@@ -122,9 +153,98 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-athena-background text-on-surface;
   }
   html {
     @apply font-sans;
+  }
+}
+
+/* ATHENA Utility Classes */
+.glass-card {
+  background: rgba(23, 31, 51, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-panel {
+  background: rgba(23, 31, 51, 0.6);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.hero-gradient {
+  background: radial-gradient(circle at 50% 50%, rgba(124, 58, 237, 0.15) 0%, rgba(11, 19, 38, 0) 70%);
+}
+
+.bg-mesh {
+  background-color: #0b1326;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(255, 185, 95, 0.05) 0px, transparent 50%);
+}
+
+.glow-button {
+  background: linear-gradient(135deg, #7c3aed 0%, #d2bbff 100%);
+  transition: all 0.3s ease;
+}
+
+.glow-button:hover {
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
+  transform: translateY(-1px);
+}
+
+/* AI Pulse Animation */
+.ai-pulse {
+  box-shadow: 0 0 0 0 rgba(210, 187, 255, 0.4);
+  animation: ai-pulse-ring 2s infinite;
+}
+
+@keyframes ai-pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(210, 187, 255, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(210, 187, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(210, 187, 255, 0);
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(124, 58, 237, 0.2);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(124, 58, 237, 0.4);
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Voice Waveform Animation */
+@keyframes voice-waveform {
+  0%, 100% {
+    transform: scaleY(0.4);
+  }
+  50% {
+    transform: scaleY(1);
   }
 }

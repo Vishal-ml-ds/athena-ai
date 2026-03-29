@@ -1,11 +1,46 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { Sparkles } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useEffect, useRef, useCallback } from "react";
+import {
+  Sparkles,
+  TrendingUp,
+  CalendarDays,
+  Terminal,
+  Wallet,
+  Brain,
+} from "lucide-react";
 import { MessageBubble } from "./message-bubble";
 import { ChatInput } from "./chat-input";
 import { useConversationStore } from "@/stores/conversation-store";
+import { cn } from "@/lib/utils";
+
+const SUGGESTION_CARDS = [
+  {
+    icon: TrendingUp,
+    iconColor: "text-[#d2bbff]",
+    title: "Research trends",
+    description: "Analyze the latest developments in large language models.",
+  },
+  {
+    icon: CalendarDays,
+    iconColor: "text-[#ffb95f]",
+    title: "Plan my week",
+    description: "Optimize my schedule for deep work and celestial focus.",
+  },
+  {
+    icon: Terminal,
+    iconColor: "text-[#d2bbff]",
+    title: "Explain LangGraph",
+    description:
+      "Break down complex multi-agent workflows into simple concepts.",
+  },
+  {
+    icon: Wallet,
+    iconColor: "text-[#ffb95f]",
+    title: "Track expenses",
+    description: "Categorize my digital asset transactions for this month.",
+  },
+] as const;
 
 export function ChatArea() {
   const {
@@ -20,97 +55,140 @@ export function ChatArea() {
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom on new messages
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages, streamingContent]);
 
-  const handleSend = async (content: string) => {
-    if (!activeConversationId) {
-      await createConversation("New Chat");
-    }
-    sendMessage(content);
-  };
+  const handleSend = useCallback(
+    async (content: string) => {
+      if (!activeConversationId) {
+        await createConversation("New Chat");
+      }
+      sendMessage(content);
+    },
+    [activeConversationId, createConversation, sendMessage]
+  );
+
+  const handleSuggestionClick = useCallback(
+    (title: string) => {
+      handleSend(title);
+    },
+    [handleSend]
+  );
+
+  const hasMessages = messages.length > 0 || isStreaming;
 
   return (
-    <div className="flex h-full flex-1 flex-col">
-      {/* Messages Area */}
-      <ScrollArea className="flex-1" ref={scrollRef}>
-        <div className="mx-auto max-w-3xl py-4">
-          {messages.length === 0 && !isStreaming ? (
-            <EmptyState />
-          ) : (
-            <>
-              {messages.map((msg) => (
-                <MessageBubble
-                  key={msg.id}
-                  role={msg.role}
-                  content={msg.content}
-                  agentName={msg.agentName}
-                />
-              ))}
+    <div className="relative flex h-full flex-1 flex-col bg-[#0b1326]">
+      {/* Scrollable Content */}
+      <section ref={scrollRef} className="flex-1 overflow-y-auto px-6 pb-32">
+        {!hasMessages ? (
+          <EmptyState onSuggestionClick={handleSuggestionClick} />
+        ) : (
+          <div className="mx-auto max-w-3xl space-y-12 py-12">
+            {messages.map((msg) => (
+              <MessageBubble
+                key={msg.id}
+                role={msg.role}
+                content={msg.content}
+                agentName={msg.agentName}
+              />
+            ))}
 
-              {/* Streaming message */}
-              {isStreaming && streamingContent && (
-                <MessageBubble
-                  role="assistant"
-                  content={streamingContent}
-                  agentName={activeAgent || "general"}
-                  isStreaming
-                />
-              )}
+            {/* Streaming message */}
+            {isStreaming && streamingContent && (
+              <MessageBubble
+                role="assistant"
+                content={streamingContent}
+                agentName={activeAgent ?? "general"}
+                isStreaming
+              />
+            )}
 
-              {/* Agent thinking indicator */}
-              {isStreaming && !streamingContent && (
-                <div className="flex items-center gap-2 px-4 py-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-600">
-                    <Sparkles className="h-4 w-4 animate-pulse text-white" />
-                  </div>
-                  <span className="text-sm text-muted-foreground">
-                    {activeAgent
-                      ? `${activeAgent} is thinking...`
-                      : "ATHENA is thinking..."}
-                  </span>
+            {/* Thinking indicator */}
+            {isStreaming && !streamingContent && (
+              <div className="flex items-center gap-3">
+                <div
+                  className={cn(
+                    "flex h-8 w-8 items-center justify-center rounded-full",
+                    "border border-[#d2bbff]/30 bg-[#171f33]",
+                    "shadow-[0_0_15px_rgba(124,58,237,0.2)]"
+                  )}
+                >
+                  <Brain className="h-4 w-4 animate-pulse text-[#d2bbff]" />
                 </div>
-              )}
-            </>
-          )}
-        </div>
-      </ScrollArea>
+                <span className="font-mono text-xs uppercase tracking-widest text-[#ffb95f]">
+                  {activeAgent
+                    ? `${activeAgent} is thinking...`
+                    : "ATHENA is thinking..."}
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+      </section>
 
-      {/* Input */}
+      {/* Bottom Input Bar */}
       <ChatInput onSend={handleSend} isStreaming={isStreaming} />
     </div>
   );
 }
 
-function EmptyState() {
+interface EmptyStateProps {
+  onSuggestionClick: (title: string) => void;
+}
+
+function EmptyState({ onSuggestionClick }: EmptyStateProps) {
   return (
-    <div className="flex h-full flex-col items-center justify-center py-20">
-      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-purple-600/20">
-        <Sparkles className="h-8 w-8 text-purple-500" />
+    <div className="mx-auto flex h-full max-w-4xl flex-col items-center justify-center space-y-8 py-12 text-center">
+      {/* Sparkle Icon with Glow */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-[#d2bbff] opacity-20 blur-[80px]" />
+        <div
+          className={cn(
+            "ai-pulse relative z-10",
+            "flex h-24 w-24 items-center justify-center rounded-full",
+            "border border-[#d2bbff]/20 bg-[#222a3d]"
+          )}
+        >
+          <Sparkles className="h-12 w-12 text-[#d2bbff]" />
+        </div>
       </div>
-      <h2 className="mb-2 text-xl font-semibold text-foreground">
-        Welcome to ATHENA
-      </h2>
-      <p className="max-w-md text-center text-sm text-muted-foreground">
-        The AI Goddess of Wisdom. Ask me anything — research, scheduling,
-        coding, finance, health, or just chat.
-      </p>
-      <div className="mt-6 grid grid-cols-2 gap-2">
-        {[
-          "Research the latest AI trends",
-          "Help me plan my week",
-          "Explain how LangGraph works",
-          "Track my expenses this month",
-        ].map((suggestion) => (
+
+      {/* Headline */}
+      <div className="space-y-2">
+        <h2 className="font-headline text-4xl font-light tracking-tight text-white md:text-5xl">
+          Welcome to{" "}
+          <span className="font-bold text-[#d2bbff]">ATHENA</span>
+        </h2>
+        <p className="font-mono text-sm uppercase tracking-widest text-[#ccc3d8]">
+          The AI Goddess of Wisdom
+        </p>
+      </div>
+
+      {/* Suggestion Cards */}
+      <div className="mt-8 grid w-full max-w-2xl grid-cols-1 gap-4 md:grid-cols-2">
+        {SUGGESTION_CARDS.map((card) => (
           <button
-            key={suggestion}
-            className="rounded-lg border border-border px-3 py-2 text-left text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            key={card.title}
+            onClick={() => onSuggestionClick(card.title)}
+            data-testid={`suggestion-${card.title}`}
+            className={cn(
+              "flex flex-col items-start rounded-2xl p-5 text-left",
+              "border border-[#4a4455]/10 bg-[#131b2e]",
+              "transition-all duration-300 hover:bg-[#222a3d]",
+              "group"
+            )}
           >
-            {suggestion}
+            <card.icon className={cn("mb-3 h-5 w-5", card.iconColor)} />
+            <span className="mb-1 text-sm font-medium text-[#dae2fd]">
+              {card.title}
+            </span>
+            <span className="text-xs leading-relaxed text-[#ccc3d8]">
+              {card.description}
+            </span>
           </button>
         ))}
       </div>
