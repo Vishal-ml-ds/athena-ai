@@ -1,7 +1,8 @@
 # ATHENA — Progress Tracker
 
-## Current Phase: Sprint 2 — Multi-Agent Core
+## Current Phase: Sprint 7 — Knowledge Graph + Polish
 ## Last Updated: 2026-03-30
+## GitHub: https://github.com/Vishal-ml-ds/athena-ai
 
 ---
 
