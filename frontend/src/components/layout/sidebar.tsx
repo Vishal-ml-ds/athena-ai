@@ -15,6 +15,9 @@ import {
   Globe,
   Share2,
   BarChart3,
+  Cpu,
+  Activity,
+  Bell,
 } from "lucide-react";
 import { useConversationStore } from "@/stores/conversation-store";
 import { cn } from "@/lib/utils";
@@ -27,9 +30,15 @@ const NAV_MODULES = [
   { href: "/browser", label: "Browser", icon: Globe },
   { href: "/knowledge", label: "Knowledge", icon: Share2 },
   { href: "/report", label: "Report", icon: BarChart3 },
+  { href: "/agents", label: "Agents", icon: Cpu },
+  { href: "/insights", label: "Insights", icon: Activity },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  onNotificationClick?: () => void;
+}
+
+export function Sidebar({ onNotificationClick }: SidebarProps) {
   const pathname = usePathname();
   const {
     conversations,
@@ -67,7 +76,7 @@ export function Sidebar() {
         >
           <Brain className="h-6 w-6 text-white" />
         </div>
-        <div>
+        <div className="flex-1">
           <h1 className="font-headline text-xl font-bold uppercase tracking-widest text-white">
             ATHENA AI
           </h1>
@@ -75,6 +84,14 @@ export function Sidebar() {
             Celestial Intelligence
           </p>
         </div>
+        <button
+          onClick={onNotificationClick}
+          data-testid="notification-bell"
+          className="relative rounded-full p-2 text-violet-400 transition-colors hover:text-amber-400"
+        >
+          <Bell className="h-5 w-5" />
+          <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-amber-500" />
+        </button>
       </div>
 
       {/* New Chat Button */}
