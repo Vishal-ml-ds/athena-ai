@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ATHENA OS - Browser Automation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container": "#171f33",
+                        "inverse-primary": "#732ee4",
+                        "surface-variant": "#2d3449",
+                        "primary-fixed-dim": "#d2bbff",
+                        "surface-container-low": "#131b2e",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "inverse-on-surface": "#283044",
+                        "surface-dim": "#0b1326",
+                        "primary-fixed": "#eaddff",
+                        "outline": "#958da1",
+                        "secondary": "#ffb95f",
+                        "on-surface-variant": "#ccc3d8",
+                        "on-background": "#dae2fd",
+                        "on-primary": "#3f008e",
+                        "tertiary": "#c4c7c9",
+                        "tertiary-container": "#646769",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "on-primary-fixed": "#25005a",
+                        "on-tertiary-fixed": "#191c1e",
+                        "surface-container-lowest": "#060e20",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed": "#e0e3e5",
+                        "error-container": "#93000a",
+                        "surface": "#0b1326",
+                        "on-tertiary": "#2d3133",
+                        "primary": "#d2bbff",
+                        "secondary-fixed": "#ffddb8",
+                        "on-primary-container": "#ede0ff",
+                        "on-surface": "#dae2fd",
+                        "surface-tint": "#d2bbff",
+                        "on-secondary-fixed": "#2a1700",
+                        "error": "#ffb4ab",
+                        "on-secondary": "#472a00",
+                        "surface-container-high": "#222a3d",
+                        "background": "#0b1326",
+                        "inverse-surface": "#dae2fd",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "on-error": "#690005",
+                        "secondary-container": "#ee9800",
+                        "primary-container": "#7c3aed",
+                        "on-secondary-container": "#5b3800",
+                        "surface-bright": "#31394d",
+                        "outline-variant": "#4a4455",
+                        "surface-container-highest": "#2d3449",
+                        "on-tertiary-container": "#e4e6e8",
+                        "on-primary-fixed-variant": "#5a00c6"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Inter"],
+                        "mono": ["JetBrains Mono"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .glass-panel {
+            background: rgba(23, 31, 51, 0.6);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface overflow-hidden h-screen font-body">
+<!-- TopNavBar Shell -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-8 h-16 bg-slate-950/60 backdrop-blur-xl shadow-[0_20px_40px_-12px_rgba(124,58,237,0.12)]">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-bold bg-gradient-to-br from-purple-400 to-purple-600 bg-clip-text text-transparent font-headline tracking-tight">ATHENA</span>
+<div class="hidden md:flex gap-6 items-center">
+<a class="text-slate-400 hover:text-slate-100 transition-colors font-headline" href="#">Dashboard</a>
+<a class="text-purple-400 border-b-2 border-purple-500 pb-1 font-headline" href="#">Automation</a>
+<a class="text-slate-400 hover:text-slate-100 transition-colors font-headline" href="#">Library</a>
+<a class="text-slate-400 hover:text-slate-100 transition-colors font-headline" href="#">Settings</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-white/5 transition-all duration-300 rounded-full">
+<span class="material-symbols-outlined text-slate-400">notifications</span>
+</button>
+<button class="p-2 hover:bg-white/5 transition-all duration-300 rounded-full">
+<span class="material-symbols-outlined text-slate-400">account_circle</span>
+</button>
+</div>
+</nav>
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-16 h-[calc(100vh-64px)] w-64 bg-slate-950/40 backdrop-blur-md flex flex-col py-6 z-40">
+<div class="px-6 mb-8">
+<h2 class="text-purple-400 font-mono text-sm uppercase tracking-widest">ATHENA OS</h2>
+<p class="text-slate-500 text-xs">Celestial Intelligence</p>
+</div>
+<nav class="flex-1">
+<div class="flex flex-col gap-1">
+<button class="flex items-center gap-4 px-6 py-3 text-slate-500 hover:text-slate-300 hover:bg-purple-500/10 transition-colors text-sm">
+<span class="material-symbols-outlined">assignment</span>
+<span>Tasks</span>
+</button>
+<button class="flex items-center gap-4 px-6 py-3 bg-gradient-to-r from-purple-600/20 to-transparent text-purple-400 border-r-2 border-purple-500 text-sm">
+<span class="material-symbols-outlined">browser_updated</span>
+<span>Browser</span>
+</button>
+<button class="flex items-center gap-4 px-6 py-3 text-slate-500 hover:text-slate-300 hover:bg-purple-500/10 transition-colors text-sm">
+<span class="material-symbols-outlined">history</span>
+<span>History</span>
+</button>
+<button class="flex items-center gap-4 px-6 py-3 text-slate-500 hover:text-slate-300 hover:bg-purple-500/10 transition-colors text-sm">
+<span class="material-symbols-outlined">folder_open</span>
+<span>Assets</span>
+</button>
+<button class="flex items-center gap-4 px-6 py-3 text-slate-500 hover:text-slate-300 hover:bg-purple-500/10 transition-colors text-sm">
+<span class="material-symbols-outlined">terminal</span>
+<span>API</span>
+</button>
+</div>
+</nav>
+<div class="px-6">
+<button class="w-full bg-primary-container text-on-primary-container py-2.5 rounded-lg text-sm font-semibold hover:opacity-90 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span>
+                New Automation
+            </button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 h-screen flex">
+<!-- LEFT PANEL: Configuration & Timeline -->
+<section class="w-[350px] bg-[#1E293B] flex flex-col border-r border-outline-variant/10">
+<div class="p-6 border-b border-outline-variant/10">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">public</span>
+<h1 class="text-xl font-bold font-headline tracking-tight text-white">Browser Task</h1>
+</div>
+<div class="space-y-4">
+<div>
+<label class="block text-xs font-mono text-slate-400 uppercase tracking-widest mb-2">Instructions</label>
+<textarea class="w-full h-32 bg-surface-container-lowest border-none rounded-xl text-sm focus:ring-1 focus:ring-primary/40 text-on-surface p-4 resize-none transition-all" placeholder="What should ATHENA do on the web?"></textarea>
+</div>
+<button class="w-full bg-primary-container hover:bg-primary py-3 rounded-lg text-white font-semibold transition-all shadow-lg shadow-primary-container/20">
+                        Execute Task
+                    </button>
+</div>
+</div>
+<!-- Action Timeline -->
+<div class="flex-1 overflow-y-auto p-6 scrollbar-hide">
+<h3 class="text-xs font-mono text-slate-500 uppercase tracking-widest mb-6">Automation Stream</h3>
+<div class="relative space-y-8">
+<!-- Vertical Line Connector -->
+<div class="absolute left-[15px] top-2 bottom-2 w-0.5 bg-slate-700/50"></div>
+<!-- Step 1 -->
+<div class="relative flex gap-4 items-start group">
+<div class="z-10 w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-emerald-400 text-sm">check</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm text-slate-100 font-medium">Navigated to amazon.in</span>
+<span class="text-[10px] font-mono text-slate-500">10:05 AM</span>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="relative flex gap-4 items-start group">
+<div class="z-10 w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-emerald-400 text-sm">check</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm text-slate-100 font-medium">Searched for wireless mouse</span>
+<span class="text-[10px] font-mono text-slate-500">10:06 AM</span>
+</div>
+</div>
+<!-- Step 3 (Active) -->
+<div class="relative flex gap-4 items-start">
+<div class="z-10 w-8 h-8 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center shrink-0 relative">
+<div class="absolute inset-0 rounded-full bg-primary animate-pulse opacity-20"></div>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+</div>
+<div class="flex flex-col">
+<span class="text-sm text-primary font-semibold">Clicked filters</span>
+<span class="text-[10px] font-mono text-slate-400">10:07 AM</span>
+</div>
+</div>
+<!-- Step 4 (Pending) -->
+<div class="relative flex gap-4 items-start opacity-40">
+<div class="z-10 w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0">
+<span class="text-[10px] font-mono text-slate-400">04</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm text-slate-400">Applying price filter</span>
+<span class="text-[10px] font-mono text-slate-600">Pending</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- RIGHT PANEL: Browser View -->
+<section class="flex-1 bg-[#0F172A] p-8 flex flex-col gap-6 overflow-hidden">
+<!-- Browser Chrome Interface -->
+<div class="flex flex-col h-full glass-panel rounded-2xl border border-outline-variant/10 overflow-hidden shadow-2xl">
+<!-- URL Bar Area -->
+<div class="p-4 bg-surface-container/40 flex items-center gap-4">
+<div class="flex gap-2 shrink-0">
+<div class="w-3 h-3 rounded-full bg-red-500/40"></div>
+<div class="w-3 h-3 rounded-full bg-yellow-500/40"></div>
+<div class="w-3 h-3 rounded-full bg-emerald-500/40"></div>
+</div>
+<div class="flex-1 flex items-center bg-surface-container-lowest px-4 py-2 rounded-lg gap-3">
+<div class="flex items-center gap-2 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 shrink-0">
+<div class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div>
+<span class="text-[10px] text-emerald-400 font-bold uppercase tracking-tighter">Live</span>
+</div>
+<span class="material-symbols-outlined text-slate-500 text-sm">lock</span>
+<input class="bg-transparent border-none text-slate-300 text-sm font-mono flex-1 focus:ring-0" readonly="" type="text" value="https://www.amazon.in/s?k=wireless+mouse"/>
+<button class="hover:text-primary transition-colors text-slate-500">
+<span class="material-symbols-outlined text-lg">refresh</span>
+</button>
+</div>
+<button class="px-4 py-2 rounded-lg border border-primary/40 text-primary text-xs font-semibold hover:bg-primary/10 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">pan_tool</span>
+                        Take Control
+                    </button>
+</div>
+<!-- Browser Viewport Area -->
+<div class="flex-1 relative bg-slate-900 group">
+<!-- Amazon Mock Content -->
+<div class="absolute inset-0 overflow-hidden">
+<img alt="Amazon search results interface" class="w-full h-full object-cover filter blur-sm opacity-60" data-alt="blurred e-commerce search results page showing grid of electronics with price tags and rating stars under warm studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkj9Mmr5yJ1WCqAZWHDJJFl1I-Yx-iQxSMtldCYVPA_cBLGBn5p3rsNf7vpUQZ2YZjMfImyXmzLmFPNj4FbIXgDUhJEEfTVr2zqJrA7DviUgpWmYnhwsV_uv31Z0FU1IeQdWm3C1frgUPhExuOCxpq1e8L-dfkTznWnTUGE990MARwQXJdBTAGb80eG_6_AtdSRqnAoPK3DVbFyV8jhWgY3sj6dCQVFL2q9T274e-0pVFmrRMuRLToCULTMITRacVe8Q67WIJMcrk"/>
+<!-- AI Cursor Overlay -->
+<div class="absolute top-[40%] left-[60%] flex flex-col items-center pointer-events-none transform -translate-x-1/2 -translate-y-1/2">
+<div class="w-8 h-8 rounded-full border-2 border-primary animate-ping absolute opacity-40"></div>
+<span class="material-symbols-outlined text-primary text-3xl drop-shadow-lg">near_me</span>
+<div class="mt-2 bg-primary px-2 py-1 rounded text-[10px] text-on-primary font-bold shadow-xl">ATHENA ACTING...</div>
+</div>
+</div>
+<!-- Viewport Footer Overlay -->
+<div class="absolute bottom-6 left-1/2 -translate-x-1/2">
+<button class="px-8 py-3 bg-red-600 hover:bg-red-500 text-white rounded-full flex items-center gap-3 font-bold shadow-2xl shadow-red-900/50 transition-transform active:scale-95">
+<span class="material-symbols-outlined fill-1">stop_circle</span>
+                            Stop Automation
+                        </button>
+</div>
+</div>
+<!-- System Meta Bar -->
+<div class="px-6 py-3 bg-surface-container/60 flex justify-between items-center">
+<div class="flex gap-6">
+<div class="flex flex-col">
+<span class="text-[10px] text-slate-500 uppercase font-mono">Frame Rate</span>
+<span class="text-xs text-on-surface font-mono">60.0 FPS</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] text-slate-500 uppercase font-mono">Latency</span>
+<span class="text-xs text-on-surface font-mono">24ms</span>
+</div>
+</div>
+<div class="flex items-center gap-2 text-slate-400">
+<span class="material-symbols-outlined text-sm">visibility</span>
+<span class="text-xs font-mono">Agent: 0x2A...F4</span>
+</div>
+</div>
+</div>
+<!-- Context Hint -->
+<div class="flex items-center gap-4 px-6 py-4 bg-surface-container-low rounded-xl border border-outline-variant/5">
+<span class="material-symbols-outlined text-secondary">info</span>
+<p class="text-sm text-slate-400 italic">
+                    ATHENA is currently identifying the best-selling wireless mice under ₹2000 with 4+ star ratings.
+                </p>
+</div>
+</section>
+</main>
+<!-- Global Layout Decorative Background elements -->
+<div class="fixed inset-0 pointer-events-none z-[-1] overflow-hidden">
+<div class="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-purple-600/5 rounded-full blur-[120px]"></div>
+<div class="absolute bottom-[-10%] left-[20%] w-[30%] h-[30%] bg-secondary/5 rounded-full blur-[100px]"></div>
+</div>
+</body></html>

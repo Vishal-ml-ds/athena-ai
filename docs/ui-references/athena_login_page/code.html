@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ATHENA | Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary-fixed": "#2a1700",
+                        "outline-variant": "#4a4455",
+                        "primary-fixed-dim": "#d2bbff",
+                        "surface-variant": "#2d3449",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-low": "#131b2e",
+                        "background": "#0b1326",
+                        "surface-tint": "#d2bbff",
+                        "surface-container-highest": "#2d3449",
+                        "on-surface-variant": "#ccc3d8",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "outline": "#958da1",
+                        "on-background": "#dae2fd",
+                        "on-tertiary-fixed": "#191c1e",
+                        "on-primary-fixed-variant": "#5a00c6",
+                        "surface": "#0b1326",
+                        "surface-dim": "#0b1326",
+                        "inverse-primary": "#732ee4",
+                        "tertiary-container": "#646769",
+                        "surface-bright": "#31394d",
+                        "secondary": "#ffb95f",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "surface-container-lowest": "#060e20",
+                        "on-secondary": "#472a00",
+                        "tertiary": "#c4c7c9",
+                        "on-error": "#690005",
+                        "on-secondary-container": "#5b3800",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "inverse-surface": "#dae2fd",
+                        "primary-fixed": "#eaddff",
+                        "surface-container-high": "#222a3d",
+                        "secondary-fixed": "#ffddb8",
+                        "error-container": "#93000a",
+                        "tertiary-fixed": "#e0e3e5",
+                        "secondary-container": "#ee9800",
+                        "on-primary-container": "#ede0ff",
+                        "primary": "#d2bbff",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "on-tertiary": "#2d3133",
+                        "on-tertiary-container": "#e4e6e8",
+                        "surface-container": "#171f33",
+                        "on-primary-fixed": "#25005a",
+                        "primary-container": "#7c3aed",
+                        "on-primary": "#3f008e",
+                        "on-surface": "#dae2fd",
+                        "inverse-on-surface": "#283044"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Inter"],
+                        "mono": ["JetBrains Mono"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #0b1326;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(124, 58, 237, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(255, 185, 95, 0.05) 0%, transparent 50%);
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(23, 31, 51, 0.6);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(149, 141, 161, 0.15);
+        }
+    </style>
+</head>
+<body class="font-body text-on-background flex items-center justify-center p-6">
+<main class="w-full max-w-[420px] relative">
+<!-- Background Ambient Glow -->
+<div class="absolute -top-24 -left-24 w-64 h-64 bg-primary-container/20 rounded-full blur-[100px] pointer-events-none"></div>
+<div class="absolute -bottom-24 -right-24 w-64 h-64 bg-secondary/10 rounded-full blur-[100px] pointer-events-none"></div>
+<!-- Login Card -->
+<div class="glass-card rounded-xl p-8 shadow-[0_20px_40px_-12px_rgba(124,58,237,0.12)] relative z-10">
+<!-- Logo Section -->
+<div class="flex flex-col items-center mb-8">
+<div class="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center shadow-[0_0_20px_rgba(124,58,237,0.4)] mb-4">
+<span class="material-symbols-outlined text-white text-2xl" data-icon="psychology" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<h1 class="font-headline text-2xl font-bold text-white tracking-tight">Welcome back</h1>
+<p class="text-on-surface-variant text-sm mt-1">Sign in to your ATHENA account</p>
+</div>
+<!-- Social Login -->
+<button class="w-full h-12 flex items-center justify-center gap-3 rounded-lg border border-outline-variant/30 bg-white/5 hover:bg-white/10 transition-all duration-300 text-sm font-medium text-on-surface group">
+<svg class="w-5 h-5" viewbox="0 0 24 24">
+<path d="M12 5.04c1.94 0 3.51.66 4.87 1.97L20.51 3.4C18.15 1.3 15.28 0 12 0 7.31 0 3.25 2.69 1.19 6.6l4.08 3.16c.97-2.9 3.66-4.72 6.73-4.72z" fill="#EA4335"></path>
+<path d="M23.49 12.27c0-.8-.07-1.56-.19-2.27H12v4.51h6.47c-.28 1.48-1.13 2.74-2.4 3.58l3.92 3.04c2.28-2.11 3.5-5.21 3.5-8.86z" fill="#4285F4"></path>
+<path d="M5.27 14.26c-.25-.74-.39-1.53-.39-2.26 0-.73.14-1.52.39-2.26L1.19 6.6C.43 8.22 0 10.06 0 12c0 1.94.43 3.78 1.19 5.4l4.08-3.14z" fill="#FBBC05"></path>
+<path d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.92-3.04c-1.1.74-2.51 1.17-4.01 1.17-3.07 0-5.76-2.08-6.73-4.88L1.19 17.4C3.25 21.31 7.31 24 12 24z" fill="#34A853"></path>
+</svg>
+                Continue with Google
+            </button>
+<!-- Divider -->
+<div class="flex items-center gap-4 my-8">
+<div class="h-[1px] flex-1 bg-outline-variant/20"></div>
+<span class="font-mono text-[10px] uppercase tracking-widest text-outline">OR</span>
+<div class="h-[1px] flex-1 bg-outline-variant/20"></div>
+</div>
+<!-- Login Form -->
+<form class="space-y-5">
+<div>
+<label class="block font-mono text-[10px] uppercase tracking-widest text-outline mb-2 ml-1">Email Address</label>
+<div class="relative group">
+<input class="w-full h-12 bg-surface-container-lowest border-none rounded-lg px-4 text-on-surface placeholder:text-outline/40 focus:ring-1 focus:ring-primary/40 transition-all" placeholder="you@example.com" type="email"/>
+<div class="absolute inset-0 rounded-lg pointer-events-none border border-outline-variant/10 group-hover:border-outline-variant/30 transition-colors"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2 ml-1">
+<label class="font-mono text-[10px] uppercase tracking-widest text-outline">Password</label>
+<a class="font-mono text-[10px] uppercase tracking-widest text-primary hover:text-primary-fixed-dim transition-colors" href="#">Forgot?</a>
+</div>
+<div class="relative group">
+<input class="w-full h-12 bg-surface-container-lowest border-none rounded-lg px-4 text-on-surface placeholder:text-outline/40 focus:ring-1 focus:ring-primary/40 transition-all" placeholder="Enter your password" type="password"/>
+<div class="absolute inset-0 rounded-lg pointer-events-none border border-outline-variant/10 group-hover:border-outline-variant/30 transition-colors"></div>
+</div>
+</div>
+<button class="w-full h-12 mt-4 bg-gradient-to-br from-primary-container to-primary text-white font-medium rounded-lg shadow-lg shadow-primary-container/20 hover:shadow-primary-container/40 active:scale-[0.98] transition-all duration-200" type="submit">
+                    Sign In
+                </button>
+</form>
+<!-- Footer -->
+<div class="mt-8 text-center">
+<p class="text-on-surface-variant text-sm">
+                    Don't have an account? 
+                    <a class="text-primary font-semibold hover:underline decoration-primary/30 underline-offset-4 ml-1" href="#">Sign up</a>
+</p>
+</div>
+</div>
+<!-- Bottom Security Note -->
+<div class="mt-8 flex items-center justify-center gap-6 opacity-40">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="encrypted">encrypted</span>
+<span class="font-mono text-[10px] uppercase tracking-tighter">End-to-End Encrypted</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="verified_user">verified_user</span>
+<span class="font-mono text-[10px] uppercase tracking-tighter">SOC2 Compliant</span>
+</div>
+</div>
+</main>
+</body></html>

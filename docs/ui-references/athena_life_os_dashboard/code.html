@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ATHENA AI | Life OS Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#0b1326",
+              "on-secondary-fixed": "#2a1700",
+              "on-primary": "#3f008e",
+              "surface-bright": "#31394d",
+              "primary-container": "#7c3aed",
+              "primary-fixed": "#eaddff",
+              "tertiary": "#c4c7c9",
+              "primary": "#d2bbff",
+              "on-secondary-container": "#5b3800",
+              "inverse-surface": "#dae2fd",
+              "tertiary-container": "#646769",
+              "on-primary-container": "#ede0ff",
+              "on-background": "#dae2fd",
+              "on-tertiary": "#2d3133",
+              "surface-container-highest": "#2d3449",
+              "surface-container-low": "#131b2e",
+              "outline": "#958da1",
+              "on-error-container": "#ffdad6",
+              "tertiary-fixed": "#e0e3e5",
+              "secondary-fixed": "#ffddb8",
+              "surface-container": "#171f33",
+              "surface-tint": "#d2bbff",
+              "on-surface-variant": "#ccc3d8",
+              "secondary": "#ffb95f",
+              "on-tertiary-fixed": "#191c1e",
+              "on-secondary": "#472a00",
+              "primary-fixed-dim": "#d2bbff",
+              "on-tertiary-container": "#e4e6e8",
+              "background": "#0b1326",
+              "surface-variant": "#2d3449",
+              "on-error": "#690005",
+              "error": "#ffb4ab",
+              "on-tertiary-fixed-variant": "#444749",
+              "inverse-on-surface": "#283044",
+              "on-surface": "#dae2fd",
+              "outline-variant": "#4a4455",
+              "surface-dim": "#0b1326",
+              "secondary-container": "#ee9800",
+              "on-secondary-fixed-variant": "#653e00",
+              "on-primary-fixed-variant": "#5a00c6",
+              "on-primary-fixed": "#25005a",
+              "inverse-primary": "#732ee4",
+              "error-container": "#93000a",
+              "surface-container-high": "#222a3d",
+              "tertiary-fixed-dim": "#c4c7c9",
+              "secondary-fixed-dim": "#ffb95f",
+              "surface-container-lowest": "#060e20"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { background-color: #0b1326; color: #dae2fd; font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-card { background: rgba(23, 31, 51, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(74, 68, 85, 0.15); }
+        .heat-map-square { width: 12px; height: 12px; border-radius: 2px; }
+        .active-glow { box-shadow: 0 0 20px rgba(124, 58, 237, 0.3); }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #222a3d; border-radius: 10px; }
+    </style>
+</head>
+<body class="antialiased overflow-hidden">
+<!-- Side Navigation Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-slate-950/80 backdrop-blur-2xl flex flex-col h-full border-r border-white/5 z-50">
+<div class="p-8">
+<h1 class="font-['Space_Grotesk'] font-bold text-purple-500 text-2xl tracking-tighter">ATHENA</h1>
+<p class="font-['JetBrains_Mono'] text-[10px] uppercase tracking-widest text-slate-500 mt-1">System Active</p>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 bg-purple-500/10 text-purple-400 border-r-2 border-purple-500 px-4 py-3 font-['JetBrains_Mono'] text-xs uppercase tracking-tighter transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 font-['JetBrains_Mono'] text-xs uppercase tracking-tighter hover:bg-white/5 hover:text-slate-200 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+<span>Habits</span>
+</a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 font-['JetBrains_Mono'] text-xs uppercase tracking-tighter hover:bg-white/5 hover:text-slate-200 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span>Goals</span>
+</a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 font-['JetBrains_Mono'] text-xs uppercase tracking-tighter hover:bg-white/5 hover:text-slate-200 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span>Finance</span>
+</a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 font-['JetBrains_Mono'] text-xs uppercase tracking-tighter hover:bg-white/5 hover:text-slate-200 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="monitor_heart">monitor_heart</span>
+<span>Health</span>
+</a>
+</nav>
+<div class="p-4 mt-auto border-t border-white/5">
+<button class="w-full py-3 bg-primary-container hover:bg-primary-container/80 text-white rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                New Entry
+            </button>
+<div class="mt-4 space-y-1">
+<a class="flex items-center gap-3 text-slate-500 px-4 py-2 font-['JetBrains_Mono'] text-[10px] uppercase hover:text-slate-200" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="help_outline">help_outline</span> Support
+                </a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-2 font-['JetBrains_Mono'] text-[10px] uppercase hover:text-slate-200" href="#">
+<span class="material-symbols-outlined text-sm" data-icon="person">person</span> Account
+                </a>
+</div>
+</div>
+</aside>
+<!-- Top Navigation Shell -->
+<header class="fixed top-0 left-64 right-0 z-40 bg-slate-950/60 backdrop-blur-xl shadow-[0_20px_40px_-12px_rgba(124,58,237,0.12)]">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="flex items-center gap-8">
+<span class="font-['Space_Grotesk'] tracking-widest text-white uppercase text-xl font-light">ATHENA AI</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-purple-400 font-medium border-b-2 border-purple-500 pb-1 font-['Space_Grotesk'] text-sm tracking-tight" href="#">Habits</a>
+<a class="text-slate-400 hover:text-slate-200 transition-colors font-['Space_Grotesk'] text-sm tracking-tight" href="#">Goals</a>
+<a class="text-slate-400 hover:text-slate-200 transition-colors font-['Space_Grotesk'] text-sm tracking-tight" href="#">Finance</a>
+<a class="text-slate-400 hover:text-slate-200 transition-colors font-['Space_Grotesk'] text-sm tracking-tight" href="#">Health</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group hidden lg:block">
+<input class="bg-slate-900/50 border-none rounded-full py-2 pl-10 pr-4 text-sm text-slate-300 w-64 focus:ring-1 focus:ring-purple-500 transition-all outline-none" placeholder="Global search..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-2 text-slate-500 text-lg" data-icon="search">search</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-400 hover:bg-white/5 rounded-full transition-all" title="Notifications">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-400 hover:bg-white/5 rounded-full transition-all" title="Settings">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-gradient-to-tr from-purple-500 to-amber-500 p-[1px] ml-2">
+<img alt="User profile avatar" class="h-full w-full rounded-full object-cover border-2 border-slate-950" data-alt="close up portrait of a young professional man with short dark hair and a confident gaze in warm studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvKgeM7uLZbmN2OvB_aq8PfXwQuTEYR0i50Ej7lnAnR90PYqv43LJdNiuukxdc4MTwnRAyIaFsM7XRd2xOXf0eoZP1l1PKOIPKWjvUml7EoZp_fkxJ3TH6F_pjfT2umQ4AcT966apRGCkJbnASaYRogD0oD7Z7_UjAajDmp99PcofdsIzowp7T5cburWsuyfN9aYftbScE8TE61a5sbi4Gg1tO8LGzBmUfnQzzCdA1KGJgqtDPSkltCCxg6g0WlGIb5o4Ve0Meavk"/>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 min-h-screen overflow-y-auto px-8 pb-12">
+<div class="max-w-6xl mx-auto space-y-8">
+<!-- Contextual Header -->
+<div class="flex items-end justify-between">
+<div>
+<h2 class="text-4xl font-light font-headline tracking-tight text-white">Focus: <span class="text-primary">Habits</span></h2>
+<p class="text-slate-400 mt-2 font-body">Synchronizing performance data for your daily ritual.</p>
+</div>
+<div class="glass-card px-4 py-2 rounded-xl flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-secondary animate-pulse"></div>
+<span class="font-['JetBrains_Mono'] text-xs text-secondary-fixed-dim">AI OPTIMIZATION ACTIVE</span>
+</div>
+</div>
+<!-- Dashboard Grid -->
+<div class="grid grid-cols-12 gap-6">
+<!-- STREAK SUMMARY (Top Row) -->
+<div class="col-span-12 glass-card rounded-2xl p-8 relative overflow-hidden flex items-center justify-between border-l-4 border-l-secondary">
+<div class="relative z-10">
+<div class="flex items-center gap-2 text-secondary mb-1">
+<span class="material-symbols-outlined" data-icon="local_fire_department" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+<span class="font-['JetBrains_Mono'] text-sm uppercase tracking-widest">Consistency Engine</span>
+</div>
+<h3 class="text-3xl font-headline text-white">Current streak: <span class="text-secondary">12 days</span></h3>
+<p class="text-slate-400 text-sm mt-1">You are in the top 5% of ATHENA users this week.</p>
+</div>
+<div class="hidden lg:block">
+<div class="flex gap-2">
+<!-- Simple mock sparkline -->
+<div class="flex items-end gap-1 h-12">
+<div class="w-1 bg-slate-800 h-4 rounded-full"></div>
+<div class="w-1 bg-slate-800 h-6 rounded-full"></div>
+<div class="w-1 bg-secondary h-8 rounded-full"></div>
+<div class="w-1 bg-secondary h-10 rounded-full"></div>
+<div class="w-1 bg-secondary h-12 rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- DAILY CHECKLIST (Bento Left) -->
+<div class="col-span-12 lg:col-span-7 space-y-6">
+<div class="glass-card rounded-2xl p-6">
+<div class="flex items-center justify-between mb-6">
+<h4 class="font-headline text-xl text-white">Daily Checklist</h4>
+<span class="text-xs font-['JetBrains_Mono'] text-slate-500 uppercase">April 24, 2024</span>
+</div>
+<div class="space-y-4">
+<!-- Item 1: Completed -->
+<div class="flex items-center gap-4 group cursor-pointer p-3 rounded-xl hover:bg-white/5 transition-all">
+<div class="w-6 h-6 rounded bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+<span class="material-symbols-outlined text-sm" data-icon="check">check</span>
+</div>
+<div class="flex-1">
+<span class="text-slate-500 line-through font-medium">Morning Meditation</span>
+<span class="ml-3 text-[10px] font-['JetBrains_Mono'] text-slate-600 bg-slate-900 px-2 py-0.5 rounded">15m</span>
+</div>
+<div class="flex items-center gap-1 text-slate-600 text-xs">
+<span class="material-symbols-outlined text-xs" data-icon="bolt">bolt</span> 12
+                                </div>
+</div>
+<!-- Item 2: Active -->
+<div class="flex items-center gap-4 group cursor-pointer p-3 rounded-xl bg-purple-500/5 border border-purple-500/10 transition-all active-glow">
+<div class="w-6 h-6 rounded border border-purple-500/40 flex items-center justify-center text-purple-400 group-hover:bg-purple-500/20">
+<!-- Empty checkbox -->
+</div>
+<div class="flex-1">
+<span class="text-white font-medium">Deep Work Block</span>
+<span class="ml-3 text-[10px] font-['JetBrains_Mono'] text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded">4h</span>
+</div>
+<div class="flex items-center gap-1 text-purple-400 text-xs">
+<span class="material-symbols-outlined text-xs" data-icon="bolt" style="font-variation-settings: 'FILL' 1;">bolt</span> 8
+                                </div>
+</div>
+<!-- Item 3: Active -->
+<div class="flex items-center gap-4 group cursor-pointer p-3 rounded-xl hover:bg-white/5 transition-all">
+<div class="w-6 h-6 rounded border border-slate-700 flex items-center justify-center text-slate-400 group-hover:border-purple-500">
+</div>
+<div class="flex-1">
+<span class="text-slate-300 font-medium">Hydration Goal</span>
+<span class="ml-3 text-[10px] font-['JetBrains_Mono'] text-slate-500 bg-slate-900 px-2 py-0.5 rounded">3L</span>
+</div>
+<div class="flex items-center gap-1 text-slate-500 text-xs">
+<span class="material-symbols-outlined text-xs" data-icon="bolt">bolt</span> 20
+                                </div>
+</div>
+</div>
+<button class="mt-8 w-full py-2 border border-dashed border-slate-700 rounded-lg text-slate-500 text-xs font-['JetBrains_Mono'] hover:border-purple-500 hover:text-purple-400 transition-all">
+                            + ADD CUSTOM TASK
+                        </button>
+</div>
+</div>
+<!-- HEAT MAP (Bento Right Top) -->
+<div class="col-span-12 lg:col-span-5 space-y-6">
+<div class="glass-card rounded-2xl p-6">
+<h4 class="font-headline text-lg text-white mb-4">Activity Velocity</h4>
+<div class="flex flex-wrap gap-1.5" id="heatmap-grid">
+<!-- Generating mock heatmap squares -->
+<!-- Row 1-7 (approx 12 weeks visible) -->
+<script>
+                                const grid = document.getElementById('heatmap-grid');
+                                const levels = ['bg-slate-900', 'bg-emerald-900/40', 'bg-emerald-700/60', 'bg-emerald-500', 'bg-emerald-400'];
+                                for (let i = 0; i < 90; i++) {
+                                    const square = document.createElement('div');
+                                    square.className = `heat-map-square ${levels[Math.floor(Math.random() * levels.length)]}`;
+                                    grid.appendChild(square);
+                                }
+                            </script>
+</div>
+<div class="flex justify-between mt-4 text-[10px] font-['JetBrains_Mono'] text-slate-500">
+<span>JAN</span>
+<span>FEB</span>
+<span>MAR</span>
+<div class="flex gap-1 items-center">
+<span>Less</span>
+<div class="w-2 h-2 bg-slate-900 rounded-sm"></div>
+<div class="w-2 h-2 bg-emerald-500 rounded-sm"></div>
+<span>More</span>
+</div>
+</div>
+</div>
+<!-- RECENT AI INSIGHT (Bento Right Bottom) -->
+<div class="glass-card rounded-2xl p-6 bg-gradient-to-br from-surface-container to-purple-900/10">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-on-secondary-fixed">
+<span class="material-symbols-outlined text-sm" data-icon="smart_toy">smart_toy</span>
+</div>
+<span class="font-['JetBrains_Mono'] text-xs font-bold text-secondary uppercase tracking-tight">Athena Pulse</span>
+</div>
+<p class="text-sm text-slate-300 leading-relaxed italic">
+                            "You are 24% more likely to complete 'Deep Work' when 'Morning Meditation' is finished before 08:30. Optimal window detected."
+                        </p>
+</div>
+</div>
+<!-- GOALS PREVIEW (Section Header) -->
+<div class="col-span-12 mt-4">
+<div class="flex items-center justify-between border-b border-white/5 pb-4">
+<h3 class="font-headline text-2xl text-white">Active Objectives</h3>
+<button class="text-primary text-sm font-medium flex items-center gap-2 hover:gap-3 transition-all">
+                            Manage All <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- GOAL CARDS -->
+<div class="col-span-12 md:col-span-6 glass-card rounded-2xl p-6 flex flex-col justify-between h-48 group hover:border-purple-500/30 transition-all">
+<div>
+<div class="flex justify-between items-start">
+<span class="text-[10px] font-['JetBrains_Mono'] px-2 py-0.5 rounded bg-amber-500/10 text-amber-500 uppercase tracking-tighter">Finance</span>
+<span class="text-slate-500 text-xs font-['JetBrains_Mono']">Target: Dec 2024</span>
+</div>
+<h4 class="text-xl font-headline text-white mt-3">Portfolio Alpha Target</h4>
+</div>
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="text-2xl font-['JetBrains_Mono'] text-white">68<span class="text-slate-500 text-sm">%</span></span>
+<span class="text-slate-400 text-xs">$125,000 / $200k</span>
+</div>
+<div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden">
+<div class="bg-gradient-to-r from-purple-600 to-amber-500 h-full w-[68%]"></div>
+</div>
+</div>
+</div>
+<div class="col-span-12 md:col-span-6 glass-card rounded-2xl p-6 flex flex-col justify-between h-48 group hover:border-purple-500/30 transition-all">
+<div>
+<div class="flex justify-between items-start">
+<span class="text-[10px] font-['JetBrains_Mono'] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 uppercase tracking-tighter">Health</span>
+<span class="text-slate-500 text-xs font-['JetBrains_Mono']">Target: June 2024</span>
+</div>
+<h4 class="text-xl font-headline text-white mt-3">Peak Cardiovascular State</h4>
+</div>
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="text-2xl font-['JetBrains_Mono'] text-white">42<span class="text-slate-500 text-sm">%</span></span>
+<span class="text-slate-400 text-xs">V02 Max: 48 / 55</span>
+</div>
+<div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden">
+<div class="bg-gradient-to-r from-emerald-600 to-cyan-500 h-full w-[42%]"></div>
+</div>
+</div>
+</div>
+<!-- FINANCE SUMMARY -->
+<div class="col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+<div class="glass-card rounded-2xl p-6">
+<div class="flex justify-between items-start text-slate-500 mb-2">
+<span class="text-xs font-['JetBrains_Mono'] uppercase">Monthly Income</span>
+<span class="text-emerald-400 text-xs flex items-center"><span class="material-symbols-outlined text-xs" data-icon="north">north</span> 12%</span>
+</div>
+<p class="text-3xl font-headline text-white">$12,500</p>
+</div>
+<div class="glass-card rounded-2xl p-6">
+<div class="flex justify-between items-start text-slate-500 mb-2">
+<span class="text-xs font-['JetBrains_Mono'] uppercase">Expenditure</span>
+<span class="text-red-400 text-xs flex items-center"><span class="material-symbols-outlined text-xs" data-icon="north">north</span> 4%</span>
+</div>
+<p class="text-3xl font-headline text-white">$4,200</p>
+</div>
+<div class="glass-card rounded-2xl p-6 border-b-2 border-primary">
+<div class="flex justify-between items-start text-slate-500 mb-2">
+<span class="text-xs font-['JetBrains_Mono'] uppercase">Net Savings</span>
+<span class="text-emerald-400 text-xs flex items-center"><span class="material-symbols-outlined text-xs" data-icon="north">north</span> 8%</span>
+</div>
+<p class="text-3xl font-headline text-white">$8,300</p>
+</div>
+</div>
+<!-- HEALTH METRICS -->
+<div class="col-span-12 grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+<div class="glass-card p-4 rounded-xl flex items-center justify-between">
+<div>
+<p class="text-[10px] text-slate-500 font-bold uppercase">Sleep</p>
+<p class="text-xl font-headline text-white">8.2h</p>
+</div>
+<span class="material-symbols-outlined text-emerald-400" data-icon="trending_up">trending_up</span>
+</div>
+<div class="glass-card p-4 rounded-xl flex items-center justify-between">
+<div>
+<p class="text-[10px] text-slate-500 font-bold uppercase">Exercise</p>
+<p class="text-xl font-headline text-white">45m</p>
+</div>
+<span class="material-symbols-outlined text-emerald-400" data-icon="trending_up">trending_up</span>
+</div>
+<div class="glass-card p-4 rounded-xl flex items-center justify-between">
+<div>
+<p class="text-[10px] text-slate-500 font-bold uppercase">RHR</p>
+<p class="text-xl font-headline text-white">52 bpm</p>
+</div>
+<span class="material-symbols-outlined text-emerald-400" data-icon="trending_down">trending_down</span>
+</div>
+<div class="glass-card p-4 rounded-xl flex items-center justify-between">
+<div>
+<p class="text-[10px] text-slate-500 font-bold uppercase">Mood</p>
+<p class="text-xl font-headline text-white">Calm</p>
+</div>
+<span class="material-symbols-outlined text-purple-400" data-icon="psychology">psychology</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Visual Accents -->
+<div class="fixed top-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/10 blur-[150px] rounded-full -z-10 pointer-events-none"></div>
+<div class="fixed bottom-[-10%] left-[-10%] w-[30%] h-[30%] bg-amber-500/5 blur-[100px] rounded-full -z-10 pointer-events-none"></div>
+</body></html>

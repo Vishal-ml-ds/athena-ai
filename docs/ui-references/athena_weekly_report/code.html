@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ATHENA | Weekly Intelligence Report</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-error": "#690005",
+                        "on-tertiary-container": "#e4e6e8",
+                        "surface-tint": "#d2bbff",
+                        "surface-container-lowest": "#060e20",
+                        "on-surface": "#dae2fd",
+                        "inverse-primary": "#732ee4",
+                        "surface-variant": "#2d3449",
+                        "on-secondary-container": "#5b3800",
+                        "error": "#ffb4ab",
+                        "background": "#0b1326",
+                        "outline-variant": "#4a4455",
+                        "inverse-surface": "#dae2fd",
+                        "on-primary-fixed": "#25005a",
+                        "on-tertiary-fixed": "#191c1e",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "secondary-fixed": "#ffddb8",
+                        "primary-container": "#7c3aed",
+                        "outline": "#958da1",
+                        "on-secondary": "#472a00",
+                        "surface-container": "#171f33",
+                        "surface-container-low": "#131b2e",
+                        "tertiary-fixed": "#e0e3e5",
+                        "primary-fixed-dim": "#d2bbff",
+                        "surface-bright": "#31394d",
+                        "tertiary": "#c4c7c9",
+                        "on-primary-fixed-variant": "#5a00c6",
+                        "on-background": "#dae2fd",
+                        "secondary": "#ffb95f",
+                        "on-secondary-fixed": "#2a1700",
+                        "on-primary-container": "#ede0ff",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "surface-container-high": "#222a3d",
+                        "surface": "#0b1326",
+                        "on-tertiary": "#2d3133",
+                        "tertiary-container": "#646769",
+                        "primary-fixed": "#eaddff",
+                        "error-container": "#93000a",
+                        "secondary-container": "#ee9800",
+                        "surface-container-highest": "#2d3449",
+                        "on-primary": "#3f008e",
+                        "inverse-on-surface": "#283044",
+                        "surface-dim": "#0b1326",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "on-error-container": "#ffdad6",
+                        "primary": "#d2bbff",
+                        "on-surface-variant": "#ccc3d8"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Inter"],
+                        "mono": ["JetBrains Mono"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #0b1326;
+            color: #dae2fd;
+        }
+        .glass-card {
+            background: rgba(23, 31, 51, 0.6);
+            backdrop-filter: blur(12px);
+        }
+        .primary-gradient {
+            background: linear-gradient(135deg, #7c3aed 0%, #d2bbff 100%);
+        }
+    </style>
+</head>
+<body class="font-body selection:bg-primary/30">
+<!-- TopNavBar from Shared Components -->
+<nav class="fixed top-0 w-full z-50 bg-[#0b1326]/80 backdrop-blur-xl">
+<div class="flex justify-between items-center px-8 py-6 max-w-[1440px] mx-auto">
+<div class="text-2xl font-light tracking-tighter text-white uppercase font-headline">
+                Aether OS
+            </div>
+<div class="hidden md:flex gap-8 items-center font-['Space_Grotesk'] tracking-tight">
+<a class="text-[#7C3AED] font-medium border-b border-[#7C3AED]/40 pb-1" href="#">Reports</a>
+<a class="text-gray-400 hover:text-white transition-colors" href="#">Insights</a>
+<a class="text-gray-400 hover:text-white transition-colors" href="#">Vault</a>
+<a class="text-gray-400 hover:text-white transition-colors" href="#">Settings</a>
+</div>
+<div class="flex gap-4 items-center">
+<span class="material-symbols-outlined text-gray-400 hover:text-white cursor-pointer transition-all active:scale-95 duration-200">notifications</span>
+<span class="material-symbols-outlined text-gray-400 hover:text-white cursor-pointer transition-all active:scale-95 duration-200">account_circle</span>
+</div>
+</div>
+<div class="bg-[#131b2e] h-[1px] w-full opacity-20"></div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="pt-32 pb-20 px-4 max-w-[700px] mx-auto">
+<!-- Header Section -->
+<header class="mb-12 flex flex-col items-center text-center">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-primary text-4xl">calendar_month</span>
+<h1 class="text-4xl md:text-5xl font-headline font-bold text-white tracking-tight">Your Week in Review</h1>
+</div>
+<div class="font-mono text-sm tracking-widest text-on-surface-variant uppercase mb-8">
+                March 23 — March 29, 2026
+            </div>
+<div class="flex items-center gap-4 px-5 py-2.5 rounded-full bg-surface-container-low border border-outline-variant/10 shadow-lg">
+<div class="w-10 h-10 rounded-full primary-gradient flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary text-2xl" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<div class="text-left">
+<p class="text-[10px] font-mono uppercase tracking-tighter text-primary">Intelligence Engine</p>
+<p class="text-sm font-medium text-on-surface">Generated by ATHENA</p>
+</div>
+</div>
+</header>
+<!-- Newsletter Content -->
+<div class="space-y-8">
+<!-- 1. HIGHLIGHTS -->
+<section class="p-8 rounded-xl bg-surface-container-low shadow-[0_20px_40px_-12px_rgba(124,58,237,0.08)] border border-outline-variant/10">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">star</span>
+<h2 class="text-xl font-headline font-semibold text-white uppercase tracking-wider">Highlights</h2>
+</div>
+<ul class="space-y-4">
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-emerald-400 mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-on-surface">Completed <span class="text-white font-medium">5/7</span> daily habits consistently.</span>
+</li>
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-emerald-400 mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-on-surface">Under budget by <span class="text-white font-medium">Rs 2,000</span> for non-essential spending.</span>
+</li>
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-emerald-400 mt-0.5" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-on-surface">Achieved deep sleep goal <span class="text-white font-medium">6 nights</span> out of 7.</span>
+</li>
+</ul>
+</section>
+<!-- 2. HABITS SUMMARY -->
+<section class="p-8 rounded-xl bg-surface-container-low border border-outline-variant/10">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary">rebase_edit</span>
+<h2 class="text-xl font-headline font-semibold text-white uppercase tracking-wider">Habits Summary</h2>
+</div>
+<div class="space-y-6 mb-8">
+<div class="space-y-2">
+<div class="flex justify-between items-end">
+<span class="text-sm font-medium text-on-surface-variant">Deep Work</span>
+<span class="font-mono text-xs text-secondary">12 day streak</span>
+</div>
+<div class="h-2 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full w-[85%]"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between items-end">
+<span class="text-sm font-medium text-on-surface-variant">Hydration</span>
+<span class="font-mono text-xs text-secondary">5 day streak</span>
+</div>
+<div class="h-2 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full w-[70%]"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between items-end">
+<span class="text-sm font-medium text-on-surface-variant">Reading</span>
+<span class="font-mono text-xs text-secondary">24 day streak</span>
+</div>
+<div class="h-2 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full w-[95%]"></div>
+</div>
+</div>
+</div>
+<div class="p-4 rounded-lg bg-primary-container/10 border-l-2 border-primary">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-xl">auto_awesome</span>
+<p class="text-sm italic text-primary">"You're most consistent on weekday mornings. Consider moving your most difficult tasks to the 8 AM slot."</p>
+</div>
+</div>
+</section>
+<!-- 3. GOALS PROGRESS -->
+<section class="p-8 rounded-xl bg-surface-container-low border border-outline-variant/10">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary">target</span>
+<h2 class="text-xl font-headline font-semibold text-white uppercase tracking-wider">Goals Progress</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="p-6 rounded-xl bg-surface-container-highest/30 border border-outline-variant/10">
+<div class="flex justify-between mb-4">
+<span class="text-xs font-mono uppercase text-on-surface-variant">Q2 Target</span>
+<span class="text-lg font-bold text-white">75%</span>
+</div>
+<div class="relative pt-1">
+<div class="overflow-hidden h-1.5 mb-4 text-xs flex rounded bg-surface-variant">
+<div class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-primary" style="width:75%"></div>
+</div>
+</div>
+<p class="text-xs text-on-surface-variant">Professional Development Milestone</p>
+</div>
+<div class="p-6 rounded-xl bg-surface-container-highest/30 border border-outline-variant/10">
+<div class="flex justify-between mb-4">
+<span class="text-xs font-mono uppercase text-on-surface-variant">Marathon Prep</span>
+<span class="text-lg font-bold text-white">42%</span>
+</div>
+<div class="relative pt-1">
+<div class="overflow-hidden h-1.5 mb-4 text-xs flex rounded bg-surface-variant">
+<div class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-secondary" style="width:42%"></div>
+</div>
+</div>
+<p class="text-xs text-on-surface-variant">Accumulated Mileage Goal</p>
+</div>
+</div>
+</section>
+<!-- 4. FINANCE OVERVIEW -->
+<section class="p-8 rounded-xl bg-surface-container-low border border-outline-variant/10">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+<h2 class="text-xl font-headline font-semibold text-white uppercase tracking-wider">Finance Overview</h2>
+</div>
+<div class="flex flex-col md:flex-row gap-10 items-center">
+<div class="flex-1 w-full space-y-4">
+<div class="flex justify-between text-xs font-mono uppercase text-on-surface-variant">
+<span>Spending Comparison</span>
+</div>
+<div class="flex items-end gap-4 h-32 pt-4">
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full bg-surface-variant rounded-t-lg transition-all duration-500" style="height: 80%"></div>
+<span class="text-[10px] font-mono">Last Week</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full primary-gradient rounded-t-lg transition-all duration-500" style="height: 60%"></div>
+<span class="text-[10px] font-mono text-primary">This Week</span>
+</div>
+</div>
+</div>
+<div class="flex-1 w-full space-y-4">
+<p class="text-xs font-mono uppercase text-on-surface-variant mb-2">Top Categories</p>
+<div class="space-y-3">
+<div class="flex items-center justify-between text-sm">
+<span class="text-on-surface">Travel</span>
+<span class="font-bold text-white">45%</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<span class="text-on-surface">Food &amp; Dining</span>
+<span class="font-bold text-white">30%</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<span class="text-on-surface">Subscriptions</span>
+<span class="font-bold text-white">12%</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 5. HEALTH TRENDS -->
+<section class="p-8 rounded-xl bg-surface-container-low border border-outline-variant/10">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary">vital_signs</span>
+<h2 class="text-xl font-headline font-semibold text-white uppercase tracking-wider">Health Trends</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<div class="space-y-2">
+<p class="text-[10px] font-mono uppercase text-on-surface-variant">Sleep</p>
+<p class="text-2xl font-bold text-white">7.4h <span class="text-xs font-normal text-emerald-400 font-body">↑15%</span></p>
+<div class="h-12 flex items-end gap-1 opacity-50">
+<div class="flex-1 bg-primary rounded-sm h-[40%]"></div>
+<div class="flex-1 bg-primary rounded-sm h-[60%]"></div>
+<div class="flex-1 bg-primary rounded-sm h-[55%]"></div>
+<div class="flex-1 bg-primary rounded-sm h-[80%]"></div>
+<div class="flex-1 bg-primary rounded-sm h-[90%]"></div>
+</div>
+</div>
+<div class="space-y-2">
+<p class="text-[10px] font-mono uppercase text-on-surface-variant">Exercise</p>
+<p class="text-2xl font-bold text-white">240m <span class="text-xs font-normal text-error font-body">↓4%</span></p>
+<div class="h-12 flex items-end gap-1 opacity-50">
+<div class="flex-1 bg-secondary rounded-sm h-[70%]"></div>
+<div class="flex-1 bg-secondary rounded-sm h-[30%]"></div>
+<div class="flex-1 bg-secondary rounded-sm h-[40%]"></div>
+<div class="flex-1 bg-secondary rounded-sm h-[0%]"></div>
+<div class="flex-1 bg-secondary rounded-sm h-[60%]"></div>
+</div>
+</div>
+<div class="space-y-2">
+<p class="text-[10px] font-mono uppercase text-on-surface-variant">Weight</p>
+<p class="text-2xl font-bold text-white">76.2kg <span class="text-xs font-normal text-emerald-400 font-body">↓0.8</span></p>
+<div class="h-12 flex items-end gap-1 opacity-50">
+<div class="flex-1 bg-primary rounded-sm h-[85%]"></div>
+<div class="flex-1 bg-primary rounded-sm h-[83%]"></div>
+<div class="flex-1 bg-primary rounded-sm h-[81%]"></div>
+<div class="flex-1 bg-primary rounded-sm h-[82%]"></div>
+<div class="flex-1 bg-primary rounded-sm h-[79%]"></div>
+</div>
+</div>
+</div>
+<div class="p-4 rounded-lg bg-emerald-500/5 border-l-2 border-emerald-500">
+<p class="text-sm text-emerald-400 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">trending_up</span>
+                        Your sleep quality improved 15% this week compared to last month.
+                    </p>
+</div>
+</section>
+<!-- 6. NUDGES -->
+<section class="p-8 rounded-xl bg-secondary-container/5 border border-secondary-container/20 shadow-[0_0_50px_rgba(255,185,95,0.03)]">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">lightbulb</span>
+<h2 class="text-xl font-headline font-semibold text-secondary uppercase tracking-wider">Athena Nudges</h2>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-4 rounded-lg bg-surface-container border border-outline-variant/10 hover:bg-surface-container-high transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="w-2 h-2 rounded-full bg-secondary animate-pulse"></div>
+<span class="text-on-surface">You haven't exercised in 3 days</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-4 rounded-lg bg-surface-container border border-outline-variant/10 hover:bg-surface-container-high transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="w-2 h-2 rounded-full bg-secondary/50"></div>
+<span class="text-on-surface">Review your Q2 professional goals</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-4 rounded-lg bg-surface-container border border-outline-variant/10 hover:bg-surface-container-high transition-colors cursor-pointer group">
+<div class="flex items-center gap-4">
+<div class="w-2 h-2 rounded-full bg-secondary/50"></div>
+<span class="text-on-surface">Plan your grocery list for Monday</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- CTA Buttons -->
+<div class="flex flex-col sm:flex-row gap-4 pt-10">
+<button class="flex-1 py-4 px-6 rounded-lg primary-gradient text-on-primary font-bold shadow-lg hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+                    Export PDF
+                </button>
+<button class="flex-1 py-4 px-6 rounded-lg border border-primary text-primary font-bold hover:bg-primary/5 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">share</span>
+                    Share Report
+                </button>
+</div>
+</div>
+</main>
+<!-- Footer from Shared Components -->
+<footer class="w-full py-12 mt-20 bg-[#0b1326] border-t border-[#4a4455]/15">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 gap-6 max-w-[1440px] mx-auto">
+<p class="font-['JetBrains_Mono'] text-[10px] uppercase tracking-widest text-gray-500">
+                © 2024 Aether Intelligence. All data encrypted via Neural-Link.
+            </p>
+<div class="flex gap-8 font-['JetBrains_Mono'] text-[10px] uppercase tracking-widest">
+<a class="text-gray-500 hover:text-[#7C3AED] transition-colors" href="#">Export PDF</a>
+<a class="text-gray-500 hover:text-[#7C3AED] transition-colors" href="#">Share Report</a>
+<a class="text-gray-500 hover:text-[#7C3AED] transition-colors" href="#">Archive</a>
+<a class="text-gray-500 hover:text-[#7C3AED] transition-colors" href="#">System Status</a>
+</div>
+</div>
+</footer>
+</body></html>

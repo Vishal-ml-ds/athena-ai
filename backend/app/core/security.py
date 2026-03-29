@@ -1,34 +1,17 @@
 """Authentication and authorization middleware.
-Validates Supabase JWTs, resolves tenant context, enforces access control."""
+Validates Supabase JWTs via Supabase's own auth API — no local decoding needed."""
 
 from uuid import UUID
 
-import jwt
 from fastapi import Depends, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from app.core.config import Settings, get_settings
+from app.core.dependencies import get_supabase_client
 from app.core.exceptions import AuthenticationError
 from app.models.common import TenantContext
 
 security_scheme = HTTPBearer(auto_error=False)
-
-
-def _decode_supabase_jwt(token: str, settings: Settings) -> dict:
-    """Decode and validate a Supabase JWT.
-    Uses the anon key as the JWT secret (Supabase's default HMAC signing)."""
-    try:
-        payload = jwt.decode(
-            token,
-            settings.supabase_anon_key,
-            algorithms=["HS256"],
-            audience="authenticated",
-        )
-        return payload
-    except jwt.ExpiredSignatureError:
-        raise AuthenticationError("Token expired")
-    except jwt.InvalidTokenError:
-        raise AuthenticationError("Invalid token")
 
 
 async def get_current_user(
@@ -36,36 +19,35 @@ async def get_current_user(
     credentials: HTTPAuthorizationCredentials | None = Depends(security_scheme),
     settings: Settings = Depends(get_settings),
 ) -> TenantContext:
-    """Extract and validate user identity from the request.
-    This is the primary auth dependency — inject into every protected endpoint.
-
-    Flow: JWT → decode → extract user_id → query profile for tenant_id + plan.
-    """
+    """Validate token via Supabase auth API and extract user context."""
     if credentials is None:
         raise AuthenticationError("Missing authorization header")
 
     token = credentials.credentials
-    payload = _decode_supabase_jwt(token, settings)
 
-    user_id = payload.get("sub")
-    email = payload.get("email", "")
+    try:
+        supabase = get_supabase_client()
+        user_response = supabase.auth.get_user(token)
+        user = user_response.user
 
-    if not user_id:
-        raise AuthenticationError("Invalid token: missing user ID")
+        if not user:
+            raise AuthenticationError("Invalid token")
 
-    # Extract tenant_id from user_metadata (set during signup)
-    user_metadata = payload.get("user_metadata", {})
-    tenant_id = user_metadata.get("tenant_id")
-    plan = user_metadata.get("plan", "free")
+        user_id = user.id
+        email = user.email or ""
+        user_metadata = user.user_metadata or {}
 
-    if not tenant_id:
-        # Fallback: for new users, tenant_id might not be in JWT yet
-        # The signup flow should set this, but handle gracefully
-        tenant_id = user_id  # Use user_id as tenant_id for single-user tenants
+        tenant_id = user_metadata.get("tenant_id", str(user_id))
+        plan = user_metadata.get("plan", "free")
 
-    return TenantContext(
-        user_id=UUID(user_id),
-        tenant_id=UUID(tenant_id),
-        email=email,
-        plan=plan,
-    )
+        return TenantContext(
+            user_id=UUID(str(user_id)),
+            tenant_id=UUID(tenant_id),
+            email=email,
+            plan=plan,
+        )
+
+    except AuthenticationError:
+        raise
+    except Exception:
+        raise AuthenticationError("Invalid or expired token")

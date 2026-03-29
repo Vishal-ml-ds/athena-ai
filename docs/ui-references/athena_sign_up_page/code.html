@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create Account | ATHENA AI OS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-dim": "#0b1326",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "surface-container-highest": "#2d3449",
+                        "secondary-fixed": "#ffddb8",
+                        "secondary": "#ffb95f",
+                        "tertiary-container": "#646769",
+                        "primary-fixed-dim": "#d2bbff",
+                        "on-background": "#dae2fd",
+                        "secondary-container": "#ee9800",
+                        "on-tertiary-container": "#e4e6e8",
+                        "surface-bright": "#31394d",
+                        "surface-container-lowest": "#060e20",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "primary-container": "#7c3aed",
+                        "inverse-primary": "#732ee4",
+                        "surface-container-low": "#131b2e",
+                        "tertiary-fixed": "#e0e3e5",
+                        "outline-variant": "#4a4455",
+                        "surface-variant": "#2d3449",
+                        "inverse-on-surface": "#283044",
+                        "primary": "#d2bbff",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "on-tertiary": "#2d3133",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "background": "#0b1326",
+                        "on-surface-variant": "#ccc3d8",
+                        "on-primary": "#3f008e",
+                        "outline": "#958da1",
+                        "surface-container": "#171f33",
+                        "on-surface": "#dae2fd",
+                        "on-secondary-fixed": "#2a1700",
+                        "surface-container-high": "#222a3d",
+                        "on-secondary-container": "#5b3800",
+                        "on-primary-fixed": "#25005a",
+                        "error-container": "#93000a",
+                        "surface": "#0b1326",
+                        "on-secondary": "#472a00",
+                        "on-primary-container": "#ede0ff",
+                        "tertiary": "#c4c7c9",
+                        "on-tertiary-fixed": "#191c1e",
+                        "on-error-container": "#ffdad6",
+                        "inverse-surface": "#dae2fd",
+                        "surface-tint": "#d2bbff",
+                        "on-primary-fixed-variant": "#5a00c6",
+                        "error": "#ffb4ab",
+                        "primary-fixed": "#eaddff",
+                        "on-error": "#690005"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(23, 31, 51, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+        .glow-button {
+            background: linear-gradient(135deg, #7c3aed 0%, #d2bbff 100%);
+            transition: all 0.3s ease;
+        }
+        .glow-button:hover {
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
+            transform: translateY(-1px);
+        }
+        .bg-mesh {
+            background-color: #0b1326;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(255, 185, 95, 0.05) 0px, transparent 50%);
+        }
+    </style>
+</head>
+<body class="bg-mesh font-body text-on-surface min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-8 py-6 bg-transparent backdrop-blur-xl shadow-[0_20px_40px_-12px_rgba(124,58,237,0.12)]">
+<div class="text-2xl font-bold tracking-tighter text-slate-100 font-headline">ATHENA</div>
+<nav class="hidden md:flex items-center space-x-8">
+<a class="text-slate-400 font-['Space_Grotesk'] tracking-tight hover:text-purple-300 transition-colors duration-300" href="#">Features</a>
+<a class="text-slate-400 font-['Space_Grotesk'] tracking-tight hover:text-purple-300 transition-colors duration-300" href="#">Security</a>
+<a class="text-slate-400 font-['Space_Grotesk'] tracking-tight hover:text-purple-300 transition-colors duration-300" href="#">Enterprise</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="scale-95 active:opacity-80 transition-all text-purple-400 font-semibold font-['Space_Grotesk'] tracking-tight">Sign Up</button>
+</div>
+</header>
+<main class="flex-grow flex items-center justify-center px-4 pt-24 pb-12">
+<!-- Auth Card -->
+<div class="w-full max-w-[420px] glass-panel rounded-xl p-8 border border-outline-variant/15 shadow-2xl">
+<!-- Icon -->
+<div class="flex justify-center mb-6">
+<div class="w-16 h-16 rounded-full bg-primary-container flex items-center justify-center shadow-[0_0_30px_rgba(124,58,237,0.3)]">
+<span class="material-symbols-outlined text-on-primary-container text-3xl" data-icon="psychology" data-weight="fill" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+</div>
+<!-- Header -->
+<div class="text-center mb-8">
+<h1 class="text-2xl font-bold text-white font-headline tracking-tight mb-2">Create account</h1>
+<p class="text-sm text-on-surface-variant font-medium">Get started with ATHENA</p>
+</div>
+<!-- Form -->
+<form class="space-y-5" onsubmit="return false;">
+<div class="space-y-2">
+<label class="block font-['JetBrains_Mono'] text-[10px] uppercase tracking-widest text-secondary" for="name">Your name</label>
+<input class="w-full bg-surface-container-lowest border-none rounded-lg py-3 px-4 text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/40 transition-all outline-none" id="name" placeholder="John Doe" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="block font-['JetBrains_Mono'] text-[10px] uppercase tracking-widest text-secondary" for="email">you@example.com</label>
+<input class="w-full bg-surface-container-lowest border-none rounded-lg py-3 px-4 text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/40 transition-all outline-none" id="email" placeholder="Email address" type="email"/>
+</div>
+<div class="space-y-2">
+<label class="block font-['JetBrains_Mono'] text-[10px] uppercase tracking-widest text-secondary" for="password">Min 8 characters</label>
+<input class="w-full bg-surface-container-lowest border-none rounded-lg py-3 px-4 text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/40 transition-all outline-none" id="password" placeholder="Password" type="password"/>
+</div>
+<button class="w-full py-4 rounded-lg text-on-primary font-semibold font-headline tracking-wide glow-button mt-4">
+                    Create Account
+                </button>
+</form>
+<!-- Footer Link -->
+<div class="mt-8 text-center">
+<p class="text-sm text-on-surface-variant">
+                    Already have an account? 
+                    <a class="text-primary font-semibold hover:text-primary-fixed-dim transition-colors ml-1" href="#">Sign in</a>
+</p>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full bg-[#0b1326]">
+<div class="w-full max-w-7xl mx-auto px-8 py-12 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="text-slate-200 font-bold font-['JetBrains_Mono'] text-[10px] uppercase tracking-widest">ATHENA AI OS</div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="text-slate-500 font-['JetBrains_Mono'] text-[10px] uppercase tracking-widest hover:text-amber-400 transition-colors" href="#">Privacy Policy</a>
+<a class="text-slate-500 font-['JetBrains_Mono'] text-[10px] uppercase tracking-widest hover:text-amber-400 transition-colors" href="#">Terms of Service</a>
+<a class="text-slate-500 font-['JetBrains_Mono'] text-[10px] uppercase tracking-widest hover:text-amber-400 transition-colors" href="#">System Status</a>
+</div>
+<div class="text-slate-500 font-['JetBrains_Mono'] text-[10px] uppercase tracking-widest">
+                © 2024 ATHENA AI OS. Celestial Intelligence Systems.
+            </div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Athena AI - System Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "secondary": "#ffb95f",
+                        "on-surface": "#dae2fd",
+                        "background": "#0b1326",
+                        "on-primary-container": "#ede0ff",
+                        "on-tertiary": "#2d3133",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "surface-tint": "#d2bbff",
+                        "surface-container-low": "#131b2e",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "secondary-fixed": "#ffddb8",
+                        "on-surface-variant": "#ccc3d8",
+                        "on-secondary": "#472a00",
+                        "primary-fixed-dim": "#d2bbff",
+                        "on-error": "#690005",
+                        "on-secondary-container": "#5b3800",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-container": "#e4e6e8",
+                        "inverse-surface": "#dae2fd",
+                        "primary-fixed": "#eaddff",
+                        "surface-variant": "#2d3449",
+                        "tertiary": "#c4c7c9",
+                        "secondary-container": "#ee9800",
+                        "surface-bright": "#31394d",
+                        "tertiary-container": "#646769",
+                        "surface-container-lowest": "#060e20",
+                        "on-background": "#dae2fd",
+                        "on-secondary-fixed": "#2a1700",
+                        "surface-dim": "#0b1326",
+                        "surface-container": "#171f33",
+                        "outline": "#958da1",
+                        "inverse-primary": "#732ee4",
+                        "on-tertiary-fixed": "#191c1e",
+                        "error-container": "#93000a",
+                        "error": "#ffb4ab",
+                        "surface": "#0b1326",
+                        "surface-container-highest": "#2d3449",
+                        "on-primary-fixed-variant": "#5a00c6",
+                        "surface-container-high": "#222a3d",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "on-primary": "#3f008e",
+                        "primary-container": "#7c3aed",
+                        "outline-variant": "#4a4455",
+                        "on-primary-fixed": "#25005a",
+                        "tertiary-fixed": "#e0e3e5",
+                        "inverse-on-surface": "#283044",
+                        "primary": "#d2bbff",
+                        "on-secondary-fixed-variant": "#653e00"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Inter"],
+                        "mono": ["JetBrains Mono"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(23, 31, 51, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        body {
+            background-color: #0b1326;
+            color: #dae2fd;
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-[#0b1326] flex justify-between items-center px-8 py-4 w-full shadow-[0_20px_40px_-12px_rgba(124,58,237,0.12)]">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-bold bg-gradient-to-br from-violet-500 to-violet-200 bg-clip-text text-transparent font-['Space_Grotesk'] tracking-tight">Aether OS</span>
+<div class="hidden md:flex gap-6">
+<a class="text-slate-400 hover:text-slate-200 transition-colors" href="#">Docs</a>
+<a class="text-slate-400 hover:text-slate-200 transition-colors" href="#">Support</a>
+<a class="text-slate-400 hover:text-slate-200 transition-colors" href="#">Changelog</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-400 hover:bg-violet-500/10 rounded-lg transition-colors active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-400 hover:bg-violet-500/10 rounded-lg transition-colors active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant/20">
+<img alt="User avatar" data-alt="Portrait of a modern professional user in soft studio lighting with a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmqMtGlntU3DYYfIvGAhVBGhti7dITY4g51Z25rDEf8Xp4fQRe1kfHFJvlbJ9JPLruwjBPbk424Cwy3LixBUwFIHxxHDK0e8FEL_zbt6kcaC40Ba1EgRzrrCWerDqkiLImRhOXA7SDNYSjCxbpNSAkMEFMmmCy--qLg3ZqqD7gNWywQPt0rBC76ToaJvu1KQgNDFe40-SvRtr6AZxC57nHt_cEeu4iqk4dpRLrK3ZEjScDMo-APB8v9ILxhYP70-Gtr7S3FSpmM6U"/>
+</div>
+</div>
+</nav>
+<!-- Side Navigation Bar -->
+<aside class="h-screen w-64 fixed left-0 top-0 pt-20 bg-[#131b2e] flex flex-col h-full p-4 space-y-2 font-['Inter'] font-light">
+<div class="px-4 py-6 mb-4">
+<div class="flex items-center gap-3 mb-2">
+<div class="h-10 w-10 rounded-full border-2 border-secondary p-0.5">
+<div class="h-full w-full rounded-full bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm" data-icon="bolt" data-weight="fill" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</div>
+</div>
+<div>
+<h3 class="text-lg font-bold text-slate-100 leading-none">System Settings</h3>
+<p class="text-[10px] font-mono text-slate-500 uppercase tracking-widest mt-1">v2.4.0-stable</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-violet-400 font-semibold bg-violet-500/10 rounded-lg active:translate-x-1 transition-transform" href="#profile">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span>Profile</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-[#171f33] transition-all rounded-lg active:translate-x-1 transition-transform" href="#preferences">
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+<span>Preferences</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-[#171f33] transition-all rounded-lg active:translate-x-1 transition-transform" href="#integrations">
+<span class="material-symbols-outlined" data-icon="extension">extension</span>
+<span>Integrations</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-[#171f33] transition-all rounded-lg active:translate-x-1 transition-transform" href="#api-keys">
+<span class="material-symbols-outlined" data-icon="vpn_key">vpn_key</span>
+<span>API Keys</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-[#171f33] transition-all rounded-lg active:translate-x-1 transition-transform" href="#billing">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span>Billing</span>
+</a>
+</nav>
+<div class="pt-4 border-t border-outline-variant/10 mt-auto">
+<button class="w-full bg-gradient-to-r from-primary-container to-primary text-on-primary-container py-3 rounded-xl font-medium mb-4 shadow-lg shadow-primary-container/20 active:scale-95 transition-transform">
+                Upgrade Plan
+            </button>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Help</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-error transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 px-10 pb-20">
+<div class="max-w-5xl mx-auto space-y-12">
+<!-- Header Section -->
+<header>
+<h1 class="text-4xl font-headline font-light text-on-surface tracking-tight mb-2">Workspace <span class="text-primary font-bold">Preferences</span></h1>
+<p class="text-slate-400 font-body">Configure your Athena AI environment and security parameters.</p>
+</header>
+<!-- Profile Section -->
+<section class="space-y-6" id="profile">
+<div class="flex items-center gap-4 mb-2">
+<span class="material-symbols-outlined text-primary" data-icon="account_circle">account_circle</span>
+<h2 class="text-xl font-headline font-semibold">User Profile</h2>
+</div>
+<div class="glass-panel rounded-xl p-8 border border-outline-variant/10">
+<div class="flex flex-col md:flex-row gap-10 items-start">
+<div class="relative group cursor-pointer">
+<div class="h-20 w-20 rounded-full overflow-hidden border-2 border-primary/30 group-hover:border-primary transition-colors">
+<img alt="Profile avatar" class="h-full w-full object-cover" data-alt="High resolution professional headshot of a person with soft cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgYL3f6-Abq7hMiGabzl_iyURaaSb9_Nn1KTP8po7NqXg62LxUoIwfqlsW1Te_Jp5K_MCA1Mo29IdPcoQfUYBy7S05JqGBYnTchf3XclTcDPDnTNy-Ye5FI_bM7Kf6YcjAhB60MHFJC9pA_Sb-3vCNABjvZJD9IsnxxkiWCvNHWXpxCUfy-SlDofnKNwRZ8Fo-JHKYabRTQGwbUoB9swWDPC7_QW5yVha9SkYjinaAN-8vwp84JXYNGgxVW2PbJ_b5AaIllc4XXM8"/>
+</div>
+<div class="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-white text-sm" data-icon="photo_camera">photo_camera</span>
+</div>
+</div>
+<div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+<div class="space-y-2">
+<label class="text-xs font-mono text-slate-500 uppercase tracking-widest">Full Name</label>
+<input class="w-full bg-surface-container-lowest border-none rounded-lg py-3 px-4 text-on-surface focus:ring-1 focus:ring-primary/40 font-body transition-all" type="text" value="Alexander Thorne"/>
+</div>
+<div class="space-y-2 opacity-60">
+<label class="text-xs font-mono text-slate-500 uppercase tracking-widest">Email Address</label>
+<input class="w-full bg-surface-container-lowest border-none rounded-lg py-3 px-4 text-on-surface cursor-not-allowed font-body" readonly="" type="email" value="alex@athena-ai.io"/>
+</div>
+<div class="md:col-span-2 flex justify-end">
+<button class="px-6 py-2.5 bg-surface-container-high text-primary rounded-lg font-medium hover:bg-surface-container-highest transition-colors active:scale-95">
+                                    Save Changes
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Preferences Section -->
+<section class="space-y-6" id="preferences">
+<div class="flex items-center gap-4 mb-2">
+<span class="material-symbols-outlined text-primary" data-icon="settings_suggest">settings_suggest</span>
+<h2 class="text-xl font-headline font-semibold">System Preferences</h2>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Theme Toggle -->
+<div class="glass-panel rounded-xl p-6 border border-outline-variant/10 flex flex-col justify-between">
+<label class="text-xs font-mono text-slate-500 uppercase tracking-widest block mb-4">Interface Theme</label>
+<div class="bg-surface-container-lowest p-1 rounded-full flex items-center">
+<button class="flex-1 py-2 px-4 rounded-full text-sm font-medium transition-all bg-primary text-on-primary">Dark</button>
+<button class="flex-1 py-2 px-4 rounded-full text-sm font-medium transition-all text-slate-400 hover:text-slate-200">Light</button>
+</div>
+</div>
+<!-- Timezone & Language -->
+<div class="glass-panel rounded-xl p-6 border border-outline-variant/10 lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="text-xs font-mono text-slate-500 uppercase tracking-widest">Timezone</label>
+<div class="relative">
+<select class="w-full bg-surface-container-lowest border-none rounded-lg py-3 pl-4 pr-10 text-on-surface appearance-none focus:ring-1 focus:ring-primary/40">
+<option>UTC-08:00 (Pacific Time)</option>
+<option>UTC+00:00 (GMT)</option>
+<option>UTC+01:00 (Central Europe)</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3 text-slate-500 pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-xs font-mono text-slate-500 uppercase tracking-widest">Language</label>
+<div class="relative">
+<select class="w-full bg-surface-container-lowest border-none rounded-lg py-3 pl-4 pr-10 text-on-surface appearance-none focus:ring-1 focus:ring-primary/40">
+<option>English (US)</option>
+<option>German</option>
+<option>Japanese</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-3 text-slate-500 pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<div class="glass-panel rounded-xl p-6 border border-outline-variant/10">
+<label class="text-xs font-mono text-slate-500 uppercase tracking-widest block mb-4">AI Voice Synthesis</label>
+<div class="relative max-w-md">
+<select class="w-full bg-surface-container-lowest border-none rounded-lg py-3 pl-12 pr-10 text-on-surface appearance-none focus:ring-1 focus:ring-primary/40">
+<option>Hyperion (Male, Authority)</option>
+<option>Selene (Female, Empathetic)</option>
+<option>Atlas (Non-binary, Technical)</option>
+</select>
+<span class="material-symbols-outlined absolute left-4 top-3 text-primary" data-icon="record_voice_over">record_voice_over</span>
+<span class="material-symbols-outlined absolute right-3 top-3 text-slate-500 pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</section>
+<!-- Integrations Bento Grid -->
+<section class="space-y-6" id="integrations">
+<div class="flex items-center gap-4 mb-2">
+<span class="material-symbols-outlined text-primary" data-icon="hub">hub</span>
+<h2 class="text-xl font-headline font-semibold">Connected Services</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Google -->
+<div class="glass-panel rounded-xl p-6 border border-outline-variant/10 flex flex-col items-center text-center space-y-4">
+<div class="h-12 w-12 rounded-xl bg-white/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="mail" data-weight="fill" style="font-variation-settings: 'FILL' 1;">mail</span>
+</div>
+<div>
+<h3 class="font-semibold text-on-surface">Google Workspace</h3>
+<p class="text-xs text-slate-500 mt-1">Calendar &amp; Drive Sync</p>
+</div>
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-medium">
+<span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                            Connected
+                        </div>
+</div>
+<!-- GitHub -->
+<div class="glass-panel rounded-xl p-6 border border-outline-variant/10 flex flex-col items-center text-center space-y-4 group hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="h-12 w-12 rounded-xl bg-white/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="terminal">terminal</span>
+</div>
+<div>
+<h3 class="font-semibold text-on-surface">GitHub</h3>
+<p class="text-xs text-slate-500 mt-1">Repository AI Agent</p>
+</div>
+<button class="w-full py-2 bg-surface-container-high rounded-lg text-sm font-medium hover:bg-primary hover:text-on-primary transition-all">
+                            Connect
+                        </button>
+</div>
+<!-- Slack -->
+<div class="glass-panel rounded-xl p-6 border border-outline-variant/10 flex flex-col items-center text-center space-y-4 opacity-50 grayscale">
+<div class="h-12 w-12 rounded-xl bg-white/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400 text-3xl" data-icon="chat_bubble">chat_bubble</span>
+</div>
+<div>
+<h3 class="font-semibold text-on-surface">Slack</h3>
+<p class="text-xs text-slate-500 mt-1">Direct Messaging Integration</p>
+</div>
+<span class="text-xs font-mono text-slate-500 uppercase tracking-widest">Coming Soon</span>
+</div>
+</div>
+</section>
+<!-- API Keys Table Section -->
+<section class="space-y-6" id="api-keys">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary" data-icon="key">key</span>
+<h2 class="text-xl font-headline font-semibold">Developer API</h2>
+</div>
+<button class="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary-container to-primary text-on-primary-container rounded-lg font-medium shadow-lg shadow-primary-container/20 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                        Create API Key
+                    </button>
+</div>
+<div class="glass-panel rounded-xl overflow-hidden border border-outline-variant/10">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low border-b border-outline-variant/10">
+<tr>
+<th class="px-6 py-4 text-xs font-mono text-slate-500 uppercase tracking-widest">Label</th>
+<th class="px-6 py-4 text-xs font-mono text-slate-500 uppercase tracking-widest">Prefix</th>
+<th class="px-6 py-4 text-xs font-mono text-slate-500 uppercase tracking-widest">Created</th>
+<th class="px-6 py-4 text-xs font-mono text-slate-500 uppercase tracking-widest text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/5">
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-5 font-medium text-on-surface">Production Node</td>
+<td class="px-6 py-5 font-mono text-primary text-sm">at_live_82b9...</td>
+<td class="px-6 py-5 text-slate-400 text-sm">Oct 12, 2023</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 text-slate-500 hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-5 font-medium text-on-surface">Development Sandbox</td>
+<td class="px-6 py-5 font-mono text-primary text-sm">at_test_f022...</td>
+<td class="px-6 py-5 text-slate-400 text-sm">Nov 04, 2023</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 text-slate-500 hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+</main>
+</body></html>

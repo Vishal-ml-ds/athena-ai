@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Memory Management Panel | ATHENA AI OS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b1326; /* Design System Surface */
+        }
+        .font-headline { font-family: 'Space Grotesk', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#d2bbff",
+              "on-secondary-fixed-variant": "#653e00",
+              "tertiary-fixed": "#e0e3e5",
+              "inverse-on-surface": "#283044",
+              "primary-container": "#7c3aed",
+              "outline-variant": "#4a4455",
+              "on-primary-fixed": "#25005a",
+              "on-primary": "#3f008e",
+              "surface-container-highest": "#2d3449",
+              "on-primary-fixed-variant": "#5a00c6",
+              "surface-container-high": "#222a3d",
+              "on-tertiary-fixed-variant": "#444749",
+              "error-container": "#93000a",
+              "error": "#ffb4ab",
+              "surface": "#0b1326",
+              "on-tertiary-fixed": "#191c1e",
+              "outline": "#958da1",
+              "inverse-primary": "#732ee4",
+              "surface-container": "#171f33",
+              "on-secondary-fixed": "#2a1700",
+              "surface-dim": "#0b1326",
+              "tertiary-container": "#646769",
+              "surface-container-lowest": "#060e20",
+              "on-background": "#dae2fd",
+              "secondary-container": "#ee9800",
+              "surface-bright": "#31394d",
+              "tertiary": "#c4c7c9",
+              "primary-fixed": "#eaddff",
+              "surface-variant": "#2d3449",
+              "inverse-surface": "#dae2fd",
+              "on-tertiary-container": "#e4e6e8",
+              "on-secondary-container": "#5b3800",
+              "on-error-container": "#ffdad6",
+              "primary-fixed-dim": "#d2bbff",
+              "on-error": "#690005",
+              "on-secondary": "#472a00",
+              "on-surface-variant": "#ccc3d8",
+              "surface-container-low": "#131b2e",
+              "secondary-fixed-dim": "#ffb95f",
+              "secondary-fixed": "#ffddb8",
+              "on-tertiary": "#2d3133",
+              "tertiary-fixed-dim": "#c4c7c9",
+              "surface-tint": "#d2bbff",
+              "on-primary-container": "#ede0ff",
+              "background": "#0b1326",
+              "secondary": "#ffb95f",
+              "on-surface": "#dae2fd"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="text-on-surface selection:bg-primary-container selection:text-on-primary-container">
+<!-- Sidebar (SideNavBar Implementation from JSON) -->
+<aside class="h-screen w-64 fixed left-0 top-0 z-40 bg-slate-900/80 backdrop-blur-md flex flex-col h-full py-6 border-r border-purple-500/15 font-['Inter'] text-sm font-medium">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-container to-primary flex items-center justify-center shadow-[0_0_15px_rgba(124,58,237,0.4)]">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">psychology</span>
+</div>
+<div>
+<h2 class="text-lg font-['Space_Grotesk'] text-white font-bold leading-tight">Aether AI</h2>
+<p class="text-[10px] uppercase tracking-widest text-primary/60">Neural Interface Active</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="text-slate-500 px-4 py-3 hover:text-slate-300 flex items-center gap-3 hover:bg-slate-800/50 transition-all hover:translate-x-1 duration-300" href="#">
+<span class="material-symbols-outlined">forum</span>
+<span>Chat</span>
+</a>
+<a class="bg-gradient-to-r from-purple-600/20 to-transparent text-purple-400 border-l-4 border-purple-500 px-4 py-3 flex items-center gap-3 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">psychology</span>
+<span>Memory</span>
+</a>
+<a class="text-slate-500 px-4 py-3 hover:text-slate-300 flex items-center gap-3 hover:bg-slate-800/50 transition-all hover:translate-x-1 duration-300" href="#">
+<span class="material-symbols-outlined">database</span>
+<span>Knowledge</span>
+</a>
+<a class="text-slate-500 px-4 py-3 hover:text-slate-300 flex items-center gap-3 hover:bg-slate-800/50 transition-all hover:translate-x-1 duration-300" href="#">
+<span class="material-symbols-outlined">settings_cinematic_blur</span>
+<span>Settings</span>
+</a>
+</nav>
+<div class="px-4 mt-4">
+<button class="w-full bg-primary-container hover:bg-primary text-on-primary-container font-semibold py-2.5 rounded-lg transition-all flex items-center justify-center gap-2 active:scale-95">
+<span class="material-symbols-outlined text-sm">add</span>
+                New Memory
+            </button>
+</div>
+<footer class="mt-auto px-4 pt-4 border-t border-white/5 space-y-1">
+<a class="text-slate-500 px-4 py-2 hover:text-slate-300 flex items-center gap-3 text-xs transition-all" href="#">
+<span class="material-symbols-outlined text-sm">help_outline</span>
+<span>Help</span>
+</a>
+<a class="text-slate-500 px-4 py-2 hover:text-slate-300 flex items-center gap-3 text-xs transition-all" href="#">
+<span class="material-symbols-outlined text-sm">sensors</span>
+<span>Status</span>
+</a>
+</footer>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen bg-[#0F172A] relative flex flex-col">
+<!-- Top Navigation Anchor (Shared Component Mapping) -->
+<header class="sticky top-0 z-30 bg-slate-950/60 backdrop-blur-xl flex justify-between items-center w-full px-10 py-5 shadow-[0_20px_40px_-12px_rgba(124,58,237,0.12)]">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-3xl">memory</span>
+<h1 class="font-headline text-2xl font-bold bg-gradient-to-br from-purple-400 to-purple-600 bg-clip-text text-transparent">ATHENA's Memory</h1>
+</div>
+<div class="flex-1 max-w-md mx-12">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-surface-container-lowest border-none rounded-full py-2.5 pl-12 pr-4 text-on-surface placeholder:text-outline focus:ring-1 focus:ring-primary/40 transition-all" placeholder="Search memories..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-slate-400 hover:text-slate-200 cursor-pointer transition-colors">notifications</span>
+<span class="material-symbols-outlined text-slate-400 hover:text-slate-200 cursor-pointer transition-colors">settings</span>
+</div>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-primary/20">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a stylish young man with a focused expression and cinematic lighting on a dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBj8LU250RJVrnHRs2A9Lm8p_TrIVVOkLXvZpJEvHg4OUa1wq7hXCccPUmHe7BQpRrMi4hJdUoMG1Lge5X5fk_RSxXE71HxVXyjiiWFZJwJLuzQJPSqnslGOAhU2Wklz2hqOJhCQPReNgyKSvXuq_xsuz1zM8kDKTPsGn78E16Lhwlryo4utmURkGCNVOOaLHKiDlG-PSgBi0NyK5pTU6TSJ7mncoN6zAzc_6j0B0nw1tFqfwHul9l4IWGvn4AVcQQ99_QEQv9RUpc"/>
+</div>
+</div>
+</header>
+<!-- Scrollable Canvas -->
+<div class="flex-1 overflow-y-auto px-6 py-8">
+<div class="max-w-[700px] mx-auto space-y-8">
+<!-- Filter Chips Section -->
+<section class="flex flex-wrap gap-2 justify-center">
+<button class="px-5 py-1.5 rounded-full bg-primary-container text-on-primary-container text-sm font-medium transition-all">All</button>
+<button class="px-5 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant text-sm font-medium transition-all">Facts</button>
+<button class="px-5 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant text-sm font-medium transition-all">Preferences</button>
+<button class="px-5 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant text-sm font-medium transition-all">Events</button>
+<button class="px-5 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant text-sm font-medium transition-all">Relationships</button>
+</section>
+<!-- Summary Card -->
+<section class="bg-surface-container/60 backdrop-blur-md rounded-xl p-6 border border-white/5 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-3xl -mr-16 -mt-16"></div>
+<div class="flex items-center gap-5 relative z-10">
+<div class="p-3 bg-primary-container/20 rounded-lg">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div>
+<p class="text-on-surface font-headline text-lg font-medium leading-snug">
+                                ATHENA knows <span class="text-primary font-bold">42 facts</span>, <span class="text-secondary font-bold">18 preferences</span>, and <span class="text-tertiary font-bold">12 events</span> about you.
+                            </p>
+<p class="text-on-surface-variant text-sm mt-1">Neural sync integrity is currently at 98.4%.</p>
+</div>
+</div>
+</section>
+<!-- Memory List -->
+<section class="space-y-4">
+<!-- Card 1: Preference -->
+<div class="group bg-surface-container hover:bg-surface-container-high transition-all rounded-xl p-5 border border-white/5 relative">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-secondary-container/20 text-secondary border border-secondary/20">Preference</span>
+<button class="opacity-0 group-hover:opacity-100 p-1.5 text-error/60 hover:text-error hover:bg-error/10 rounded-lg transition-all">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+<p class="text-on-surface leading-relaxed mb-4">User prefers dark mode for all interfaces and cinematic high-contrast aesthetics.</p>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex items-center gap-4">
+<div class="flex flex-col gap-1">
+<span class="text-[10px] text-outline-variant font-mono uppercase">Importance</span>
+<div class="w-24 h-1 bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[90%] shadow-[0_0_8px_rgba(255,185,95,0.4)]"></div>
+</div>
+</div>
+<span class="font-mono text-xs text-secondary mt-3">0.9</span>
+</div>
+<span class="font-mono text-[10px] text-outline-variant mt-3">Learned on May 12, 2024</span>
+</div>
+</div>
+<!-- Card 2: Event -->
+<div class="group bg-surface-container hover:bg-surface-container-high transition-all rounded-xl p-5 border border-white/5 relative">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-tertiary-container/20 text-tertiary border border-tertiary/20">Event</span>
+<button class="opacity-0 group-hover:opacity-100 p-1.5 text-error/60 hover:text-error hover:bg-error/10 rounded-lg transition-all">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+<p class="text-on-surface leading-relaxed mb-4">User has a strategic review meeting with the CEO on Friday at 2 PM to discuss AI integration.</p>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex items-center gap-4">
+<div class="flex flex-col gap-1">
+<span class="text-[10px] text-outline-variant font-mono uppercase">Importance</span>
+<div class="w-24 h-1 bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-[75%]"></div>
+</div>
+</div>
+<span class="font-mono text-xs text-tertiary mt-3">0.75</span>
+</div>
+<span class="font-mono text-[10px] text-outline-variant mt-3">Learned on May 14, 2024</span>
+</div>
+</div>
+<!-- Card 3: Fact -->
+<div class="group bg-surface-container hover:bg-surface-container-high transition-all rounded-xl p-5 border border-white/5 relative">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-primary-container/20 text-primary border border-primary/20">Fact</span>
+<button class="opacity-0 group-hover:opacity-100 p-1.5 text-error/60 hover:text-error hover:bg-error/10 rounded-lg transition-all">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+<p class="text-on-surface leading-relaxed mb-4">User is a Senior UI Architect with expertise in generative design systems and spatial computing.</p>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex items-center gap-4">
+<div class="flex flex-col gap-1">
+<span class="text-[10px] text-outline-variant font-mono uppercase">Importance</span>
+<div class="w-24 h-1 bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[95%] shadow-[0_0_8px_rgba(210,187,255,0.4)]"></div>
+</div>
+</div>
+<span class="font-mono text-xs text-primary mt-3">0.95</span>
+</div>
+<span class="font-mono text-[10px] text-outline-variant mt-3">Learned on May 10, 2024</span>
+</div>
+</div>
+<!-- Card 4: Fact -->
+<div class="group bg-surface-container hover:bg-surface-container-high transition-all rounded-xl p-5 border border-white/5 relative">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-primary-container/20 text-primary border border-primary/20">Fact</span>
+<button class="opacity-0 group-hover:opacity-100 p-1.5 text-error/60 hover:text-error hover:bg-error/10 rounded-lg transition-all">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+<p class="text-on-surface leading-relaxed mb-4">User's primary workstation is located in the London HQ, 4th floor innovation lab.</p>
+<div class="flex items-center justify-between mt-auto">
+<div class="flex items-center gap-4">
+<div class="flex flex-col gap-1">
+<span class="text-[10px] text-outline-variant font-mono uppercase">Importance</span>
+<div class="w-24 h-1 bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[40%]"></div>
+</div>
+</div>
+<span class="font-mono text-xs text-primary mt-3">0.4</span>
+</div>
+<span class="font-mono text-[10px] text-outline-variant mt-3">Learned on May 15, 2024</span>
+</div>
+</div>
+</section>
+<!-- Status Footer for Panel -->
+<div class="pt-8 pb-12 text-center">
+<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-container-low border border-white/5">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-[10px] font-mono text-outline-variant uppercase tracking-widest">ATHENA Memory Sync: Active</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Decorative Background Element -->
+<div class="fixed bottom-0 right-0 w-[500px] h-[500px] bg-primary/5 blur-[120px] rounded-full -mb-64 -mr-64 pointer-events-none"></div>
+</main>
+</body></html>

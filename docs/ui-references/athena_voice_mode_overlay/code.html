@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ATHENA AI OS - Voice Mode</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-radial-nebula {
+            background: radial-gradient(circle at center, rgba(124, 58, 237, 0.15) 0%, rgba(11, 19, 38, 1) 70%);
+        }
+        .ai-core-glow {
+            box-shadow: 0 0 60px 10px rgba(124, 58, 237, 0.4);
+        }
+        /* Custom scrollbar for the transcript area */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(149, 141, 161, 0.2);
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "inverse-primary": "#732ee4",
+                "on-surface-variant": "#ccc3d8",
+                "on-primary-fixed": "#25005a",
+                "surface-variant": "#2d3449",
+                "tertiary": "#c4c7c9",
+                "secondary-container": "#ee9800",
+                "on-tertiary-fixed": "#191c1e",
+                "on-secondary-fixed": "#2a1700",
+                "on-background": "#dae2fd",
+                "on-tertiary": "#2d3133",
+                "error": "#ffb4ab",
+                "on-error-container": "#ffdad6",
+                "surface-tint": "#d2bbff",
+                "on-primary": "#3f008e",
+                "surface-container": "#171f33",
+                "tertiary-fixed": "#e0e3e5",
+                "primary-container": "#7c3aed",
+                "background": "#0b1326",
+                "on-secondary": "#472a00",
+                "surface-container-high": "#222a3d",
+                "on-primary-fixed-variant": "#5a00c6",
+                "inverse-on-surface": "#283044",
+                "primary": "#d2bbff",
+                "outline-variant": "#4a4455",
+                "surface-dim": "#0b1326",
+                "on-secondary-container": "#5b3800",
+                "surface": "#0b1326",
+                "on-primary-container": "#ede0ff",
+                "tertiary-container": "#646769",
+                "primary-fixed-dim": "#d2bbff",
+                "inverse-surface": "#dae2fd",
+                "on-tertiary-container": "#e4e6e8",
+                "on-surface": "#dae2fd",
+                "outline": "#958da1",
+                "error-container": "#93000a",
+                "surface-container-highest": "#2d3449",
+                "secondary-fixed-dim": "#ffb95f",
+                "secondary-fixed": "#ffddb8",
+                "surface-container-lowest": "#060e20",
+                "primary-fixed": "#eaddff",
+                "on-error": "#690005",
+                "surface-container-low": "#131b2e",
+                "on-tertiary-fixed-variant": "#444749",
+                "surface-bright": "#31394d",
+                "secondary": "#ffb95f",
+                "on-secondary-fixed-variant": "#653e00",
+                "tertiary-fixed-dim": "#c4c7c9"
+              },
+              fontFamily: {
+                "headline": ["Space Grotesk"],
+                "body": ["Inter"],
+                "label": ["Inter"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body selection:bg-primary/30 antialiased overflow-hidden">
+<!-- Main Navigation Shell (TopAppBar Placeholder as per JSON) -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-transparent">
+<div class="flex items-center gap-2">
+<span class="text-xl font-bold text-slate-100 font-headline tracking-tight">Aether OS</span>
+<span class="text-[10px] font-label px-2 py-0.5 rounded-full bg-primary-container/20 text-primary border border-primary/20">VOICE_MODE</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex gap-8 items-center text-slate-400 font-headline tracking-tight">
+<a class="hover:text-purple-300 transition-colors" href="#">History</a>
+<a class="hover:text-purple-300 transition-colors" href="#">Insights</a>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-slate-400 hover:text-purple-300 cursor-pointer">settings</span>
+<span class="material-symbols-outlined text-slate-400 hover:text-purple-300 cursor-pointer">more_vert</span>
+</div>
+</div>
+</header>
+<!-- Voice Mode Overlay Container -->
+<main class="relative h-screen w-full flex flex-col items-center justify-center bg-radial-nebula px-6">
+<!-- Center Content: AI Core & Status -->
+<div class="flex flex-col items-center mb-12">
+<!-- AI Core Pulse -->
+<div class="relative flex items-center justify-center mb-8">
+<div class="absolute w-36 h-36 rounded-full bg-primary-container/20 animate-ping"></div>
+<div class="w-[120px] h-[120px] rounded-full bg-gradient-to-tr from-[#7C3AED] to-[#9333EA] ai-core-glow flex items-center justify-center relative z-10 border border-primary/30">
+<span class="material-symbols-outlined text-white text-5xl" style="font-variation-settings: 'FILL' 1;">mic</span>
+</div>
+</div>
+<!-- Listening Text -->
+<h1 class="font-headline text-3xl font-light text-white tracking-wide mb-6">ATHENA is listening...</h1>
+<!-- Audio Waveform Visualization -->
+<div class="flex items-end gap-1.5 h-16 w-64 justify-center mb-10">
+<div class="w-1 bg-primary/60 rounded-full h-4 animate-[bounce_1.2s_infinite_0s]"></div>
+<div class="w-1 bg-primary/80 rounded-full h-8 animate-[bounce_1.2s_infinite_0.2s]"></div>
+<div class="w-1 bg-primary rounded-full h-12 animate-[bounce_1.2s_infinite_0.4s]"></div>
+<div class="w-1 bg-primary/90 rounded-full h-6 animate-[bounce_1.2s_infinite_0.1s]"></div>
+<div class="w-1 bg-primary/70 rounded-full h-10 animate-[bounce_1.2s_infinite_0.3s]"></div>
+<div class="w-1 bg-primary rounded-full h-14 animate-[bounce_1.2s_infinite_0.5s]"></div>
+<div class="w-1 bg-primary/80 rounded-full h-9 animate-[bounce_1.2s_infinite_0.2s]"></div>
+<div class="w-1 bg-primary/60 rounded-full h-5 animate-[bounce_1.2s_infinite_0.6s]"></div>
+</div>
+<!-- Live Transcript Area -->
+<div class="w-full max-w-2xl h-48 overflow-y-auto custom-scrollbar flex flex-col gap-6 px-4 mask-fade-edges">
+<!-- User Entry -->
+<div class="flex flex-col items-end w-full group">
+<span class="font-label text-[10px] uppercase tracking-widest text-slate-500 mb-1 px-2">User</span>
+<div class="max-w-[80%] text-right text-slate-400 font-body text-lg leading-relaxed">
+                        "ATHENA, can you summarize the latest market insights for the quantum computing sector?"
+                    </div>
+</div>
+<!-- AI Response Placeholder (Streaming) -->
+<div class="flex flex-col items-start w-full group">
+<span class="font-label text-[10px] uppercase tracking-widest text-secondary mb-1 px-2">ATHENA</span>
+<div class="max-w-[85%] text-left text-white font-body text-lg leading-relaxed bg-surface-container/30 backdrop-blur-md p-4 rounded-xl border border-white/5">
+                        Analyzing global data streams... I've identified three key shifts in qubit stability protocols and a significant increase in venture capital flow toward fault-tolerant systems.
+                    </div>
+</div>
+<!-- Active User Input -->
+<div class="flex flex-col items-end w-full animate-pulse">
+<span class="font-label text-[10px] uppercase tracking-widest text-slate-500 mb-1 px-2">User</span>
+<div class="text-slate-400 font-body text-lg italic">
+                        "What about the impact on encryption..."
+                    </div>
+</div>
+</div>
+</div>
+<!-- Bottom Controls -->
+<div class="fixed bottom-12 flex flex-col items-center gap-8 w-full max-w-md px-6">
+<!-- Mode Toggle Pill -->
+<div class="flex p-1 bg-surface-container-low/60 backdrop-blur-xl rounded-full border border-outline-variant/10 w-full">
+<button class="flex-1 py-3 px-6 rounded-full text-xs font-label uppercase tracking-widest bg-primary-container text-on-primary-container transition-all shadow-lg">
+                    Hands-free
+                </button>
+<button class="flex-1 py-3 px-6 rounded-full text-xs font-label uppercase tracking-widest text-slate-400 hover:text-white transition-all">
+                    Push to talk
+                </button>
+</div>
+<!-- Action Cluster -->
+<div class="flex items-center justify-center gap-10">
+<!-- Mute Button -->
+<button class="w-12 h-12 rounded-full border border-outline-variant/30 flex items-center justify-center text-slate-300 hover:bg-white/5 hover:text-white transition-all group">
+<span class="material-symbols-outlined text-2xl group-active:scale-90 transition-transform">mic_off</span>
+</button>
+<!-- End Call Button -->
+<button class="w-[72px] h-[72px] rounded-full bg-error-container text-on-error-container flex items-center justify-center shadow-xl hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">call_end</span>
+</button>
+<!-- Settings/Alt Option -->
+<button class="w-12 h-12 rounded-full border border-outline-variant/30 flex items-center justify-center text-slate-300 hover:bg-white/5 hover:text-white transition-all group">
+<span class="material-symbols-outlined text-2xl group-active:scale-90 transition-transform">volume_up</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Shared Navigation Component (BottomNavBar - Hidden for focused voice mode) -->
+<!-- Applying "Automatic Suppression" rule: suppress shell on task-focused/immersive screens -->
+<nav class="hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-slate-900/60 backdrop-blur-xl rounded-t-3xl shadow-[0_-20px_40px_-12px_rgba(124,58,237,0.12)]">
+<div class="flex flex-col items-center justify-center bg-purple-600/20 text-purple-300 rounded-xl px-4 py-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">mic</span>
+<span class="font-['JetBrains_Mono'] text-[10px] uppercase">Voice</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 px-4 py-2 hover:bg-slate-800/50 transition-all">
+<span class="material-symbols-outlined">bubble_chart</span>
+<span class="font-['JetBrains_Mono'] text-[10px] uppercase">Chat</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 px-4 py-2 hover:bg-slate-800/50 transition-all">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span class="font-['JetBrains_Mono'] text-[10px] uppercase">Memories</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 px-4 py-2 hover:bg-slate-800/50 transition-all">
+<span class="material-symbols-outlined">terminal</span>
+<span class="font-['JetBrains_Mono'] text-[10px] uppercase">System</span>
+</div>
+</nav>
+<!-- Immersive Background Elements -->
+<div class="fixed inset-0 pointer-events-none z-[-1] overflow-hidden">
+<!-- Nebula Glows -->
+<div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/10 blur-[120px] rounded-full"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary/5 blur-[100px] rounded-full"></div>
+<!-- Abstract Tech Element -->
+<div class="absolute inset-0 opacity-10">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 100">
+<defs>
+<pattern height="10" id="grid" patternunits="userSpaceOnUse" width="10">
+<path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" stroke-width="0.1"></path>
+</pattern>
+</defs>
+<rect fill="url(#grid)" height="100" width="100"></rect>
+</svg>
+</div>
+</div>
+</body></html>

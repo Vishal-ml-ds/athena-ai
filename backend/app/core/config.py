@@ -21,8 +21,9 @@ class Settings(BaseSettings):
     supabase_service_role_key: str
     database_url: str
 
-    # OpenAI
-    openai_api_key: str
+    # Euri AI (OpenAI-compatible gateway via Euron)
+    euri_api_key: str
+    euri_base_url: str = "https://api.euron.one/api/v1/euri"
 
     # Redis
     redis_url: str = "redis://localhost:6379"
@@ -35,7 +36,7 @@ class Settings(BaseSettings):
 
     # Agent Config
     max_agent_iterations: int = 10
-    default_model: str = "gpt-4o"
+    default_model: str = "gpt-4o-mini"
     embedding_model: str = "text-embedding-3-small"
 
     model_config = {
