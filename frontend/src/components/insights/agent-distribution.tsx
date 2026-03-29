@@ -27,7 +27,7 @@ const ACTIVE_AGENT_COUNT = 6;
 export function AgentDistribution() {
   return (
     <div className="bg-[rgba(23,31,51,0.6)] backdrop-blur-xl border border-[#4a4455]/15 p-8 rounded-xl flex flex-col">
-      <h3 className="font-[family-name:'Space_Grotesk'] text-lg font-bold text-[#dae2fd] mb-8">
+      <h3 className="font-headline text-lg font-bold text-[#dae2fd] mb-8">
         Agent Distribution
       </h3>
 
@@ -36,7 +36,7 @@ export function AgentDistribution() {
         <div className="relative w-48 h-48 rounded-full border-[16px] border-[#060e20] flex items-center justify-center">
           <div className="absolute inset-[-16px] rounded-full border-[16px] border-l-[#60a5fa] border-t-[#22d3ee] border-r-[#34d399] border-b-[#fbbf24] opacity-80 rotate-45" />
           <div className="text-center">
-            <span className="block text-3xl font-bold font-[family-name:'Space_Grotesk'] text-white">
+            <span className="block text-3xl font-bold font-headline text-white">
               {ACTIVE_AGENT_COUNT}
             </span>
             <span className="text-[10px] uppercase font-mono text-[#958da1] tracking-widest">

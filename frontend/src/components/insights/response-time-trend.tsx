@@ -7,11 +7,11 @@ export function ResponseTimeTrend() {
     <div className="bg-[rgba(23,31,51,0.6)] backdrop-blur-xl border border-[#4a4455]/15 p-8 rounded-xl h-[340px] flex flex-col">
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h3 className="font-[family-name:'Space_Grotesk'] text-lg font-bold text-[#dae2fd]">
+        <h3 className="font-headline text-lg font-bold text-[#dae2fd]">
           Response Time Trend
         </h3>
         <div className="text-right">
-          <span className="block text-2xl font-bold text-[#d2bbff] font-[family-name:'Space_Grotesk']">
+          <span className="block text-2xl font-bold text-[#d2bbff] font-headline">
             1.1s
           </span>
           <span className="text-[10px] text-[#958da1] font-mono uppercase">Avg Latency</span>

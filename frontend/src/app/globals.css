@@ -10,7 +10,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-mono: 'JetBrains Mono', monospace;
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -49,29 +49,30 @@
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 
-  /* ATHENA Design Tokens */
+  /* ATHENA Design Tokens — Colors */
+  --color-athena-background: #0b1326;
+  --color-athena-primary: #d2bbff;
+  --color-athena-secondary: #ffb95f;
+  --color-primary-container: #7c3aed;
+  --color-on-primary-container: #ede0ff;
+  --color-on-surface: #dae2fd;
+  --color-on-surface-variant: #ccc3d8;
+  --color-surface: #0b1326;
+  --color-surface-container: #171f33;
+  --color-surface-container-low: #131b2e;
   --color-surface-container-high: #222a3d;
   --color-surface-container-lowest: #060e20;
-  --color-surface-dim: #0b1326;
-  --color-on-surface: #dae2fd;
-  --color-outline-variant: #4a4455;
-  --color-athena-background: #0b1326;
-  --color-surface-variant: #2d3449;
-  --color-athena-secondary: #ffb95f;
-  --color-athena-primary: #d2bbff;
-  --color-surface-container: #171f33;
   --color-surface-container-highest: #2d3449;
-  --color-surface-container-low: #131b2e;
-  --color-outline: #958da1;
-  --color-on-surface-variant: #ccc3d8;
-  --color-primary-container: #7c3aed;
-  --color-athena-surface: #0b1326;
-  --color-on-primary-container: #ede0ff;
+  --color-surface-dim: #0b1326;
+  --color-surface-variant: #2d3449;
   --color-surface-bright: #31394d;
-  --color-inverse-primary: #732ee4;
-  --color-secondary-container: #ee9800;
+  --color-outline: #958da1;
+  --color-outline-variant: #4a4455;
   --color-on-primary: #3f008e;
   --color-on-secondary: #472a00;
+  --color-athena-surface: #0b1326;
+  --color-inverse-primary: #732ee4;
+  --color-secondary-container: #ee9800;
 
   /* Font Families */
   --font-headline: 'Space Grotesk', sans-serif;
@@ -160,6 +161,16 @@
   }
 }
 
+/* Tailwind v4 utility for font-headline */
+@utility font-headline {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+/* Tailwind v4 utility for font-body */
+@utility font-body {
+  font-family: 'Inter', sans-serif;
+}
+
 /* ATHENA Utility Classes */
 .glass-card {
   background: rgba(23, 31, 51, 0.6);
@@ -212,6 +223,16 @@
   }
 }
 
+/* Voice Waveform Animation */
+@keyframes voice-waveform {
+  0%, 100% {
+    transform: scaleY(0.4);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 4px;
@@ -230,21 +251,11 @@
   background: rgba(124, 58, 237, 0.4);
 }
 
-.scrollbar-hide {
+/* Scrollbar Hide Utility */
+@utility scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-
-/* Voice Waveform Animation */
-@keyframes voice-waveform {
-  0%, 100% {
-    transform: scaleY(0.4);
-  }
-  50% {
-    transform: scaleY(1);
+  &::-webkit-scrollbar {
+    display: none;
   }
 }

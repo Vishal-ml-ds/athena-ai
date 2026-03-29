@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Brain, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
@@ -9,7 +8,6 @@ import { createClient } from "@/lib/supabase/client";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export default function SignupPage() {
-  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,8 +47,7 @@ export default function SignupPage() {
         });
       }
 
-      router.push("/chat");
-      router.refresh();
+      window.location.href = "/onboarding";
     } catch {
       setError("An unexpected error occurred");
     } finally {
@@ -59,31 +56,31 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="bg-mesh font-[var(--font-body)] text-on-surface min-h-screen flex flex-col">
+    <div className="bg-mesh font-body text-on-surface min-h-screen flex flex-col">
       {/* Top Nav */}
       <header className="fixed top-0 w-full z-50 flex justify-between items-center px-8 py-6 bg-transparent backdrop-blur-xl shadow-[0_20px_40px_-12px_rgba(124,58,237,0.12)]">
         <Link
           href="/"
-          className="text-2xl font-bold tracking-tighter text-slate-100 font-[var(--font-headline)]"
+          className="text-2xl font-bold tracking-tighter text-slate-100 font-headline"
         >
           ATHENA
         </Link>
         <nav className="hidden md:flex items-center space-x-8">
           <Link
             href="/#features"
-            className="text-slate-400 font-[var(--font-headline)] tracking-tight hover:text-purple-300 transition-colors duration-300"
+            className="text-slate-400 font-headline tracking-tight hover:text-purple-300 transition-colors duration-300"
           >
             Features
           </Link>
           <Link
             href="/#pricing"
-            className="text-slate-400 font-[var(--font-headline)] tracking-tight hover:text-purple-300 transition-colors duration-300"
+            className="text-slate-400 font-headline tracking-tight hover:text-purple-300 transition-colors duration-300"
           >
             Security
           </Link>
           <Link
             href="/#pricing"
-            className="text-slate-400 font-[var(--font-headline)] tracking-tight hover:text-purple-300 transition-colors duration-300"
+            className="text-slate-400 font-headline tracking-tight hover:text-purple-300 transition-colors duration-300"
           >
             Enterprise
           </Link>
@@ -91,7 +88,7 @@ export default function SignupPage() {
         <div className="flex items-center gap-4">
           <Link
             href="/login"
-            className="text-purple-400 font-semibold font-[var(--font-headline)] tracking-tight active:opacity-80 transition-all"
+            className="text-purple-400 font-semibold font-headline tracking-tight active:opacity-80 transition-all"
           >
             Sign In
           </Link>
@@ -110,7 +107,7 @@ export default function SignupPage() {
 
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-white font-[var(--font-headline)] tracking-tight mb-2">
+            <h1 className="text-2xl font-bold text-white font-headline tracking-tight mb-2">
               Create account
             </h1>
             <p className="text-sm text-on-surface-variant font-medium">
@@ -121,7 +118,7 @@ export default function SignupPage() {
           {/* Form */}
           <form onSubmit={handleSignup} className="space-y-5">
             <div className="space-y-2">
-              <label className="block font-[var(--font-mono-jb)] text-[10px] uppercase tracking-widest text-athena-secondary">
+              <label className="block font-mono text-[10px] uppercase tracking-widest text-athena-secondary">
                 Your name
               </label>
               <input
@@ -136,7 +133,7 @@ export default function SignupPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="block font-[var(--font-mono-jb)] text-[10px] uppercase tracking-widest text-athena-secondary">
+              <label className="block font-mono text-[10px] uppercase tracking-widest text-athena-secondary">
                 Email address
               </label>
               <input
@@ -151,7 +148,7 @@ export default function SignupPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="block font-[var(--font-mono-jb)] text-[10px] uppercase tracking-widest text-athena-secondary">
+              <label className="block font-mono text-[10px] uppercase tracking-widest text-athena-secondary">
                 Password (min 8 characters)
               </label>
               <input
@@ -175,7 +172,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-4 rounded-lg text-on-primary font-semibold font-[var(--font-headline)] tracking-wide glow-button mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-4 rounded-lg text-on-primary font-semibold font-headline tracking-wide glow-button mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
               data-testid="signup-submit"
             >
               {isLoading ? (
@@ -204,30 +201,30 @@ export default function SignupPage() {
       {/* Footer */}
       <footer className="w-full bg-athena-background">
         <div className="w-full max-w-7xl mx-auto px-8 py-12 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="text-slate-200 font-bold font-[var(--font-mono-jb)] text-[10px] uppercase tracking-widest">
+          <div className="text-slate-200 font-bold font-mono text-[10px] uppercase tracking-widest">
             ATHENA AI OS
           </div>
           <div className="flex flex-wrap justify-center gap-6">
             <a
               href="#"
-              className="text-slate-500 font-[var(--font-mono-jb)] text-[10px] uppercase tracking-widest hover:text-amber-400 transition-colors"
+              className="text-slate-500 font-mono text-[10px] uppercase tracking-widest hover:text-amber-400 transition-colors"
             >
               Privacy Policy
             </a>
             <a
               href="#"
-              className="text-slate-500 font-[var(--font-mono-jb)] text-[10px] uppercase tracking-widest hover:text-amber-400 transition-colors"
+              className="text-slate-500 font-mono text-[10px] uppercase tracking-widest hover:text-amber-400 transition-colors"
             >
               Terms of Service
             </a>
             <a
               href="#"
-              className="text-slate-500 font-[var(--font-mono-jb)] text-[10px] uppercase tracking-widest hover:text-amber-400 transition-colors"
+              className="text-slate-500 font-mono text-[10px] uppercase tracking-widest hover:text-amber-400 transition-colors"
             >
               System Status
             </a>
           </div>
-          <div className="text-slate-500 font-[var(--font-mono-jb)] text-[10px] uppercase tracking-widest">
+          <div className="text-slate-500 font-mono text-[10px] uppercase tracking-widest">
             2024 ATHENA AI OS. Celestial Intelligence Systems.
           </div>
         </div>

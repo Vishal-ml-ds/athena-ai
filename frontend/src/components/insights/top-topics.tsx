@@ -23,7 +23,7 @@ const TOPICS: Topic[] = [
 export function TopTopics() {
   return (
     <div className="bg-[rgba(23,31,51,0.6)] backdrop-blur-xl border border-[#4a4455]/15 p-8 rounded-xl h-[340px] flex flex-col">
-      <h3 className="font-[family-name:'Space_Grotesk'] text-lg font-bold text-[#dae2fd] mb-6">
+      <h3 className="font-headline text-lg font-bold text-[#dae2fd] mb-6">
         Top Topics
       </h3>
       <div className="flex-1 space-y-5">

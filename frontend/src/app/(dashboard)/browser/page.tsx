@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   Globe,
   Check,
@@ -11,7 +10,9 @@ import {
   Info,
   MousePointer2,
   Eye,
+  AlertTriangle,
 } from "lucide-react";
+import { toast } from "sonner";
 
 // --- Types ---
 
@@ -25,6 +26,8 @@ interface TimelineStep {
 }
 
 // --- Constants ---
+
+const COMING_SOON_MESSAGE = "Browser automation coming in Sprint 5. Try chatting with the Browser agent instead!";
 
 const TIMELINE_STEPS: TimelineStep[] = [
   { id: "1", label: "Navigated to amazon.in", time: "10:05 AM", status: "completed" },
@@ -54,18 +57,37 @@ const STATUS_STYLES: Record<StepStatus, { ring: string; inner: React.ReactNode }
 };
 
 const META_STATS = [
-  { label: "Frame Rate", value: "60.0 FPS" },
-  { label: "Latency", value: "24ms" },
+  { label: "Frame Rate", value: "-- FPS" },
+  { label: "Latency", value: "--ms" },
 ] as const;
 
+// --- Helpers ---
+
+function showComingSoon() {
+  toast.info(COMING_SOON_MESSAGE, {
+    description: "Go to Chat and select the Browser agent to browse the web via conversation.",
+  });
+}
+
 // --- Components ---
+
+function PreviewBanner() {
+  return (
+    <div className="flex items-center gap-3 px-4 py-3 bg-[#ffb95f]/10 border border-[#ffb95f]/20 rounded-xl mb-6">
+      <AlertTriangle className="h-4 w-4 text-[#ffb95f] shrink-0" />
+      <p className="text-sm text-[#ffb95f] font-medium">
+        Preview -- Full browser automation launching soon
+      </p>
+    </div>
+  );
+}
 
 function TaskInputPanel() {
   return (
     <div className="p-6 border-b border-[#4a4455]/10">
       <div className="flex items-center gap-3 mb-6">
         <Globe className="h-5 w-5 text-[#d2bbff]" />
-        <h1 className="text-xl font-bold font-[family-name:'Space_Grotesk'] tracking-tight text-white">
+        <h1 className="text-xl font-bold font-headline tracking-tight text-white">
           Browser Task
         </h1>
       </div>
@@ -80,7 +102,11 @@ function TaskInputPanel() {
             data-testid="browser-task-input"
           />
         </div>
-        <button className="w-full bg-[#7c3aed] hover:bg-[#d2bbff] py-3 rounded-lg text-white font-semibold transition-all shadow-lg shadow-[#7c3aed]/20">
+        <button
+          onClick={showComingSoon}
+          className="w-full bg-[#7c3aed] hover:bg-[#d2bbff] py-3 rounded-lg text-white font-semibold transition-all shadow-lg shadow-[#7c3aed]/20"
+          data-testid="browser-execute-btn"
+        >
           Execute Task
         </button>
       </div>
@@ -153,21 +179,27 @@ function BrowserViewport() {
           <div className="w-3 h-3 rounded-full bg-emerald-500/40" />
         </div>
         <div className="flex-1 flex items-center bg-[#060e20] px-4 py-2 rounded-lg gap-3">
-          <div className="flex items-center gap-2 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 shrink-0">
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-tighter">
-              Live
+          <div className="flex items-center gap-2 px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 shrink-0">
+            <div className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+            <span className="text-[10px] text-slate-500 font-bold uppercase tracking-tighter">
+              Preview
             </span>
           </div>
           <Lock className="h-3 w-3 text-slate-500" />
           <span className="text-slate-300 text-sm font-mono flex-1 truncate">
             https://www.amazon.in/s?k=wireless+mouse
           </span>
-          <button className="hover:text-[#d2bbff] transition-colors text-slate-500">
+          <button
+            onClick={showComingSoon}
+            className="hover:text-[#d2bbff] transition-colors text-slate-500"
+          >
             <RefreshCw className="h-4 w-4" />
           </button>
         </div>
-        <button className="px-4 py-2 rounded-lg border border-[#d2bbff]/40 text-[#d2bbff] text-xs font-semibold hover:bg-[#d2bbff]/10 transition-all flex items-center gap-2">
+        <button
+          onClick={showComingSoon}
+          className="px-4 py-2 rounded-lg border border-[#d2bbff]/40 text-[#d2bbff] text-xs font-semibold hover:bg-[#d2bbff]/10 transition-all flex items-center gap-2"
+        >
           <Hand className="h-3 w-3" />
           Take Control
         </button>
@@ -177,7 +209,7 @@ function BrowserViewport() {
       <div className="flex-1 relative bg-slate-900 min-h-[300px]">
         {/* Placeholder for screenshot */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
-          <p className="text-slate-600 font-mono text-sm">Live browser view placeholder</p>
+          <p className="text-slate-600 font-mono text-sm">Live browser view -- coming in Sprint 5</p>
         </div>
 
         {/* AI Cursor */}
@@ -185,13 +217,17 @@ function BrowserViewport() {
           <div className="w-8 h-8 rounded-full border-2 border-[#d2bbff] animate-ping absolute opacity-40" />
           <MousePointer2 className="h-8 w-8 text-[#d2bbff] drop-shadow-lg" />
           <div className="mt-2 bg-[#d2bbff] px-2 py-1 rounded text-[10px] text-[#3f008e] font-bold shadow-xl">
-            ATHENA ACTING...
+            PREVIEW MODE
           </div>
         </div>
 
         {/* Stop button */}
         <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
-          <button className="px-8 py-3 bg-red-600 hover:bg-red-500 text-white rounded-full flex items-center gap-3 font-bold shadow-2xl shadow-red-900/50 transition-transform active:scale-95">
+          <button
+            onClick={showComingSoon}
+            className="px-8 py-3 bg-red-600 hover:bg-red-500 text-white rounded-full flex items-center gap-3 font-bold shadow-2xl shadow-red-900/50 transition-transform active:scale-95"
+            data-testid="browser-stop-btn"
+          >
             <StopCircle className="h-5 w-5" />
             Stop Automation
           </button>
@@ -210,7 +246,7 @@ function BrowserViewport() {
         </div>
         <div className="flex items-center gap-2 text-slate-400">
           <Eye className="h-4 w-4" />
-          <span className="text-xs font-mono">Agent: 0x2A...F4</span>
+          <span className="text-xs font-mono">Preview Mode</span>
         </div>
       </div>
     </div>
@@ -221,26 +257,32 @@ function BrowserViewport() {
 
 export default function BrowserAutomationPage() {
   return (
-    <div className="flex-1 flex bg-[#0b1326] overflow-hidden">
-      {/* Left Panel */}
-      <section className="w-[350px] bg-[#1E293B] flex flex-col border-r border-[#4a4455]/10 shrink-0">
-        <TaskInputPanel />
-        <ActionTimeline />
-      </section>
+    <div className="flex-1 flex flex-col bg-[#0b1326] overflow-hidden">
+      {/* Preview Banner */}
+      <div className="px-8 pt-6">
+        <PreviewBanner />
+      </div>
 
-      {/* Right Panel */}
-      <section className="flex-1 p-8 flex flex-col gap-6 overflow-hidden">
-        <BrowserViewport />
+      <div className="flex-1 flex overflow-hidden">
+        {/* Left Panel */}
+        <section className="w-[350px] bg-[#1E293B] flex flex-col border-r border-[#4a4455]/10 shrink-0">
+          <TaskInputPanel />
+          <ActionTimeline />
+        </section>
 
-        {/* Context Hint */}
-        <div className="flex items-center gap-4 px-6 py-4 bg-[#131b2e] rounded-xl border border-[#4a4455]/5">
-          <Info className="h-5 w-5 text-[#ffb95f] shrink-0" />
-          <p className="text-sm text-slate-400 italic">
-            ATHENA is currently identifying the best-selling wireless mice under Rs 2000 with 4+ star
-            ratings.
-          </p>
-        </div>
-      </section>
+        {/* Right Panel */}
+        <section className="flex-1 p-8 flex flex-col gap-6 overflow-hidden">
+          <BrowserViewport />
+
+          {/* Context Hint */}
+          <div className="flex items-center gap-4 px-6 py-4 bg-[#131b2e] rounded-xl border border-[#4a4455]/5">
+            <Info className="h-5 w-5 text-[#ffb95f] shrink-0" />
+            <p className="text-sm text-slate-400 italic">
+              This is a preview of browser automation. Use the Browser agent in Chat for web tasks today.
+            </p>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

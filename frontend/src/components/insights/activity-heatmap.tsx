@@ -31,7 +31,7 @@ export function ActivityHeatmap() {
     <div className="bg-[rgba(23,31,51,0.6)] backdrop-blur-xl border border-[#4a4455]/15 p-8 rounded-xl">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
-        <h3 className="font-[family-name:'Space_Grotesk'] text-lg font-bold text-[#dae2fd]">
+        <h3 className="font-headline text-lg font-bold text-[#dae2fd]">
           Activity Heatmap
         </h3>
         <div className="flex items-center gap-2 text-[10px] text-[#958da1] font-mono">

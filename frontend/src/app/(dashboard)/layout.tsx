@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { Menu, Bell } from "lucide-react";
 import { Sidebar } from "@/components/layout/sidebar";
 import { NotificationCenter } from "@/components/notification-center";
 import { CommandPalette } from "@/components/command-palette";
@@ -12,6 +13,7 @@ export default function DashboardLayout({
 }) {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleNotifications = () => {
     setIsNotificationOpen((prev) => !prev);
@@ -30,11 +32,39 @@ export default function DashboardLayout({
   }, [handleKeyDown]);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#0b1326]">
-      <Sidebar onNotificationClick={toggleNotifications} />
-      <main className="flex flex-1 flex-col overflow-hidden ml-[280px]">
+    <div className="flex h-screen overflow-hidden bg-athena-background">
+      {/* Mobile top bar — visible only on small screens */}
+      <div className="fixed left-0 right-0 top-0 z-30 flex items-center justify-between bg-surface-container-low/80 px-4 py-3 backdrop-blur-xl md:hidden">
+        <button
+          onClick={() => setIsSidebarOpen(true)}
+          data-testid="mobile-menu-button"
+          className="rounded-lg p-2 text-slate-400 transition-colors hover:text-white"
+        >
+          <Menu className="h-6 w-6" />
+        </button>
+        <span className="font-headline text-lg font-bold uppercase tracking-widest text-white">
+          ATHENA
+        </span>
+        <button
+          onClick={toggleNotifications}
+          className="relative rounded-full p-2 text-violet-400 transition-colors hover:text-amber-400"
+        >
+          <Bell className="h-5 w-5" />
+          <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-amber-500" />
+        </button>
+      </div>
+
+      <Sidebar
+        onNotificationClick={toggleNotifications}
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
+
+      {/* Main content: top padding on mobile for top bar, left margin on desktop for sidebar */}
+      <main className="flex flex-1 flex-col overflow-hidden pt-14 md:ml-[280px] md:pt-0">
         {children}
       </main>
+
       <NotificationCenter
         isOpen={isNotificationOpen}
         onClose={() => setIsNotificationOpen(false)}

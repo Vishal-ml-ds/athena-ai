@@ -40,7 +40,7 @@ function FeatureCard({ icon: Icon, title, description }: FeatureCardProps) {
       <div className="w-14 h-14 rounded-xl bg-surface-container-high flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
         <Icon className="w-7 h-7 text-athena-primary" />
       </div>
-      <h4 className="text-xl font-[var(--font-headline)] font-bold mb-4">
+      <h4 className="text-xl font-headline font-bold mb-4">
         {title}
       </h4>
       <p className="text-on-surface-variant font-light text-sm leading-relaxed">
@@ -54,10 +54,10 @@ export function FeatureGrid() {
   return (
     <section id="features" className="py-32 px-8 max-w-7xl mx-auto">
       <div className="text-center mb-24">
-        <h2 className="text-sm font-[var(--font-mono-jb)] tracking-[0.4em] uppercase text-athena-primary mb-4">
+        <h2 className="text-sm font-mono tracking-[0.4em] uppercase text-athena-primary mb-4">
           Core Ecosystem
         </h2>
-        <h3 className="text-4xl md:text-5xl font-[var(--font-headline)] font-medium">
+        <h3 className="text-4xl md:text-5xl font-headline font-medium">
           Architecture of Intelligence
         </h3>
       </div>

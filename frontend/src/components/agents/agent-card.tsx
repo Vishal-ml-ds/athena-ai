@@ -74,7 +74,7 @@ export function AgentCard({
       </div>
 
       {/* Name + last active + confidence ring */}
-      <h3 className="text-xl font-[family-name:'Space_Grotesk'] font-bold text-white mb-1">
+      <h3 className="text-xl font-headline font-bold text-white mb-1">
         {name}
       </h3>
       <div className="flex justify-between items-center mb-4">

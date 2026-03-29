@@ -1,6 +1,15 @@
 "use client";
 
-import { TrendingUp, Star, Search } from "lucide-react";
+import { useEffect, useState } from "react";
+import { TrendingUp, Star, Search, Loader2 } from "lucide-react";
+import { api } from "@/lib/api/client";
+
+// --- Types ---
+
+interface UsageData {
+  conversations: number;
+  plan: string;
+}
 
 // --- Constants ---
 
@@ -23,22 +32,49 @@ const MESSAGE_BARS = [
 // --- Component ---
 
 export function InsightStatCards() {
+  const [usage, setUsage] = useState<UsageData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchUsage() {
+      try {
+        const data = await api.get<UsageData>("/api/v1/analytics/usage");
+        setUsage(data);
+      } catch {
+        // Fall back to showing "--"
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchUsage();
+  }, []);
+
+  const conversationDisplay = isLoading
+    ? null
+    : usage?.conversations !== undefined
+      ? usage.conversations.toLocaleString()
+      : "--";
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {/* Total Conversations */}
+      {/* Total Conversations -- real API */}
       <div className="bg-[rgba(23,31,51,0.6)] backdrop-blur-xl border border-[#4a4455]/15 p-6 rounded-xl flex flex-col justify-between h-40">
         <div className="flex justify-between items-start">
-          <span className="font-[family-name:'Space_Grotesk'] text-sm font-medium text-[#958da1]">
+          <span className="font-headline text-sm font-medium text-[#958da1]">
             Total Conversations
           </span>
           <span className="text-xs text-emerald-400 font-bold flex items-center gap-1">
             <TrendingUp className="h-3.5 w-3.5" />
-            +12%
+            Live
           </span>
         </div>
         <div className="flex items-end justify-between">
-          <span className="text-4xl font-bold font-[family-name:'Space_Grotesk'] text-[#dae2fd]">
-            1,248
+          <span className="text-4xl font-bold font-headline text-[#dae2fd]">
+            {isLoading ? (
+              <Loader2 className="h-8 w-8 animate-spin text-[#d2bbff]" />
+            ) : (
+              conversationDisplay
+            )}
           </span>
           <div className="h-10 w-20 flex items-end gap-[2px]">
             {CONVERSATION_BARS.map((bar, index) => (
@@ -55,12 +91,12 @@ export function InsightStatCards() {
       {/* Messages This Week */}
       <div className="bg-[rgba(23,31,51,0.6)] backdrop-blur-xl border border-[#4a4455]/15 p-6 rounded-xl flex flex-col justify-between h-40">
         <div className="flex justify-between items-start">
-          <span className="font-[family-name:'Space_Grotesk'] text-sm font-medium text-[#958da1]">
+          <span className="font-headline text-sm font-medium text-[#958da1]">
             Messages This Week
           </span>
         </div>
         <div className="flex items-end justify-between">
-          <span className="text-4xl font-bold font-[family-name:'Space_Grotesk'] text-[#dae2fd]">
+          <span className="text-4xl font-bold font-headline text-[#dae2fd]">
             432
           </span>
           <div className="flex items-end gap-1 mb-1">
@@ -78,13 +114,13 @@ export function InsightStatCards() {
       {/* Tokens Consumed */}
       <div className="bg-[rgba(23,31,51,0.6)] backdrop-blur-xl border border-[#4a4455]/15 p-6 rounded-xl flex flex-col justify-between h-40">
         <div className="flex justify-between items-start">
-          <span className="font-[family-name:'Space_Grotesk'] text-sm font-medium text-[#958da1]">
+          <span className="font-headline text-sm font-medium text-[#958da1]">
             Tokens Consumed
           </span>
           <span className="font-mono text-[10px] text-[#ffb95f]">$12.45 EST</span>
         </div>
         <div>
-          <span className="text-3xl font-bold font-[family-name:'Space_Grotesk'] text-[#dae2fd]">
+          <span className="text-3xl font-bold font-headline text-[#dae2fd]">
             850k
           </span>
           <div className="mt-4 h-1.5 w-full bg-[#060e20] rounded-full overflow-hidden">
@@ -97,7 +133,7 @@ export function InsightStatCards() {
       {/* Most Used Agent */}
       <div className="bg-[rgba(23,31,51,0.6)] backdrop-blur-xl border border-[#4a4455]/15 p-6 rounded-xl flex flex-col justify-between h-40 border-l-4 border-l-[#ffb95f]">
         <div className="flex justify-between items-start">
-          <span className="font-[family-name:'Space_Grotesk'] text-sm font-medium text-[#958da1]">
+          <span className="font-headline text-sm font-medium text-[#958da1]">
             Most Used Agent
           </span>
           <Star className="h-5 w-5 text-[#ffb95f] fill-[#ffb95f]" />
@@ -107,7 +143,7 @@ export function InsightStatCards() {
             <Search className="h-5 w-5 text-[#ffb95f]" />
           </div>
           <div>
-            <span className="block text-xl font-bold font-[family-name:'Space_Grotesk'] text-[#ffb95f] tracking-wider">
+            <span className="block text-xl font-bold font-headline text-[#ffb95f] tracking-wider">
               RESEARCHER
             </span>
             <span className="text-[10px] font-mono text-[#958da1]">42% USAGE DENSITY</span>

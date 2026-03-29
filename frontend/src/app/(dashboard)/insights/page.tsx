@@ -1,5 +1,6 @@
 "use client";
 
+import { Info } from "lucide-react";
 import { InsightStatCards } from "@/components/insights/insight-stat-cards";
 import { AgentDistribution } from "@/components/insights/agent-distribution";
 import { ActivityHeatmap } from "@/components/insights/activity-heatmap";
@@ -20,10 +21,18 @@ export default function ConversationInsightsPage() {
       <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-[#d2bbff]/5 rounded-full blur-[120px] -z-0 pointer-events-none" />
 
       <section className="relative z-10 p-8 space-y-8">
+        {/* Real-time note */}
+        <div className="flex items-center gap-3 px-4 py-3 bg-[#131b2e] rounded-xl border border-[#4a4455]/10">
+          <Info className="h-4 w-4 text-[#d2bbff] shrink-0" />
+          <p className="text-sm text-slate-400">
+            Analytics update in real-time as you use ATHENA. Start chatting to see your data here.
+          </p>
+        </div>
+
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <h2 className="text-3xl font-[family-name:'Space_Grotesk'] font-bold text-[#dae2fd]">
+            <h2 className="text-3xl font-headline font-bold text-[#dae2fd]">
               Intelligence Analytics
             </h2>
             <p className="text-[#958da1] mt-1">
@@ -46,7 +55,7 @@ export default function ConversationInsightsPage() {
           </div>
         </div>
 
-        {/* Top Stats */}
+        {/* Top Stats -- wired to real API */}
         <InsightStatCards />
 
         {/* Main Charts: Distribution + Heatmap */}

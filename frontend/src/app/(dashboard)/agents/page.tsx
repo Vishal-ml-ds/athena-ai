@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   Search,
   Calendar,
@@ -8,10 +9,13 @@ import {
   Globe,
   DollarSign,
   Brain,
+  Plus,
   type LucideIcon,
 } from "lucide-react";
+import { toast } from "sonner";
 import { AgentCard } from "@/components/agents/agent-card";
-import { PerformanceStats } from "@/components/agents/performance-stats";
+import { AgentPerformanceStats } from "@/components/agents/performance-stats-live";
+import { api } from "@/lib/api/client";
 
 // --- Types ---
 
@@ -26,6 +30,11 @@ interface Agent {
   avgResp: string;
   confidence: number;
   lastActive: string;
+}
+
+interface UsageData {
+  conversations: number;
+  plan: string;
 }
 
 // --- Constants ---
@@ -45,15 +54,38 @@ const ROW_ONE_COUNT = 4;
 // --- Page ---
 
 export default function AgentCommandCenterPage() {
+  const [usage, setUsage] = useState<UsageData | null>(null);
+  const [isLoadingUsage, setIsLoadingUsage] = useState(true);
+
   const rowOneAgents = AGENTS.slice(0, ROW_ONE_COUNT);
   const rowTwoAgents = AGENTS.slice(ROW_ONE_COUNT);
+
+  useEffect(() => {
+    async function fetchUsage() {
+      try {
+        const data = await api.get<UsageData>("/api/v1/analytics/usage");
+        setUsage(data);
+      } catch {
+        // Silently fall back to showing "--" for conversation count
+      } finally {
+        setIsLoadingUsage(false);
+      }
+    }
+    fetchUsage();
+  }, []);
+
+  const handleDeployAgent = () => {
+    toast.info("Custom agents coming in next update", {
+      description: "You'll be able to create and deploy specialized agents soon.",
+    });
+  };
 
   return (
     <div className="flex-1 overflow-y-auto p-8 pb-24 bg-[#0b1326]">
       {/* Header */}
       <header className="mb-10 flex justify-between items-end">
         <div>
-          <h1 className="text-4xl font-[family-name:'Space_Grotesk'] font-light tracking-tight text-white">
+          <h1 className="text-4xl font-headline font-light tracking-tight text-white">
             Command <span className="text-[#d2bbff] font-bold">Center</span>
           </h1>
           <p className="text-slate-400 font-mono text-xs mt-2 uppercase tracking-widest">
@@ -61,28 +93,42 @@ export default function AgentCommandCenterPage() {
             <span className="text-[#ffb95f]">All Systems Nominal</span>
           </p>
         </div>
-        <div className="bg-[rgba(23,31,51,0.6)] backdrop-blur-xl px-4 py-2 rounded-xl flex flex-col items-end">
-          <span className="text-[10px] font-mono text-slate-500 uppercase">System Uptime</span>
-          <span className="text-white font-mono font-bold">99.98%</span>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={handleDeployAgent}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#7c3aed] hover:bg-[#6d28d9] text-white text-sm font-medium transition-colors"
+            data-testid="deploy-agent-btn"
+          >
+            <Plus className="h-4 w-4" />
+            Deploy New Agent
+          </button>
+          <div className="bg-[rgba(23,31,51,0.6)] backdrop-blur-xl px-4 py-2 rounded-xl flex flex-col items-end">
+            <span className="text-[10px] font-mono text-slate-500 uppercase">System Uptime</span>
+            <span className="text-white font-mono font-bold">99.98%</span>
+          </div>
         </div>
       </header>
 
-      {/* Agent Grid — Row 1 (4 cards) */}
+      {/* Agent Grid -- Row 1 (4 cards) */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
         {rowOneAgents.map((agent) => (
           <AgentCard key={agent.name} {...agent} />
         ))}
       </div>
 
-      {/* Agent Grid — Row 2 (3 cards) */}
+      {/* Agent Grid -- Row 2 (3 cards) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         {rowTwoAgents.map((agent) => (
           <AgentCard key={agent.name} {...agent} />
         ))}
       </div>
 
-      {/* Performance Stats */}
-      <PerformanceStats />
+      {/* Performance Stats -- wired to real API */}
+      <AgentPerformanceStats
+        conversationCount={usage?.conversations ?? null}
+        isLoading={isLoadingUsage}
+        plan={usage?.plan ?? "free"}
+      />
     </div>
   );
 }

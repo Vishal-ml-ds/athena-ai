@@ -30,10 +30,10 @@ export function HowItWorks() {
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
           <div className="max-w-xl">
-            <h2 className="text-sm font-[var(--font-mono-jb)] tracking-[0.4em] uppercase text-athena-secondary mb-4">
+            <h2 className="text-sm font-mono tracking-[0.4em] uppercase text-athena-secondary mb-4">
               Workflow Optimization
             </h2>
-            <h3 className="text-4xl md:text-5xl font-[var(--font-headline)] font-medium">
+            <h3 className="text-4xl md:text-5xl font-headline font-medium">
               From Thought to Execution
             </h3>
           </div>
@@ -48,10 +48,10 @@ export function HowItWorks() {
           {/* Step 1 */}
           <div className="relative space-y-8">
             <div className="flex items-center gap-6">
-              <span className="w-12 h-12 rounded-full border border-athena-primary/40 flex items-center justify-center font-[var(--font-headline)] text-xl font-bold text-athena-primary">
+              <span className="w-12 h-12 rounded-full border border-athena-primary/40 flex items-center justify-center font-headline text-xl font-bold text-athena-primary">
                 01
               </span>
-              <h4 className="text-2xl font-[var(--font-headline)] font-bold">
+              <h4 className="text-2xl font-headline font-bold">
                 Ask Anything
               </h4>
             </div>
@@ -67,10 +67,10 @@ export function HowItWorks() {
           {/* Step 2 */}
           <div className="relative space-y-8">
             <div className="flex items-center gap-6">
-              <span className="w-12 h-12 rounded-full border border-athena-primary/40 flex items-center justify-center font-[var(--font-headline)] text-xl font-bold text-athena-primary">
+              <span className="w-12 h-12 rounded-full border border-athena-primary/40 flex items-center justify-center font-headline text-xl font-bold text-athena-primary">
                 02
               </span>
-              <h4 className="text-2xl font-[var(--font-headline)] font-bold">
+              <h4 className="text-2xl font-headline font-bold">
                 Parallel Agency
               </h4>
             </div>
@@ -95,10 +95,10 @@ export function HowItWorks() {
           {/* Step 3 */}
           <div className="relative space-y-8">
             <div className="flex items-center gap-6">
-              <span className="w-12 h-12 rounded-full border border-athena-primary/40 flex items-center justify-center font-[var(--font-headline)] text-xl font-bold text-athena-primary">
+              <span className="w-12 h-12 rounded-full border border-athena-primary/40 flex items-center justify-center font-headline text-xl font-bold text-athena-primary">
                 03
               </span>
-              <h4 className="text-2xl font-[var(--font-headline)] font-bold">
+              <h4 className="text-2xl font-headline font-bold">
                 Intelligent Results
               </h4>
             </div>

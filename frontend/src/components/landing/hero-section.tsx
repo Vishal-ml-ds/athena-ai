@@ -11,13 +11,13 @@ export function HeroSection() {
         {/* Status badge */}
         <div className="inline-flex items-center space-x-2 bg-surface-container-high/50 px-4 py-1.5 rounded-full border border-outline-variant/10 mb-4">
           <span className="flex h-2 w-2 rounded-full bg-athena-secondary animate-pulse" />
-          <span className="font-[var(--font-mono-jb)] text-[10px] uppercase tracking-[0.2em] text-athena-secondary">
+          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-athena-secondary">
             Neural Link Established
           </span>
         </div>
 
         {/* Headline */}
-        <h1 className="text-5xl md:text-8xl font-[var(--font-headline)] font-bold tracking-tighter text-on-surface leading-[0.9] md:leading-[1.1]">
+        <h1 className="text-5xl md:text-8xl font-headline font-bold tracking-tighter text-on-surface leading-[0.9] md:leading-[1.1]">
           The AI Goddess <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-athena-primary to-athena-secondary">
             That Runs Your Life
@@ -34,11 +34,11 @@ export function HeroSection() {
         <div className="flex flex-col sm:flex-row gap-6 justify-center mt-12">
           <Link
             href="/signup"
-            className="bg-primary-container text-on-primary-container px-10 py-5 rounded-xl font-[var(--font-headline)] text-lg uppercase tracking-tight font-bold shadow-2xl shadow-primary-container/40 hover:scale-[1.02] transition-transform active:scale-95"
+            className="bg-primary-container text-on-primary-container px-10 py-5 rounded-xl font-headline text-lg uppercase tracking-tight font-bold shadow-2xl shadow-primary-container/40 hover:scale-[1.02] transition-transform active:scale-95"
           >
             Get Started Free
           </Link>
-          <button className="px-10 py-5 rounded-xl font-[var(--font-headline)] text-lg uppercase tracking-tight font-bold border border-outline-variant/30 hover:bg-surface-container-high transition-colors active:scale-95">
+          <button className="px-10 py-5 rounded-xl font-headline text-lg uppercase tracking-tight font-bold border border-outline-variant/30 hover:bg-surface-container-high transition-colors active:scale-95">
             Watch Demo
           </button>
         </div>

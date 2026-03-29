@@ -29,7 +29,7 @@ const PRICING_TIERS: ReadonlyArray<PricingTierProps> = [
     ],
     ctaLabel: "Start Free",
     buttonClass:
-      "w-full py-4 rounded-xl border border-outline-variant/30 hover:bg-surface-container-high transition-colors font-[var(--font-headline)] uppercase tracking-tight font-bold",
+      "w-full py-4 rounded-xl border border-outline-variant/30 hover:bg-surface-container-high transition-colors font-headline uppercase tracking-tight font-bold",
   },
   {
     name: "Pro",
@@ -45,7 +45,7 @@ const PRICING_TIERS: ReadonlyArray<PricingTierProps> = [
     ],
     ctaLabel: "Upgrade to Pro",
     buttonClass:
-      "w-full py-4 rounded-xl bg-primary-container text-on-primary-container font-[var(--font-headline)] uppercase tracking-tight font-bold shadow-lg shadow-primary-container/20",
+      "w-full py-4 rounded-xl bg-primary-container text-on-primary-container font-headline uppercase tracking-tight font-bold shadow-lg shadow-primary-container/20",
   },
   {
     name: "Ultra",
@@ -60,7 +60,7 @@ const PRICING_TIERS: ReadonlyArray<PricingTierProps> = [
     ],
     ctaLabel: "Go Ultra",
     buttonClass:
-      "w-full py-4 rounded-xl border border-athena-secondary/30 text-athena-secondary hover:bg-athena-secondary/10 transition-colors font-[var(--font-headline)] uppercase tracking-tight font-bold",
+      "w-full py-4 rounded-xl border border-athena-secondary/30 text-athena-secondary hover:bg-athena-secondary/10 transition-colors font-headline uppercase tracking-tight font-bold",
   },
 ];
 
@@ -83,18 +83,18 @@ function PricingCard({
       }`}
     >
       {isHighlighted && (
-        <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary-container text-on-primary-container px-4 py-1 rounded-full text-[10px] font-[var(--font-mono-jb)] uppercase tracking-[0.2em] font-bold">
+        <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary-container text-on-primary-container px-4 py-1 rounded-full text-[10px] font-mono uppercase tracking-[0.2em] font-bold">
           Most Popular
         </div>
       )}
       <div className="mb-8">
         <h4
-          className={`text-xl font-[var(--font-headline)] font-medium uppercase tracking-widest ${tierColorClass}`}
+          className={`text-xl font-headline font-medium uppercase tracking-widest ${tierColorClass}`}
         >
           {name}
         </h4>
         <div className="mt-4 flex items-baseline">
-          <span className="text-5xl font-[var(--font-headline)] font-bold">
+          <span className="text-5xl font-headline font-bold">
             {price}
           </span>
           <span className="text-on-surface-variant ml-2">/mo</span>
@@ -122,10 +122,10 @@ export function PricingSection() {
   return (
     <section id="pricing" className="py-32 px-8 max-w-7xl mx-auto">
       <div className="text-center mb-24">
-        <h2 className="text-sm font-[var(--font-mono-jb)] tracking-[0.4em] uppercase text-athena-primary mb-4">
+        <h2 className="text-sm font-mono tracking-[0.4em] uppercase text-athena-primary mb-4">
           Investment
         </h2>
-        <h3 className="text-4xl md:text-5xl font-[var(--font-headline)] font-medium">
+        <h3 className="text-4xl md:text-5xl font-headline font-medium">
           Power for Every Lifestyle
         </h3>
       </div>
