@@ -393,23 +393,25 @@ export default function WeeklyReportPage() {
 function HighlightsList({ data }: { data: ReportData }) {
   const highlights: string[] = [];
 
-  if (data.habits.length > 0) {
-    const bestHabit = [...data.habits].sort((a, b) => b.current_streak - a.current_streak)[0];
-    highlights.push(`Best streak: ${bestHabit.name} at ${bestHabit.current_streak} days.`);
-  }
-
-  if (data.goals.length > 0) {
-    const topGoal = [...data.goals].sort((a, b) => b.progress - a.progress)[0];
-    highlights.push(`${topGoal.title} is at ${topGoal.progress}% progress.`);
-  }
-
-  if (data.finance) {
-    if (data.finance.savings > 0) {
-      highlights.push(`Saved Rs ${data.finance.savings.toLocaleString()} this week.`);
+  if (data.habits?.length > 0) {
+    const bestHabit = [...data.habits].sort((a, b) => (b.current_streak ?? 0) - (a.current_streak ?? 0))[0];
+    if (bestHabit) {
+      highlights.push(`Best streak: ${bestHabit.name} at ${bestHabit.current_streak ?? 0} days.`);
     }
   }
 
-  if (data.health?.sleep.is_positive) {
+  if (data.goals?.length > 0) {
+    const topGoal = [...data.goals].sort((a, b) => (b.progress ?? 0) - (a.progress ?? 0))[0];
+    if (topGoal) {
+      highlights.push(`${topGoal.title} is at ${topGoal.progress ?? 0}% progress.`);
+    }
+  }
+
+  if (data.finance?.savings && data.finance.savings > 0) {
+    highlights.push(`Saved Rs ${data.finance.savings.toLocaleString()} this week.`);
+  }
+
+  if (data.health?.sleep?.is_positive) {
     highlights.push(`Sleep quality improved by ${data.health.sleep.change}.`);
   }
 
@@ -432,15 +434,15 @@ function HighlightsList({ data }: { data: ReportData }) {
 function NudgesList({ data }: { data: ReportData }) {
   const nudges: { text: string; isPrimary: boolean }[] = [];
 
-  const lowHabits = data.habits.filter((h) => h.completion_rate < 50);
+  const lowHabits = (data.habits ?? []).filter((h) => (h.completion_rate ?? 100) < 50);
   if (lowHabits.length > 0) {
     nudges.push({
-      text: `${lowHabits[0].name} needs attention — only ${lowHabits[0].completion_rate}% completion`,
+      text: `${lowHabits[0].name} needs attention — only ${lowHabits[0].completion_rate ?? 0}% completion`,
       isPrimary: true,
     });
   }
 
-  const slowGoals = data.goals.filter((g) => g.progress < 30);
+  const slowGoals = (data.goals ?? []).filter((g) => (g.progress ?? 0) < 30);
   if (slowGoals.length > 0) {
     nudges.push({
       text: `Review your "${slowGoals[0].title}" goal — it's falling behind`,
@@ -448,7 +450,7 @@ function NudgesList({ data }: { data: ReportData }) {
     });
   }
 
-  if (data.finance && data.finance.savings < 0) {
+  if (data.finance?.savings && data.finance.savings < 0) {
     nudges.push({ text: "You overspent this week. Review your budget.", isPrimary: true });
   }
 
