@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import {
   Mic,
   MicOff,
@@ -10,6 +10,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useConversationStore } from "@/stores/conversation-store";
 
 // --- Types ---
 
@@ -29,6 +30,8 @@ type RecordingState = "idle" | "recording" | "processing";
 type VoiceMode = "hands-free" | "push-to-talk";
 
 // --- Constants ---
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 const WAVEFORM_BARS = [
   { height: "h-4", opacity: "opacity-60", delay: "0s" },
@@ -51,6 +54,58 @@ const IDLE_BARS = [
   { height: "h-1", opacity: "opacity-30" },
   { height: "h-2", opacity: "opacity-30" },
 ] as const;
+
+// --- Helpers ---
+
+async function getAuthToken(): Promise<string | null> {
+  const { createClient } = await import("@/lib/supabase/client");
+  const supabase = createClient();
+  const { data } = await supabase.auth.getSession();
+  return data.session?.access_token ?? null;
+}
+
+async function transcribeAudio(blob: Blob): Promise<string> {
+  const token = await getAuthToken();
+  const form = new FormData();
+  form.append("file", blob, "audio.webm");
+
+  const response = await fetch(`${API_BASE}/api/v1/voice/transcribe`, {
+    method: "POST",
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    body: form,
+  });
+
+  if (!response.ok) throw new Error(`Transcription failed: ${response.status}`);
+  const body = await response.json();
+  if (!body.success) throw new Error(body.error?.message || "Transcription failed");
+  return body.data?.text || "";
+}
+
+async function synthesizeAndPlay(text: string): Promise<void> {
+  const token = await getAuthToken();
+
+  const response = await fetch(`${API_BASE}/api/v1/voice/synthesize`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify({ text, voice: "alloy" }),
+  });
+
+  if (!response.ok) return; // Fail silently — TTS is nice-to-have
+
+  const body = await response.json();
+  if (!body.success || !body.data?.audio) return;
+
+  // Decode base64 and play
+  const audioBytes = Uint8Array.from(atob(body.data.audio), (c) => c.charCodeAt(0));
+  const audioBlob = new Blob([audioBytes], { type: "audio/mpeg" });
+  const audioUrl = URL.createObjectURL(audioBlob);
+  const audio = new Audio(audioUrl);
+  audio.onended = () => URL.revokeObjectURL(audioUrl);
+  await audio.play();
+}
 
 // --- Sub-Components ---
 
@@ -125,6 +180,59 @@ export function VoiceOverlay({ isOpen, onClose }: VoiceOverlayProps) {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const entryCountRef = useRef(0);
+  const pendingResponseRef = useRef(false);
+
+  const {
+    messages,
+    isStreaming,
+    activeConversationId,
+    createConversation,
+    sendMessage,
+  } = useConversationStore();
+
+  // Watch for new assistant message after we send one
+  useEffect(() => {
+    if (!pendingResponseRef.current || isStreaming) return;
+
+    const lastMsg = messages[messages.length - 1];
+    if (lastMsg?.role === "assistant" && lastMsg.content) {
+      pendingResponseRef.current = false;
+
+      // Add to local transcript
+      entryCountRef.current += 1;
+      setTranscript((prev) => [
+        ...prev.filter((e) => e.id !== "streaming"),
+        {
+          id: String(entryCountRef.current),
+          speaker: "athena",
+          text: lastMsg.content,
+        },
+      ]);
+
+      // Synthesize and play
+      synthesizeAndPlay(lastMsg.content).catch(() => {
+        // TTS failed — silence is fine, transcript still shows
+      });
+    }
+  }, [messages, isStreaming]);
+
+  // Show streaming indicator while waiting
+  useEffect(() => {
+    if (!pendingResponseRef.current) return;
+
+    if (isStreaming) {
+      setTranscript((prev) => {
+        const hasStreaming = prev.some((e) => e.id === "streaming");
+        if (hasStreaming) return prev;
+        return [
+          ...prev,
+          { id: "streaming", speaker: "athena", text: "Thinking...", isStreaming: true },
+        ];
+      });
+    } else {
+      setTranscript((prev) => prev.filter((e) => e.id !== "streaming"));
+    }
+  }, [isStreaming]);
 
   const startRecording = useCallback(async () => {
     try {
@@ -134,13 +242,10 @@ export function VoiceOverlay({ isOpen, onClose }: VoiceOverlayProps) {
       chunksRef.current = [];
 
       mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          chunksRef.current.push(event.data);
-        }
+        if (event.data.size > 0) chunksRef.current.push(event.data);
       };
 
       mediaRecorder.onstop = async () => {
-        // Stop all tracks to release microphone
         stream.getTracks().forEach((track) => track.stop());
 
         if (chunksRef.current.length === 0) return;
@@ -148,28 +253,36 @@ export function VoiceOverlay({ isOpen, onClose }: VoiceOverlayProps) {
         setRecordingState("processing");
         const blob = new Blob(chunksRef.current, { type: "audio/webm" });
 
-        // For MVP: transcription API not wired yet
-        // Show the recorded audio info and a coming soon message
-        entryCountRef.current += 1;
-        const newEntry: TranscriptEntry = {
-          id: String(entryCountRef.current),
-          speaker: "user",
-          text: `[Recorded ${(blob.size / 1024).toFixed(1)} KB of audio]`,
-        };
+        try {
+          const text = await transcribeAudio(blob);
 
-        entryCountRef.current += 1;
-        const athenaReply: TranscriptEntry = {
-          id: String(entryCountRef.current),
-          speaker: "athena",
-          text: "Voice transcription requires an OpenAI API key. Coming soon!",
-        };
+          if (!text.trim()) {
+            toast.info("No speech detected", { description: "Try speaking more clearly." });
+            setRecordingState("idle");
+            return;
+          }
 
-        setTranscript((prev) => [...prev, newEntry, athenaReply]);
-        setRecordingState("idle");
+          // Add user message to transcript
+          entryCountRef.current += 1;
+          setTranscript((prev) => [
+            ...prev,
+            { id: String(entryCountRef.current), speaker: "user", text },
+          ]);
 
-        toast.info("Voice transcription coming soon", {
-          description: "Audio was captured successfully. Whisper integration is in progress.",
-        });
+          // Ensure conversation exists, then send
+          let convId = activeConversationId;
+          if (!convId) {
+            convId = await createConversation("Voice Session");
+          }
+
+          pendingResponseRef.current = true;
+          await sendMessage(text);
+        } catch (err) {
+          const message = err instanceof Error ? err.message : "Unknown error";
+          toast.error("Voice processing failed", { description: message });
+        } finally {
+          setRecordingState("idle");
+        }
       };
 
       mediaRecorder.start();
@@ -180,7 +293,7 @@ export function VoiceOverlay({ isOpen, onClose }: VoiceOverlayProps) {
       });
       setRecordingState("idle");
     }
-  }, []);
+  }, [activeConversationId, createConversation, sendMessage]);
 
   const stopRecording = useCallback(() => {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
@@ -197,25 +310,25 @@ export function VoiceOverlay({ isOpen, onClose }: VoiceOverlayProps) {
   }, [recordingState, startRecording, stopRecording]);
 
   const handleClose = useCallback(() => {
-    // Stop recording if active before closing
     if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
       mediaRecorderRef.current.stream.getTracks().forEach((track) => track.stop());
       mediaRecorderRef.current.stop();
     }
     setRecordingState("idle");
     setTranscript([]);
+    pendingResponseRef.current = false;
     onClose();
   }, [onClose]);
 
   if (!isOpen) return null;
 
   const isRecording = recordingState === "recording";
-  const isProcessing = recordingState === "processing";
+  const isProcessing = recordingState === "processing" || (pendingResponseRef.current && isStreaming);
 
   const statusText = isRecording
     ? "ATHENA is listening..."
     : isProcessing
-      ? "Processing audio..."
+      ? "Processing..."
       : "Tap the orb to speak";
 
   return (
