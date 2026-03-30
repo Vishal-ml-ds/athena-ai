@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Shield,
   CreditCard,
@@ -7,6 +9,7 @@ import {
   ShoppingCart,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface AgentIconProps {
   readonly icon: LucideIcon;
@@ -44,9 +47,18 @@ export function HowItWorks() {
         </div>
 
         {/* Steps */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-16 relative">
+        <motion.div 
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={{
+            hidden: { opacity: 0 },
+            show: { opacity: 1, transition: { staggerChildren: 0.2 } }
+          }}
+          className="grid grid-cols-1 lg:grid-cols-3 gap-16 relative"
+        >
           {/* Step 1 */}
-          <div className="relative space-y-8">
+          <motion.div variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } } }} className="relative space-y-8">
             <div className="flex items-center gap-6">
               <span className="w-12 h-12 rounded-full border border-athena-primary/40 flex items-center justify-center font-headline text-xl font-bold text-athena-primary">
                 01
@@ -62,10 +74,10 @@ export function HowItWorks() {
               Initiate via voice or text. No complex prompts needed -- ATHENA
               understands intent from natural language.
             </p>
-          </div>
+          </motion.div>
 
           {/* Step 2 */}
-          <div className="relative space-y-8">
+          <motion.div variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } } }} className="relative space-y-8">
             <div className="flex items-center gap-6">
               <span className="w-12 h-12 rounded-full border border-athena-primary/40 flex items-center justify-center font-headline text-xl font-bold text-athena-primary">
                 02
@@ -90,10 +102,10 @@ export function HowItWorks() {
               Six specialized agents (Research, Finance, Admin, Creative,
               Technical, Concierge) collaborate simultaneously.
             </p>
-          </div>
+          </motion.div>
 
           {/* Step 3 */}
-          <div className="relative space-y-8">
+          <motion.div variants={{ hidden: { opacity: 0, y: 30 }, show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } } }} className="relative space-y-8">
             <div className="flex items-center gap-6">
               <span className="w-12 h-12 rounded-full border border-athena-primary/40 flex items-center justify-center font-headline text-xl font-bold text-athena-primary">
                 03
@@ -109,8 +121,8 @@ export function HowItWorks() {
               Receive finalized actions, comprehensive reports, or confirmed
               bookings directly in your hub.
             </p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

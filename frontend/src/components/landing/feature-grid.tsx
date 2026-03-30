@@ -1,5 +1,8 @@
+"use client";
+
 import { Brain, Mic, Globe, Heart } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface FeatureCardProps {
   readonly icon: LucideIcon;
@@ -36,7 +39,13 @@ const FEATURES: ReadonlyArray<FeatureCardProps> = [
 
 function FeatureCard({ icon: Icon, title, description }: FeatureCardProps) {
   return (
-    <div className="glass-card p-8 rounded-2xl border border-outline-variant/10 hover:border-athena-primary/40 transition-all duration-500 group">
+    <motion.div 
+      variants={{
+        hidden: { opacity: 0, y: 30 },
+        show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+      }}
+      className="glass-card p-8 rounded-2xl border border-outline-variant/10 hover:border-athena-primary/40 transition-all duration-500 group"
+    >
       <div className="w-14 h-14 rounded-xl bg-surface-container-high flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
         <Icon className="w-7 h-7 text-athena-primary" />
       </div>
@@ -46,7 +55,7 @@ function FeatureCard({ icon: Icon, title, description }: FeatureCardProps) {
       <p className="text-on-surface-variant font-light text-sm leading-relaxed">
         {description}
       </p>
-    </div>
+    </motion.div>
   );
 }
 
@@ -61,11 +70,20 @@ export function FeatureGrid() {
           Architecture of Intelligence
         </h3>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <motion.div 
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={{
+          hidden: { opacity: 0 },
+          show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+        }}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+      >
         {FEATURES.map((feature) => (
           <FeatureCard key={feature.title} {...feature} />
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 }
