@@ -76,8 +76,8 @@ function PricingCard({
 }: PricingTierProps) {
   return (
     <div
-      className={`glass-card p-10 rounded-3xl flex flex-col h-full ${isHighlighted
-          ? "border-2 border-primary-container relative shadow-[0_0_50px_rgba(124,58,237,0.15)] scale-105 z-10"
+      className={`glass-card p-10 rounded-3xl flex flex-col ${isHighlighted
+          ? "border-2 border-primary-container relative shadow-[0_0_50px_rgba(124,58,237,0.15)]"
           : "border border-outline-variant/10"
         }`}
     >
@@ -99,20 +99,22 @@ function PricingCard({
           <span className="text-on-surface-variant ml-2">/mo</span>
         </div>
       </div>
-      <ul className="space-y-4 mb-12 flex-grow">
+      <ul className="space-y-4 flex-1">
         {features.map((feature) => (
           <li
             key={feature.label}
             className="flex items-center gap-3 text-sm font-light"
           >
-            <CheckCircle className={`w-[18px] h-[18px] ${checkColorClass}`} />
+            <CheckCircle className={`w-[18px] h-[18px] shrink-0 ${checkColorClass}`} />
             {feature.label}
           </li>
         ))}
       </ul>
-      <Link href="/signup" className={buttonClass} data-testid={`pricing-cta-${name.toLowerCase()}`}>
-        {ctaLabel}
-      </Link>
+      <div className="mt-10">
+        <Link href="/signup" className={`block text-center ${buttonClass}`} data-testid={`pricing-cta-${name.toLowerCase()}`}>
+          {ctaLabel}
+        </Link>
+      </div>
     </div>
   );
 }
@@ -128,7 +130,7 @@ export function PricingSection() {
           Power for Every Lifestyle
         </h3>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
         {PRICING_TIERS.map((tier) => (
           <PricingCard key={tier.name} {...tier} />
         ))}
