@@ -35,10 +35,13 @@ interface Goal {
 }
 
 interface FinanceSummary {
-  total_income: number;
-  total_expenses: number;
+  total_income?: number;
+  total_expenses?: number;
+  income?: number;
+  expenses?: number;
   savings: number;
-  top_categories: { name: string; percent: number }[];
+  top_categories?: { name: string; percent: number }[];
+  by_category?: Record<string, number>;
 }
 
 interface HealthTrends {
@@ -175,9 +178,23 @@ function GoalsSection({ goals }: { goals: Goal[] }) {
 }
 
 function FinanceSection({ finance }: { finance: FinanceSummary }) {
-  const savingsPercent = finance.total_income > 0
-    ? Math.round((finance.savings / finance.total_income) * 100)
+  const totalIncome = finance.total_income ?? finance.income ?? 0;
+  const totalExpenses = finance.total_expenses ?? finance.expenses ?? 0;
+  const savings = finance.savings ?? 0;
+  const savingsPercent = totalIncome > 0
+    ? Math.round((savings / totalIncome) * 100)
     : 0;
+
+  // Normalize categories
+  const topCategories: { name: string; percent: number }[] = finance.top_categories ?? [];
+  if (topCategories.length === 0 && finance.by_category) {
+    const entries = Object.entries(finance.by_category);
+    const total = entries.reduce((s, [, v]) => s + v, 0);
+    entries.sort((a, b) => b[1] - a[1]);
+    for (const [name, amount] of entries.slice(0, 5)) {
+      topCategories.push({ name, percent: total > 0 ? Math.round((amount / total) * 100) : 0 });
+    }
+  }
 
   return (
     <ReportSection
@@ -190,13 +207,13 @@ function FinanceSection({ finance }: { finance: FinanceSummary }) {
             <div className="p-4 rounded-xl bg-[#2d3449]/30 border border-[#4a4455]/10">
               <p className="text-[10px] font-mono uppercase text-[#ccc3d8] mb-1">Income</p>
               <p className="text-lg font-bold text-emerald-400">
-                Rs {finance.total_income.toLocaleString()}
+                Rs {totalIncome.toLocaleString()}
               </p>
             </div>
             <div className="p-4 rounded-xl bg-[#2d3449]/30 border border-[#4a4455]/10">
               <p className="text-[10px] font-mono uppercase text-[#ccc3d8] mb-1">Expenses</p>
               <p className="text-lg font-bold text-[#ffb4ab]">
-                Rs {finance.total_expenses.toLocaleString()}
+                Rs {totalExpenses.toLocaleString()}
               </p>
             </div>
             <div className="p-4 rounded-xl bg-[#2d3449]/30 border border-[#4a4455]/10">
@@ -207,11 +224,11 @@ function FinanceSection({ finance }: { finance: FinanceSummary }) {
             </div>
           </div>
         </div>
-        {finance.top_categories.length > 0 && (
+        {topCategories.length > 0 && (
           <div className="flex-1 w-full space-y-4">
             <p className="text-xs font-mono uppercase text-[#ccc3d8] mb-2">Top Categories</p>
             <div className="space-y-3">
-              {finance.top_categories.map((cat) => (
+              {topCategories.map((cat) => (
                 <div key={cat.name} className="flex items-center justify-between text-sm">
                   <span className="text-[#dae2fd]">{cat.name}</span>
                   <span className="font-bold text-white">{cat.percent}%</span>

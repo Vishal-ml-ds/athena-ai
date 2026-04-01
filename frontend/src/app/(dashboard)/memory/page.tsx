@@ -182,8 +182,8 @@ export default function MemoryPage() {
       const endpoint = filter === "all"
         ? "/api/v1/memories"
         : `/api/v1/memories?memory_type=${filter}`;
-      const data = await api.get<MemoryItem[]>(endpoint);
-      setMemories(data);
+      const data = await api.get<{ items: MemoryItem[] } | MemoryItem[]>(endpoint);
+      setMemories(Array.isArray(data) ? data : data.items ?? []);
     } catch {
       setMemories([]);
     } finally {
@@ -195,7 +195,8 @@ export default function MemoryPage() {
   const fetchSummary = useCallback(async () => {
     try {
       /* Build summary from full list */
-      const data = await api.get<MemoryItem[]>("/api/v1/memories");
+      const raw = await api.get<{ items: MemoryItem[] } | MemoryItem[]>("/api/v1/memories");
+      const data = Array.isArray(raw) ? raw : raw.items ?? [];
       const byType: Record<string, number> = {};
       for (const m of data) {
         byType[m.memory_type] = (byType[m.memory_type] ?? 0) + 1;
