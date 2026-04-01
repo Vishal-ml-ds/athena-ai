@@ -576,24 +576,24 @@ export default function LifeOSDashboardPage() {
             </div>
           </div>
 
-          {/* Dashboard Grid */}
+          {/* Dashboard Grid — filtered by active tab */}
           <div className="grid grid-cols-12 gap-6">
-            <StreakBanner streak={bestStreak} />
+            {activeTab === "Habits" && (
+              <>
+                <StreakBanner streak={bestStreak} />
+                <div className="col-span-12 lg:col-span-7 space-y-6">
+                  <HabitChecklist />
+                </div>
+                <div className="col-span-12 lg:col-span-5 space-y-6">
+                  <ActivityHeatmap />
+                  <AiInsight />
+                </div>
+              </>
+            )}
 
-            {/* Left Column */}
-            <div className="col-span-12 lg:col-span-7 space-y-6">
-              <HabitChecklist />
-            </div>
-
-            {/* Right Column */}
-            <div className="col-span-12 lg:col-span-5 space-y-6">
-              <ActivityHeatmap />
-              <AiInsight />
-            </div>
-
-            <GoalCards />
-            <FinanceSummarySection />
-            <HealthMetricsSection />
+            {activeTab === "Goals" && <GoalCards />}
+            {activeTab === "Finance" && <FinanceSummarySection />}
+            {activeTab === "Health" && <HealthMetricsSection />}
           </div>
         </div>
       </div>

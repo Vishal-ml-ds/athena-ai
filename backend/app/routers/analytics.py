@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from datetime import datetime, timedelta, timezone
+
 from fastapi import APIRouter, Depends, Query
 from supabase import Client
 
@@ -24,7 +26,7 @@ async def get_usage(
         supabase.table("conversations")
         .select("id", count="exact")
         .eq("user_id", str(ctx.user_id))
-        .gte("created_at", f"now() - interval '{days} days'")
+        .gte("created_at", (datetime.now(timezone.utc) - timedelta(days=days)).isoformat())
         .execute()
     )
     conversation_ids = [row["id"] for row in (convs_result.data or [])]
@@ -65,7 +67,7 @@ async def get_agent_distribution(
         supabase.table("conversations")
         .select("id")
         .eq("user_id", str(ctx.user_id))
-        .gte("created_at", f"now() - interval '{days} days'")
+        .gte("created_at", (datetime.now(timezone.utc) - timedelta(days=days)).isoformat())
         .execute()
     )
     conversation_ids = [row["id"] for row in (convs_result.data or [])]

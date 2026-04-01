@@ -302,7 +302,7 @@ MEMORIES = [
     },
     {
         "content": "I am targeting 20+ LPA AI Architect and Chief AI Engineer roles. ATHENA is my flagship portfolio project.",
-        "memory_type": "goal",
+        "memory_type": "fact",
         "importance": 0.9,
         "source": "onboarding",
     },
