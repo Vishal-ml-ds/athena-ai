@@ -111,16 +111,47 @@ function GraphNodeComponent({
 function DetailPanel({
   node,
   onClose,
+  onDelete,
 }: {
   node: GraphNode;
   onClose: () => void;
+  onDelete: (id: string) => void;
 }) {
-  const handleEdit = () => {
-    toast.info("Entity editing coming in next update");
+  const [isEditing, setIsEditing] = useState(false);
+  const [editLabel, setEditLabel] = useState(node.label);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleEdit = async () => {
+    if (!isEditing) {
+      setIsEditing(true);
+      return;
+    }
+    if (editLabel.trim() === node.label) {
+      setIsEditing(false);
+      return;
+    }
+    setIsSaving(true);
+    try {
+      await api.patch(`/api/v1/knowledge/nodes/${node.id}`, { name: editLabel.trim() });
+      toast.success("Node updated");
+      setIsEditing(false);
+      onClose(); // Close and let user re-fetch
+    } catch {
+      toast.error("Failed to update node");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
-  const handleDelete = () => {
-    toast.info("Entity deletion coming in next update");
+  const handleDelete = async () => {
+    try {
+      await api.delete(`/api/v1/knowledge/nodes/${node.id}`);
+      toast.success("Node deleted");
+      onDelete(node.id);
+      onClose();
+    } catch {
+      toast.error("Failed to delete node");
+    }
   };
 
   const attributes = node.attributes
@@ -155,6 +186,18 @@ function DetailPanel({
           </span>
         </div>
       </div>
+
+      {isEditing && (
+        <div className="px-6 pt-4 pb-0">
+          <input
+            className="w-full bg-[#060e20] border border-[#d2bbff]/30 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-[#d2bbff]"
+            value={editLabel}
+            onChange={(e) => setEditLabel(e.target.value)}
+            onKeyDown={(e) => { if (e.key === "Enter") handleEdit(); if (e.key === "Escape") setIsEditing(false); }}
+            autoFocus
+          />
+        </div>
+      )}
 
       <div className="flex-1 overflow-y-auto p-6 space-y-8">
         {attributes.length > 0 && (
@@ -206,10 +249,16 @@ function DetailPanel({
       <div className="p-6 bg-slate-950/40 flex gap-3">
         <button
           onClick={handleEdit}
-          className="flex-1 py-2 rounded-xl bg-[#222a3d] text-[#dae2fd] font-headline text-xs font-bold hover:bg-[#31394d] transition-colors flex items-center justify-center gap-2"
+          disabled={isSaving}
+          className="flex-1 py-2 rounded-xl bg-[#222a3d] text-[#dae2fd] font-headline text-xs font-bold hover:bg-[#31394d] transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
           data-testid="entity-edit-btn"
         >
-          <Pencil className="h-3 w-3" /> Edit
+          {isSaving ? (
+            <Loader2 className="h-3 w-3 animate-spin" />
+          ) : (
+            <Pencil className="h-3 w-3" />
+          )}
+          {isEditing ? "Save" : "Edit"}
         </button>
         <button
           onClick={handleDelete}
@@ -304,6 +353,7 @@ export default function KnowledgeGraphPage() {
   const [graphData, setGraphData] = useState<KnowledgeGraphData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const [activeFilters, setActiveFilters] = useState<Set<EntityType>>(new Set());
 
   const fetchGraph = useCallback(async () => {
     setIsLoading(true);
@@ -324,12 +374,54 @@ export default function KnowledgeGraphPage() {
   }, [fetchGraph]);
 
   const hasNodes = graphData && graphData.nodes.length > 0;
+
+  // Apply type filters if any are active
+  const visibleNodes = hasNodes
+    ? activeFilters.size === 0
+      ? graphData.nodes
+      : graphData.nodes.filter((n) => activeFilters.has(n.type))
+    : [];
+
+  const visibleNodeIds = new Set(visibleNodes.map((n) => n.id));
+  const visibleEdges = hasNodes
+    ? (graphData.edges ?? []).filter(
+        (e) => visibleNodeIds.has(e.from) && visibleNodeIds.has(e.to)
+      )
+    : [];
+
   const selectedNodeData = hasNodes
     ? graphData.nodes.find((n) => n.id === selectedNode) ?? null
     : null;
 
+  const handleNodeDelete = (deletedId: string) => {
+    if (!graphData) return;
+    setGraphData({
+      nodes: graphData.nodes.filter((n) => n.id !== deletedId),
+      edges: (graphData.edges ?? []).filter((e) => e.from !== deletedId && e.to !== deletedId),
+    });
+  };
+
   const handleAutoLayout = () => {
-    toast.info("Auto-layout coming in next update");
+    if (!graphData || graphData.nodes.length === 0) return;
+    const total = graphData.nodes.length;
+    const updated = graphData.nodes.map((node, i) => {
+      const angle = (i * 2 * Math.PI) / total;
+      return {
+        ...node,
+        top: `${(50 + 35 * Math.sin(angle)).toFixed(1)}%`,
+        left: `${(50 + 35 * Math.cos(angle)).toFixed(1)}%`,
+      };
+    });
+    setGraphData({ ...graphData, nodes: updated });
+  };
+
+  const toggleFilter = (type: EntityType) => {
+    setActiveFilters((prev) => {
+      const next = new Set(prev);
+      if (next.has(type)) next.delete(type);
+      else next.add(type);
+      return next;
+    });
   };
 
   return (
@@ -346,10 +438,10 @@ export default function KnowledgeGraphPage() {
       {/* Graph content */}
       {!isLoading && hasNodes && (
         <>
-          <ConnectionLines nodes={graphData.nodes} edges={graphData.edges} />
+          <ConnectionLines nodes={visibleNodes} edges={visibleEdges} />
 
           <div className="relative w-full h-full z-20">
-            {graphData.nodes.map((node) => (
+            {visibleNodes.map((node) => (
               <GraphNodeComponent
                 key={node.id}
                 node={node}
@@ -363,15 +455,15 @@ export default function KnowledgeGraphPage() {
           <div className="absolute top-4 left-4 z-30 flex items-center gap-3 px-4 py-2 bg-slate-950/40 backdrop-blur-xl border border-[#4a4455]/10 rounded-full">
             <div className="flex -space-x-2">
               <div className="w-6 h-6 rounded-full border-2 border-[#0b1326] bg-[#d2bbff] flex items-center justify-center text-[10px] text-[#3f008e] font-bold">
-                {graphData.nodes.length}
+                {visibleNodes.length}
               </div>
               <div className="w-6 h-6 rounded-full border-2 border-[#0b1326] bg-[#ffb95f] flex items-center justify-center text-[10px] text-[#472a00] font-bold">
-                {graphData.edges.length}
+                {visibleEdges.length}
               </div>
             </div>
             <div className="h-4 w-px bg-[#4a4455]/20" />
             <span className="font-mono text-[10px] text-slate-400 uppercase tracking-tighter">
-              {graphData.nodes.length} nodes, {graphData.edges.length} edges
+              {visibleNodes.length} nodes, {visibleEdges.length} edges
             </span>
             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           </div>
@@ -419,23 +511,32 @@ export default function KnowledgeGraphPage() {
             Entity Type Filters
           </h4>
           <div className="flex flex-wrap gap-2 max-w-xs">
-            {FILTER_CHIPS.map((chip) => (
-              <button
-                key={chip.type}
-                onClick={() => toast.info("Filtering coming in next update")}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-bold transition-all ${chip.inactiveStyle} hover:opacity-80`}
-              >
-                <div className="w-1.5 h-1.5 rounded-full bg-current" />
-                {chip.label}
-              </button>
-            ))}
+            {FILTER_CHIPS.map((chip) => {
+              const isActive = activeFilters.has(chip.type);
+              return (
+                <button
+                  key={chip.type}
+                  onClick={() => toggleFilter(chip.type)}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-bold transition-all hover:opacity-80 ${
+                    isActive ? chip.activeStyle : chip.inactiveStyle
+                  }`}
+                >
+                  <div className="w-1.5 h-1.5 rounded-full bg-current" />
+                  {chip.label}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
 
       {/* Detail Panel */}
       {selectedNodeData && (
-        <DetailPanel node={selectedNodeData} onClose={() => setSelectedNode(null)} />
+        <DetailPanel
+          node={selectedNodeData}
+          onClose={() => setSelectedNode(null)}
+          onDelete={handleNodeDelete}
+        />
       )}
     </div>
   );

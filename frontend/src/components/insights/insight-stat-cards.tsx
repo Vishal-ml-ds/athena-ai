@@ -8,7 +8,10 @@ import { api } from "@/lib/api/client";
 
 interface UsageData {
   conversations: number;
+  messages: number;
+  tokens_used: number;
   plan: string;
+  days: number;
 }
 
 // --- Constants ---
@@ -31,14 +34,19 @@ const MESSAGE_BARS = [
 
 // --- Component ---
 
-export function InsightStatCards() {
+interface InsightStatCardsProps {
+  readonly days?: number;
+}
+
+export function InsightStatCards({ days = 30 }: InsightStatCardsProps) {
   const [usage, setUsage] = useState<UsageData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     async function fetchUsage() {
       try {
-        const data = await api.get<UsageData>("/api/v1/analytics/usage");
+        const data = await api.get<UsageData>(`/api/v1/analytics/usage?days=${days}`);
         setUsage(data);
       } catch {
         // Fall back to showing "--"
@@ -47,7 +55,7 @@ export function InsightStatCards() {
       }
     }
     fetchUsage();
-  }, []);
+  }, [days]);
 
   const conversationDisplay = isLoading
     ? null
@@ -88,16 +96,20 @@ export function InsightStatCards() {
         </div>
       </div>
 
-      {/* Messages This Week */}
+      {/* Messages */}
       <div className="bg-[rgba(23,31,51,0.6)] backdrop-blur-xl border border-[#4a4455]/15 p-6 rounded-xl flex flex-col justify-between h-40">
         <div className="flex justify-between items-start">
           <span className="font-headline text-sm font-medium text-[#958da1]">
-            Messages This Week
+            Messages ({days}D)
           </span>
         </div>
         <div className="flex items-end justify-between">
           <span className="text-4xl font-bold font-headline text-[#dae2fd]">
-            432
+            {isLoading ? (
+              <Loader2 className="h-8 w-8 animate-spin text-[#d2bbff]" />
+            ) : (
+              usage?.messages?.toLocaleString() ?? "--"
+            )}
           </span>
           <div className="flex items-end gap-1 mb-1">
             {MESSAGE_BARS.map((bar, index) => (
@@ -121,12 +133,18 @@ export function InsightStatCards() {
         </div>
         <div>
           <span className="text-3xl font-bold font-headline text-[#dae2fd]">
-            850k
+            {isLoading ? (
+              <Loader2 className="h-6 w-6 animate-spin text-[#d2bbff]" />
+            ) : usage?.tokens_used !== undefined ? (
+              usage.tokens_used > 1000
+                ? `${(usage.tokens_used / 1000).toFixed(0)}k`
+                : String(usage.tokens_used)
+            ) : "--"}
           </span>
           <div className="mt-4 h-1.5 w-full bg-[#060e20] rounded-full overflow-hidden">
             <div className="h-full bg-gradient-to-r from-[#7c3aed] to-[#d2bbff] w-[85%]" />
           </div>
-          <p className="text-[10px] text-[#958da1] mt-2 font-mono">85% OF MONTHLY LIMIT</p>
+          <p className="text-[10px] text-[#958da1] mt-2 font-mono">TOTAL TOKENS USED</p>
         </div>
       </div>
 

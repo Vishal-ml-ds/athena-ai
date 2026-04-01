@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     debug: bool = False
     frontend_url: str = "http://localhost:3000"
     backend_url: str = "http://localhost:8000"
+    cors_origins: str = "http://localhost:3005,http://localhost:3000,http://localhost:3002,http://localhost:3003"
 
     # Supabase
     supabase_url: str
@@ -24,6 +25,9 @@ class Settings(BaseSettings):
     # Euri AI (OpenAI-compatible gateway via Euron)
     euri_api_key: str
     euri_base_url: str = "https://api.euron.one/api/v1/euri"
+
+    # Tavily (web search for Researcher agent)
+    tavily_api_key: str = ""
 
     # Redis
     redis_url: str = "redis://localhost:6379"

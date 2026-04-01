@@ -33,6 +33,7 @@ interface ConversationState {
   streamingContent: string;
   activeAgent: string | null;
   memoriesUsed: string[];
+  error: string | null;
 
   // Actions
   fetchConversations: () => Promise<void>;
@@ -40,6 +41,7 @@ interface ConversationState {
   selectConversation: (id: string) => Promise<void>;
   sendMessage: (content: string) => Promise<void>;
   deleteConversation: (id: string) => Promise<void>;
+  clearError: () => void;
 }
 
 export const useConversationStore = create<ConversationState>((set, get) => ({
@@ -51,14 +53,17 @@ export const useConversationStore = create<ConversationState>((set, get) => ({
   streamingContent: "",
   activeAgent: null,
   memoriesUsed: [],
+  error: null,
+
+  clearError: () => set({ error: null }),
 
   fetchConversations: async () => {
     set({ isLoading: true });
     try {
       const data = await api.get<Conversation[]>("/api/v1/conversations");
       set({ conversations: data, isLoading: false });
-    } catch {
-      set({ isLoading: false });
+    } catch (err) {
+      set({ isLoading: false, error: err instanceof Error ? err.message : "Failed to load conversations" });
     }
   },
 
@@ -147,8 +152,13 @@ export const useConversationStore = create<ConversationState>((set, get) => ({
           agentName = event.agent as string;
         }
       }
-    } catch {
-      set({ isStreaming: false, streamingContent: "", activeAgent: null });
+    } catch (err) {
+      set({
+        isStreaming: false,
+        streamingContent: "",
+        activeAgent: null,
+        error: err instanceof Error ? err.message : "Failed to send message",
+      });
     }
   },
 

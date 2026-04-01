@@ -181,6 +181,8 @@ export function VoiceOverlay({ isOpen, onClose }: VoiceOverlayProps) {
   const chunksRef = useRef<Blob[]>([]);
   const entryCountRef = useRef(0);
   const pendingResponseRef = useRef(false);
+  const shouldAutoRecordRef = useRef(false);
+  const autoRecordTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const {
     messages,
@@ -209,11 +211,20 @@ export function VoiceOverlay({ isOpen, onClose }: VoiceOverlayProps) {
         },
       ]);
 
-      // Synthesize and play
-      synthesizeAndPlay(lastMsg.content).catch(() => {
-        // TTS failed — silence is fine, transcript still shows
-      });
+      // Synthesize, play, then auto-record in hands-free mode
+      synthesizeAndPlay(lastMsg.content)
+        .catch(() => {
+          // TTS failed — silence is fine, transcript still shows
+        })
+        .finally(() => {
+          if (shouldAutoRecordRef.current) {
+            autoRecordTimerRef.current = setTimeout(() => {
+              if (shouldAutoRecordRef.current) startRecording();
+            }, 800);
+          }
+        });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages, isStreaming]);
 
   // Show streaming indicator while waiting
@@ -309,7 +320,27 @@ export function VoiceOverlay({ isOpen, onClose }: VoiceOverlayProps) {
     }
   }, [recordingState, startRecording, stopRecording]);
 
+  // Keep shouldAutoRecordRef in sync with voiceMode
+  useEffect(() => {
+    shouldAutoRecordRef.current = voiceMode === "hands-free";
+
+    // Switching to hands-free while idle — start listening immediately
+    if (voiceMode === "hands-free" && recordingState === "idle" && !pendingResponseRef.current) {
+      autoRecordTimerRef.current = setTimeout(() => {
+        if (shouldAutoRecordRef.current) startRecording();
+      }, 800);
+    }
+
+    return () => {
+      if (autoRecordTimerRef.current) clearTimeout(autoRecordTimerRef.current);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [voiceMode]);
+
   const handleClose = useCallback(() => {
+    if (autoRecordTimerRef.current) clearTimeout(autoRecordTimerRef.current);
+    shouldAutoRecordRef.current = false;
+
     if (mediaRecorderRef.current && mediaRecorderRef.current.state === "recording") {
       mediaRecorderRef.current.stream.getTracks().forEach((track) => track.stop());
       mediaRecorderRef.current.stop();

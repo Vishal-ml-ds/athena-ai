@@ -3,6 +3,7 @@
 Modular monolith: single app with strict module boundaries.
 Every request passes through: CORS → tracking → rate limiting → auth → handler."""
 
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -11,8 +12,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import get_settings
 from app.core.dependencies import close_redis
 from app.core.exceptions import AthenaError, athena_error_handler
-from app.core.middleware import RequestTrackingMiddleware
-from app.routers import analytics, auth, conversations, knowledge, life, memories, users, voice
+from app.core.middleware import RateLimitMiddleware, RequestTrackingMiddleware
+from app.routers import analytics, auth, browser, conversations, documents, knowledge, life, memories, reports, users, voice
+
+logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
@@ -20,12 +23,12 @@ async def lifespan(app: FastAPI):
     """Startup and shutdown events.
     Validates required config at startup — fail fast if anything is missing."""
     settings = get_settings()
-    print(f"ATHENA Backend starting in {settings.environment} mode")
-    print(f"Frontend URL: {settings.frontend_url}")
+    logger.info("ATHENA Backend starting in %s mode", settings.environment)
+    logger.info("Frontend URL: %s", settings.frontend_url)
     yield
     # Cleanup
     await close_redis()
-    print("ATHENA Backend shutting down")
+    logger.info("ATHENA Backend shutting down")
 
 
 app = FastAPI(
@@ -41,7 +44,7 @@ app = FastAPI(
 settings = get_settings()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.frontend_url, "http://localhost:3000", "http://localhost:3002", "http://localhost:3003"],
+    allow_origins=settings.cors_origins.split(","),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -53,6 +56,9 @@ app.add_middleware(
         "X-RateLimit-Reset",
     ],
 )
+
+# Rate limiting — Redis-backed sliding window (fails open if Redis is down)
+app.add_middleware(RateLimitMiddleware)
 
 # Request tracking — adds request_id and timing
 app.add_middleware(RequestTrackingMiddleware)
@@ -69,6 +75,9 @@ app.include_router(life.router)
 app.include_router(voice.router)
 app.include_router(knowledge.router)
 app.include_router(analytics.router)
+app.include_router(documents.router)
+app.include_router(browser.router)
+app.include_router(reports.router)
 
 
 # --- Health Check ---

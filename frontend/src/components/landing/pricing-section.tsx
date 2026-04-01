@@ -1,8 +1,5 @@
-"use client";
-
 import { CheckCircle } from "lucide-react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 
 interface PricingFeature {
   readonly label: string;
@@ -78,16 +75,11 @@ function PricingCard({
   buttonClass,
 }: PricingTierProps) {
   return (
-    <motion.div
-      variants={{
-        hidden: { opacity: 0, y: 30 },
-        show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
-      }}
-      className={`glass-card p-10 rounded-3xl flex flex-col h-full ${
-        isHighlighted
+    <div
+      className={`glass-card p-10 rounded-3xl flex flex-col h-full ${isHighlighted
           ? "border-2 border-primary-container relative shadow-[0_0_50px_rgba(124,58,237,0.15)] scale-105 z-10"
           : "border border-outline-variant/10"
-      }`}
+        }`}
     >
       {isHighlighted && (
         <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-primary-container text-on-primary-container px-4 py-1 rounded-full text-[10px] font-mono uppercase tracking-[0.2em] font-bold">
@@ -121,7 +113,7 @@ function PricingCard({
       <Link href="/signup" className={buttonClass} data-testid={`pricing-cta-${name.toLowerCase()}`}>
         {ctaLabel}
       </Link>
-    </motion.div>
+    </div>
   );
 }
 
@@ -136,20 +128,11 @@ export function PricingSection() {
           Power for Every Lifestyle
         </h3>
       </div>
-      <motion.div 
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={{
-          hidden: { opacity: 0 },
-          show: { opacity: 1, transition: { staggerChildren: 0.2 } }
-        }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-8"
-      >
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {PRICING_TIERS.map((tier) => (
           <PricingCard key={tier.name} {...tier} />
         ))}
-      </motion.div>
+      </div>
     </section>
   );
 }

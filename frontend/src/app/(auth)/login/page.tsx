@@ -40,10 +40,25 @@ export default function LoginPage() {
     }
   };
 
-  const handleGoogleLogin = () => {
-    toast.info("Google login coming soon!", {
-      description: "Use email and password for now.",
-    });
+  const handleGoogleLogin = async () => {
+    try {
+      const supabase = createClient();
+      const { error: oauthError } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/chat`,
+        },
+      });
+      if (oauthError) {
+        toast.error("Google login failed", {
+          description: oauthError.message,
+        });
+      }
+    } catch {
+      toast.error("Google login unavailable", {
+        description: "Please use email and password for now.",
+      });
+    }
   };
 
   return (

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Info } from "lucide-react";
 import { InsightStatCards } from "@/components/insights/insight-stat-cards";
 import { AgentDistribution } from "@/components/insights/agent-distribution";
@@ -9,12 +10,19 @@ import { TopTopics } from "@/components/insights/top-topics";
 
 // --- Constants ---
 
-const TIME_FILTERS = ["7D", "30D", "90D"] as const;
-const ACTIVE_FILTER_INDEX = 0;
+const TIME_FILTERS = [
+  { label: "7D", days: 7 },
+  { label: "30D", days: 30 },
+  { label: "90D", days: 90 },
+] as const;
+
+type TimeFilter = typeof TIME_FILTERS[number];
 
 // --- Page ---
 
 export default function ConversationInsightsPage() {
+  const [activeFilter, setActiveFilter] = useState<TimeFilter>(TIME_FILTERS[1]);
+
   return (
     <div className="flex-1 overflow-y-auto bg-[#0b1326] relative">
       {/* Decorative gradient */}
@@ -40,23 +48,24 @@ export default function ConversationInsightsPage() {
             </p>
           </div>
           <div className="flex bg-[#131b2e] p-1 rounded-xl">
-            {TIME_FILTERS.map((filter, index) => (
+            {TIME_FILTERS.map((filter) => (
               <button
-                key={filter}
+                key={filter.label}
+                onClick={() => setActiveFilter(filter)}
                 className={`px-4 py-2 text-xs font-medium font-mono rounded-lg transition-colors ${
-                  index === ACTIVE_FILTER_INDEX
+                  activeFilter.label === filter.label
                     ? "bg-[#222a3d] text-[#d2bbff]"
                     : "text-[#958da1] hover:text-[#dae2fd]"
                 }`}
               >
-                {filter}
+                {filter.label}
               </button>
             ))}
           </div>
         </div>
 
         {/* Top Stats -- wired to real API */}
-        <InsightStatCards />
+        <InsightStatCards days={activeFilter.days} />
 
         {/* Main Charts: Distribution + Heatmap */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">

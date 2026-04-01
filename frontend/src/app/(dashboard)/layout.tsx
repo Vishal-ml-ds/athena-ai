@@ -2,9 +2,12 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Menu, Bell } from "lucide-react";
+import { toast } from "sonner";
 import { Sidebar } from "@/components/layout/sidebar";
 import { NotificationCenter } from "@/components/notification-center";
 import { CommandPalette } from "@/components/command-palette";
+import { useConversationStore } from "@/stores/conversation-store";
+import { useLifeStore } from "@/stores/life-store";
 
 export default function DashboardLayout({
   children,
@@ -14,6 +17,25 @@ export default function DashboardLayout({
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const conversationError = useConversationStore((s) => s.error);
+  const clearConversationError = useConversationStore((s) => s.clearError);
+  const lifeError = useLifeStore((s) => s.error);
+  const clearLifeError = useLifeStore((s) => s.clearError);
+
+  useEffect(() => {
+    if (conversationError) {
+      toast.error(conversationError);
+      clearConversationError();
+    }
+  }, [conversationError, clearConversationError]);
+
+  useEffect(() => {
+    if (lifeError) {
+      toast.error(lifeError);
+      clearLifeError();
+    }
+  }, [lifeError, clearLifeError]);
 
   const toggleNotifications = () => {
     setIsNotificationOpen((prev) => !prev);

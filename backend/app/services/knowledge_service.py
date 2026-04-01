@@ -3,7 +3,10 @@
 Uses Supabase tables instead of Neo4j for Sprint 7 MVP.
 Neo4j integration can be added later for graph-native queries."""
 
+from __future__ import annotations
+
 import json
+import math
 import uuid
 
 import httpx
@@ -105,10 +108,52 @@ async def get_knowledge_graph(
             .execute()
         )
 
-        return {
-            "nodes": nodes_result.data or [],
-            "edges": edges_result.data or [],
-        }
+        raw_nodes = nodes_result.data or []
+        raw_edges = edges_result.data or []
+
+        # Build name → id lookup for edge mapping
+        name_to_id: dict[str, str] = {n["name"]: n["id"] for n in raw_nodes}
+
+        # Count edges per node to determine size
+        edge_counts: dict[str, int] = {}
+        for edge in raw_edges:
+            for key in ("source_name", "target_name"):
+                name = edge.get(key)
+                if name:
+                    edge_counts[name] = edge_counts.get(name, 0) + 1
+
+        # Transform nodes to frontend-expected format with circular layout
+        total = len(raw_nodes)
+        nodes = []
+        for i, node in enumerate(raw_nodes):
+            angle = i * 2 * math.pi / total if total > 0 else 0
+            top = 50 + 35 * math.sin(angle)
+            left = 50 + 35 * math.cos(angle)
+            node_name = node.get("name", "")
+            nodes.append({
+                "id": node["id"],
+                "label": node_name,
+                "type": node.get("node_type", "topic"),
+                "description": node.get("description", ""),
+                "top": f"{top:.1f}%",
+                "left": f"{left:.1f}%",
+                "size": "lg" if edge_counts.get(node_name, 0) > 2 else "md",
+            })
+
+        # Transform edges — map source/target names to node IDs
+        edges = []
+        for edge in raw_edges:
+            source_id = name_to_id.get(edge.get("source_name", ""))
+            target_id = name_to_id.get(edge.get("target_name", ""))
+            if source_id and target_id:
+                edges.append({
+                    "id": edge.get("id"),
+                    "from": source_id,
+                    "to": target_id,
+                    "label": edge.get("relationship", ""),
+                })
+
+        return {"nodes": nodes, "edges": edges}
 
     except Exception:
         return {"nodes": [], "edges": []}

@@ -52,6 +52,7 @@ interface ReportData {
   goals: Goal[];
   finance: FinanceSummary | null;
   health: HealthTrends | null;
+  aiInsights: string | null;
 }
 
 // --- Sub-components ---
@@ -262,11 +263,12 @@ export default function WeeklyReportPage() {
   const fetchReportData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const [habits, goals, finance, health] = await Promise.allSettled([
+      const [habits, goals, finance, health, aiReport] = await Promise.allSettled([
         api.get<Habit[]>("/api/v1/life/habits"),
         api.get<Goal[]>("/api/v1/life/goals?status=active"),
         api.get<FinanceSummary>("/api/v1/life/finance/summary"),
         api.get<HealthTrends>("/api/v1/life/health/trends"),
+        api.get<{ ai_insights: string }>("/api/v1/reports/weekly"),
       ]);
 
       setReportData({
@@ -274,6 +276,7 @@ export default function WeeklyReportPage() {
         goals: goals.status === "fulfilled" ? goals.value : [],
         finance: finance.status === "fulfilled" ? finance.value : null,
         health: health.status === "fulfilled" ? health.value : null,
+        aiInsights: aiReport.status === "fulfilled" ? aiReport.value.ai_insights : null,
       });
     } catch {
       toast.error("Failed to load report data.");
@@ -298,11 +301,16 @@ export default function WeeklyReportPage() {
   if (!reportData || isAllEmpty) return <EmptyState />;
 
   const handleExport = () => {
-    toast.info("PDF export coming in next update");
+    window.print();
   };
 
-  const handleShare = () => {
-    toast.info("Report sharing coming in next update");
+  const handleShare = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      toast.success("Link copied to clipboard!");
+    } catch {
+      toast.error("Could not copy link");
+    }
   };
 
   const today = new Date();
@@ -344,6 +352,19 @@ export default function WeeklyReportPage() {
               className="shadow-[0_20px_40px_-12px_rgba(124,58,237,0.08)]"
             >
               <HighlightsList data={reportData} />
+            </ReportSection>
+          )}
+
+          {/* AI-Generated Insights */}
+          {reportData.aiInsights && (
+            <ReportSection
+              icon={<TrendingUp className="h-5 w-5 text-emerald-400" />}
+              title="AI Insights"
+              className="shadow-[0_20px_40px_-12px_rgba(16,185,129,0.08)]"
+            >
+              <div className="prose prose-invert prose-sm max-w-none text-[#dae2fd] leading-relaxed whitespace-pre-wrap">
+                {reportData.aiInsights}
+              </div>
             </ReportSection>
           )}
 

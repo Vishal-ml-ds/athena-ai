@@ -154,18 +154,22 @@ async def complete_onboarding(
     ctx: TenantContext = Depends(get_current_user),
     supabase: Client = Depends(get_supabase_client),
 ):
-    """Complete the onboarding flow — sets display name, timezone, interests."""
-    supabase.table("profiles").update(
-        {
-            "display_name": body.display_name,
-            "preferences": {
-                "timezone": body.timezone,
-                "interests": body.interests,
-                "language": "en",
-                "theme": "dark",
-            },
-            "onboarding_completed": True,
-        }
-    ).eq("id", str(ctx.user_id)).execute()
+    """Complete the onboarding flow — sets display name, timezone, interests, and all preferences."""
+    update_data: dict = {
+        "display_name": body.display_name,
+        "preferences": {
+            "timezone": body.timezone,
+            "interests": body.interests,
+            "language": body.language,
+            "theme": body.theme,
+            "voice": body.voice,
+        },
+        "onboarding_completed": True,
+    }
+
+    if body.avatar_url:
+        update_data["avatar_url"] = body.avatar_url
+
+    supabase.table("profiles").update(update_data).eq("id", str(ctx.user_id)).execute()
 
     return ApiResponse(success=True, data={"message": "Onboarding complete"})
