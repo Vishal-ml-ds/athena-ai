@@ -4,7 +4,7 @@ import Link from "next/link";
 import { User, Brain } from "lucide-react";
 import { motion, type Variants } from "framer-motion";
 
-const EASE = [0.22, 1, 0.36, 1];
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 function fadeUp(delay: number): Variants {
   return {

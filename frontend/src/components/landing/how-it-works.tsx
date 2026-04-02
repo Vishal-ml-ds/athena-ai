@@ -26,10 +26,12 @@ const AGENT_ICONS: ReadonlyArray<AgentIconProps> = [
   { icon: ShoppingCart, colorClass: "text-athena-secondary" },
 ];
 
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
 function stepVariants(i: number): Variants {
   return {
     hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.7, delay: i * 0.2, ease: [0.22, 1, 0.36, 1] } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.7, delay: i * 0.2, ease: EASE } },
   };
 }
 
