@@ -63,10 +63,10 @@ export function Footer() {
 
       <div className="max-w-7xl mx-auto px-8 mt-24 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
         <p className="font-mono text-[11px] uppercase tracking-widest text-slate-500">
-          2024 ATHENA AI OS. DEFINING THE CELESTIAL INTELLIGENCE.
+          {new Date().getFullYear()} ATHENA AI OS. DEFINING THE CELESTIAL INTELLIGENCE.
         </p>
         <p className="font-mono text-[11px] uppercase tracking-widest text-slate-600">
-          Built by <span className="text-slate-400">Vishal Prasad</span>
+          Crafted with <span className="text-violet-400">celestial precision</span>
         </p>
       </div>
     </footer>

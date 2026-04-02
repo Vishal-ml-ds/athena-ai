@@ -1,5 +1,8 @@
+"use client";
+
 import { CheckCircle } from "lucide-react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 interface PricingFeature {
   readonly label: string;
@@ -131,8 +134,16 @@ export function PricingSection() {
         </h3>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-        {PRICING_TIERS.map((tier) => (
-          <PricingCard key={tier.name} {...tier} />
+        {PRICING_TIERS.map((tier, i) => (
+          <motion.div
+            key={tier.name}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ delay: i * 0.15, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <PricingCard {...tier} />
+          </motion.div>
         ))}
       </div>
     </section>

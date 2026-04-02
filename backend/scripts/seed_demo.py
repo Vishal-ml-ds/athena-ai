@@ -202,8 +202,8 @@ GOALS = [
         ],
     },
     {
-        "title": "Land 20+ LPA AI Role",
-        "description": "Target AI Architect or Chief AI Engineer positions",
+        "title": "Land Senior AI Role",
+        "description": "Target AI Architect or Lead AI Engineer positions",
         "category": "career",
         "target_date": str(TODAY + timedelta(days=90)),
         "progress": 55,
@@ -237,18 +237,18 @@ def _seed_goals(sb: Client, user_id: str, tenant_id: str) -> None:
 
 FINANCE_ENTRIES = [
     # Income
-    {"type": "income", "amount": 50000, "category": "salary", "description": "Monthly salary — NBC/Remunance", "date": str(TODAY.replace(day=1))},
+    {"type": "income", "amount": 50000, "category": "salary", "description": "Monthly salary", "date": str(TODAY.replace(day=1))},
     {"type": "income", "amount": 8500, "category": "freelance", "description": "Freelance ML model review", "date": str(TODAY - timedelta(days=10))},
     # Expenses
-    {"type": "expense", "amount": 12000, "category": "rent", "description": "Monthly rent — Goa", "date": str(TODAY.replace(day=1))},
+    {"type": "expense", "amount": 12000, "category": "rent", "description": "Monthly rent", "date": str(TODAY.replace(day=1))},
     {"type": "expense", "amount": 4500, "category": "food", "description": "Groceries + eating out", "date": str(TODAY - timedelta(days=5))},
-    {"type": "expense", "amount": 2200, "category": "transport", "description": "Fuel + Rapido", "date": str(TODAY - timedelta(days=8))},
+    {"type": "expense", "amount": 2200, "category": "transport", "description": "Fuel + rideshare", "date": str(TODAY - timedelta(days=8))},
     {"type": "expense", "amount": 3800, "category": "tech", "description": "Claude Pro subscription + cloud credits", "date": str(TODAY - timedelta(days=12))},
-    {"type": "expense", "amount": 1500, "category": "education", "description": "Euron AI courses", "date": str(TODAY - timedelta(days=15))},
+    {"type": "expense", "amount": 1500, "category": "education", "description": "Online AI courses", "date": str(TODAY - timedelta(days=15))},
     {"type": "expense", "amount": 2000, "category": "fitness", "description": "Gym membership + supplements", "date": str(TODAY - timedelta(days=3))},
     # Savings
     {"type": "savings", "amount": 10000, "category": "emergency_fund", "description": "Monthly SIP — emergency fund", "date": str(TODAY.replace(day=5))},
-    {"type": "savings", "amount": 5000, "category": "investments", "description": "Zerodha — Nifty 50 index", "date": str(TODAY.replace(day=5))},
+    {"type": "savings", "amount": 5000, "category": "investments", "description": "Index fund SIP", "date": str(TODAY.replace(day=5))},
 ]
 
 
@@ -295,43 +295,43 @@ def _seed_health(sb: Client, user_id: str, tenant_id: str) -> None:
 
 MEMORIES = [
     {
-        "content": "My name is Vishal Prasad. I work as a Junior Software Engineer at NBC (via Remunance) in Goa.",
+        "content": "User works as a software engineer and is focused on building AI-powered products.",
         "memory_type": "fact",
         "importance": 0.95,
         "source": "onboarding",
     },
     {
-        "content": "I am targeting 20+ LPA AI Architect and Chief AI Engineer roles. ATHENA is my flagship portfolio project.",
+        "content": "User is targeting senior AI engineering and architecture roles. ATHENA is their flagship project.",
         "memory_type": "fact",
         "importance": 0.9,
         "source": "onboarding",
     },
     {
-        "content": "My tech stack is FastAPI + Python for backend, Next.js + TypeScript + Tailwind for frontend, and Supabase for the database.",
+        "content": "Preferred tech stack: FastAPI + Python for backend, Next.js + TypeScript + Tailwind for frontend, Supabase for database.",
         "memory_type": "fact",
         "importance": 0.85,
         "source": "conversation",
     },
     {
-        "content": "I learn best by seeing working code examples. I can read and understand code but cannot write complex code from scratch yet.",
+        "content": "User prefers learning through working code examples rather than abstract explanations.",
         "memory_type": "preference",
         "importance": 0.8,
         "source": "conversation",
     },
     {
-        "content": "I am studying Sudhanshu Kumar's AI Product Engineering and AI Architect Mastery courses on Euron to level up my skills.",
+        "content": "Currently studying AI Product Engineering and system design courses to level up skills.",
         "memory_type": "fact",
         "importance": 0.75,
         "source": "conversation",
     },
     {
-        "content": "I prefer concise explanations without jargon. Daily-life analogies work best — e.g. 'a middleman' instead of 'middleware'.",
+        "content": "Prefers concise explanations without jargon. Daily-life analogies work best for complex concepts.",
         "memory_type": "preference",
         "importance": 0.7,
         "source": "conversation",
     },
     {
-        "content": "I am building ATHENA to beat a competitor product called Angelina and prove my capabilities as an AI Product Engineer.",
+        "content": "ATHENA is being built as a multi-agent Personal AI OS — the most advanced AI assistant on the market.",
         "memory_type": "insight",
         "importance": 0.85,
         "source": "conversation",
@@ -352,26 +352,26 @@ def _seed_memories(sb: Client, user_id: str, tenant_id: str) -> None:
 # ── Knowledge Graph ───────────────────────────────────────────────────────────
 
 NODES = [
-    {"name": "Vishal Prasad", "node_type": "person", "description": "Software engineer targeting AI Architect roles at 20+ LPA"},
-    {"name": "ATHENA", "node_type": "topic", "description": "Personal AI Operating System — flagship portfolio project"},
-    {"name": "FastAPI", "node_type": "skill", "description": "Python async web framework used for ATHENA backend"},
-    {"name": "Next.js", "node_type": "skill", "description": "React framework for ATHENA frontend"},
-    {"name": "Supabase", "node_type": "organization", "description": "PostgreSQL + Auth + Storage platform powering ATHENA"},
-    {"name": "NBC", "node_type": "organization", "description": "Current employer — Junior Software Engineer role"},
-    {"name": "LangGraph", "node_type": "skill", "description": "Multi-agent orchestration framework — powers ATHENA's 7-agent system"},
-    {"name": "AI Architect Mastery", "node_type": "topic", "description": "Euron course by Sudhanshu Kumar — path to 20+ LPA"},
+    {"name": "Demo User", "node_type": "person", "description": "AI engineer building next-gen intelligent systems"},
+    {"name": "ATHENA", "node_type": "topic", "description": "Personal AI Operating System — multi-agent intelligence platform"},
+    {"name": "FastAPI", "node_type": "skill", "description": "Python async web framework for high-performance APIs"},
+    {"name": "Next.js", "node_type": "skill", "description": "React framework for production-grade frontends"},
+    {"name": "Supabase", "node_type": "organization", "description": "PostgreSQL + Auth + Storage cloud platform"},
+    {"name": "Machine Learning", "node_type": "topic", "description": "Core discipline — model training, evaluation, deployment"},
+    {"name": "LangGraph", "node_type": "skill", "description": "Multi-agent orchestration framework — powers ATHENA's agent system"},
+    {"name": "AI Architecture", "node_type": "topic", "description": "System design for AI products — 5-layer architecture patterns"},
 ]
 
 EDGES = [
-    {"source_name": "Vishal Prasad", "target_name": "ATHENA", "relationship": "built"},
-    {"source_name": "Vishal Prasad", "target_name": "NBC", "relationship": "works_at"},
-    {"source_name": "Vishal Prasad", "target_name": "AI Architect Mastery", "relationship": "studying"},
+    {"source_name": "Demo User", "target_name": "ATHENA", "relationship": "built"},
+    {"source_name": "Demo User", "target_name": "Machine Learning", "relationship": "studies"},
+    {"source_name": "Demo User", "target_name": "AI Architecture", "relationship": "studying"},
     {"source_name": "ATHENA", "target_name": "FastAPI", "relationship": "uses"},
     {"source_name": "ATHENA", "target_name": "Next.js", "relationship": "uses"},
     {"source_name": "ATHENA", "target_name": "Supabase", "relationship": "uses"},
     {"source_name": "ATHENA", "target_name": "LangGraph", "relationship": "uses"},
-    {"source_name": "Vishal Prasad", "target_name": "FastAPI", "relationship": "knows"},
-    {"source_name": "Vishal Prasad", "target_name": "Next.js", "relationship": "knows"},
+    {"source_name": "Demo User", "target_name": "FastAPI", "relationship": "knows"},
+    {"source_name": "Demo User", "target_name": "Next.js", "relationship": "knows"},
 ]
 
 
