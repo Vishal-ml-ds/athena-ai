@@ -2,24 +2,20 @@
 
 import Link from "next/link";
 import { User, Brain } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 
-const fadeUp = (delay: number) => ({
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] },
-  },
-});
+const EASE = [0.22, 1, 0.36, 1];
 
-const SCALE_IN = {
+function fadeUp(delay: number): Variants {
+  return {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.7, delay, ease: EASE } },
+  };
+}
+
+const SCALE_IN: Variants = {
   hidden: { opacity: 0, scale: 0.92 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 1, delay: 0.6, ease: [0.22, 1, 0.36, 1] },
-  },
+  visible: { opacity: 1, scale: 1, transition: { duration: 1, delay: 0.6, ease: EASE } },
 };
 
 export function HeroSection() {

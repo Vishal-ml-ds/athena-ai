@@ -9,7 +9,7 @@ import {
   ShoppingCart,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 
 interface AgentIconProps {
   readonly icon: LucideIcon;
@@ -26,14 +26,12 @@ const AGENT_ICONS: ReadonlyArray<AgentIconProps> = [
   { icon: ShoppingCart, colorClass: "text-athena-secondary" },
 ];
 
-const STEP_VARIANTS = {
-  hidden: { opacity: 0, y: 40 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, delay: i * 0.2, ease: [0.22, 1, 0.36, 1] },
-  }),
-};
+function stepVariants(i: number): Variants {
+  return {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.7, delay: i * 0.2, ease: [0.22, 1, 0.36, 1] } },
+  };
+}
 
 export function HowItWorks() {
   return (
@@ -65,8 +63,7 @@ export function HowItWorks() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-16 relative">
           {/* Step 1 */}
           <motion.div
-            variants={STEP_VARIANTS}
-            custom={0}
+            variants={stepVariants(0)}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
@@ -91,8 +88,7 @@ export function HowItWorks() {
 
           {/* Step 2 */}
           <motion.div
-            variants={STEP_VARIANTS}
-            custom={1}
+            variants={stepVariants(1)}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
@@ -130,8 +126,7 @@ export function HowItWorks() {
 
           {/* Step 3 */}
           <motion.div
-            variants={STEP_VARIANTS}
-            custom={2}
+            variants={stepVariants(2)}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
