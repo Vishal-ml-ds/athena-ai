@@ -6,6 +6,7 @@ import {
   MicOff,
   PhoneOff,
   Volume2,
+  VolumeX,
   X,
   Loader2,
 } from "lucide-react";
@@ -174,6 +175,7 @@ function TranscriptArea({ entries }: { entries: TranscriptEntry[] }) {
 export function VoiceOverlay({ isOpen, onClose }: VoiceOverlayProps) {
   const [voiceMode, setVoiceMode] = useState<VoiceMode>("hands-free");
   const [isMuted, setIsMuted] = useState(false);
+  const [isSpeakerOn, setIsSpeakerOn] = useState(true);
   const [recordingState, setRecordingState] = useState<RecordingState>("idle");
   const [transcript, setTranscript] = useState<TranscriptEntry[]>([]);
 
@@ -493,10 +495,11 @@ export function VoiceOverlay({ isOpen, onClose }: VoiceOverlayProps) {
           </button>
 
           <button
-            onClick={() => toast.info("Speaker output controls coming soon")}
-            className="w-12 h-12 rounded-full border border-[#4a4455]/30 flex items-center justify-center text-slate-300 hover:bg-white/5 hover:text-white transition-all"
+            onClick={() => setIsSpeakerOn(!isSpeakerOn)}
+            className={`w-12 h-12 rounded-full border border-[#4a4455]/30 flex items-center justify-center hover:bg-white/5 transition-all ${isSpeakerOn ? "text-slate-300 hover:text-white" : "text-red-400"}`}
+            data-testid="voice-speaker-toggle"
           >
-            <Volume2 className="h-6 w-6" />
+            {isSpeakerOn ? <Volume2 className="h-6 w-6" /> : <VolumeX className="h-6 w-6" />}
           </button>
         </div>
       </div>

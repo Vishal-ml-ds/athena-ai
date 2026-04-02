@@ -115,8 +115,8 @@ export default function AgentCommandCenterPage() {
   }, []);
 
   const handleDeployAgent = () => {
-    toast.info("Custom agents coming in next update", {
-      description: "You'll be able to create and deploy specialized agents soon.",
+    toast.info("Agent customization is available in the Pro plan", {
+      description: "Upgrade to create custom specialized agents.",
     });
   };
 

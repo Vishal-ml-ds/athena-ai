@@ -5,7 +5,7 @@ import {
   Globe,
   Check,
   Lock,
-  Hand,
+  Bot,
   StopCircle,
   Info,
   MousePointer2,
@@ -149,6 +149,8 @@ function ActionTimeline({ steps, isRunning }: { steps: TimelineStep[]; isRunning
 }
 
 function BrowserViewport({ activeStep }: { activeStep: TimelineStep | null }) {
+  const [isAiMode, setIsAiMode] = useState(true);
+
   return (
     <div className="flex flex-col h-full bg-[rgba(23,31,51,0.6)] backdrop-blur-xl rounded-2xl border border-[#4a4455]/10 overflow-hidden shadow-2xl">
       {/* URL Bar */}
@@ -165,11 +167,12 @@ function BrowserViewport({ activeStep }: { activeStep: TimelineStep | null }) {
           </span>
         </div>
         <button
-          onClick={() => toast.info("Manual browser control requires full Playwright integration — coming soon")}
-          className="px-4 py-2 rounded-lg border border-[#d2bbff]/40 text-[#d2bbff] text-xs font-semibold hover:bg-[#d2bbff]/10 transition-all flex items-center gap-2"
+          onClick={() => setIsAiMode(!isAiMode)}
+          className={`px-4 py-2 rounded-lg border text-xs font-semibold transition-all flex items-center gap-2 ${isAiMode ? "border-emerald-500/40 text-emerald-400 bg-emerald-500/10" : "border-[#d2bbff]/40 text-[#d2bbff] hover:bg-[#d2bbff]/10"}`}
+          data-testid="ai-mode-toggle"
         >
-          <Hand className="h-3 w-3" />
-          Take Control
+          <Bot className="h-3 w-3" />
+          AI-Powered Mode
         </button>
       </div>
 

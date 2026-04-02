@@ -354,6 +354,8 @@ export default function KnowledgeGraphPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [activeFilters, setActiveFilters] = useState<Set<EntityType>>(new Set());
+  const [zoomLevel, setZoomLevel] = useState(1.0);
+  const [isFocusMode, setIsFocusMode] = useState(false);
 
   const fetchGraph = useCallback(async () => {
     setIsLoading(true);
@@ -424,6 +426,18 @@ export default function KnowledgeGraphPage() {
     });
   };
 
+  const MIN_ZOOM = 0.5;
+  const MAX_ZOOM = 2.0;
+  const ZOOM_STEP = 0.2;
+
+  const handleZoomIn = () => {
+    setZoomLevel((prev) => Math.min(prev + ZOOM_STEP, MAX_ZOOM));
+  };
+
+  const handleZoomOut = () => {
+    setZoomLevel((prev) => Math.max(prev - ZOOM_STEP, MIN_ZOOM));
+  };
+
   return (
     <div className="flex-1 relative bg-[#0b1326] overflow-hidden">
       {/* Radial background */}
@@ -438,17 +452,23 @@ export default function KnowledgeGraphPage() {
       {/* Graph content */}
       {!isLoading && hasNodes && (
         <>
-          <ConnectionLines nodes={visibleNodes} edges={visibleEdges} />
+          <div
+            className="absolute inset-0 origin-center transition-transform duration-200 ease-out"
+            style={{ transform: `scale(${zoomLevel})` }}
+            data-testid="graph-zoom-container"
+          >
+            <ConnectionLines nodes={visibleNodes} edges={visibleEdges} />
 
-          <div className="relative w-full h-full z-20">
-            {visibleNodes.map((node) => (
-              <GraphNodeComponent
-                key={node.id}
-                node={node}
-                isSelected={selectedNode === node.id}
-                onClick={() => setSelectedNode(node.id === selectedNode ? null : node.id)}
-              />
-            ))}
+            <div className="relative w-full h-full z-20">
+              {visibleNodes.map((node) => (
+                <GraphNodeComponent
+                  key={node.id}
+                  node={node}
+                  isSelected={selectedNode === node.id}
+                  onClick={() => setSelectedNode(node.id === selectedNode ? null : node.id)}
+                />
+              ))}
+            </div>
           </div>
 
           {/* Status indicator */}
@@ -482,30 +502,35 @@ export default function KnowledgeGraphPage() {
         <div className="h-8 w-px bg-[#4a4455]/20 mx-2" />
         <div className="flex items-center gap-1">
           <button
-            onClick={() => toast.info("Zoom coming in next update")}
-            className="p-2 text-[#dae2fd] hover:bg-white/10 rounded-lg"
+            onClick={handleZoomIn}
+            disabled={zoomLevel >= MAX_ZOOM}
+            className="p-2 text-[#dae2fd] hover:bg-white/10 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed"
+            data-testid="zoom-in-btn"
           >
             <ZoomIn className="h-5 w-5" />
           </button>
-          <span className="font-mono text-[10px] px-2 text-slate-400">100%</span>
+          <span className="font-mono text-[10px] px-2 text-slate-400">{Math.round(zoomLevel * 100)}%</span>
           <button
-            onClick={() => toast.info("Zoom coming in next update")}
-            className="p-2 text-[#dae2fd] hover:bg-white/10 rounded-lg"
+            onClick={handleZoomOut}
+            disabled={zoomLevel <= MIN_ZOOM}
+            className="p-2 text-[#dae2fd] hover:bg-white/10 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed"
+            data-testid="zoom-out-btn"
           >
             <ZoomOut className="h-5 w-5" />
           </button>
         </div>
         <div className="h-8 w-px bg-[#4a4455]/20 mx-2" />
         <button
-          onClick={() => toast.info("Focus mode coming in next update")}
-          className="p-2 text-[#dae2fd] hover:bg-white/10 rounded-lg"
+          onClick={() => setIsFocusMode(!isFocusMode)}
+          className={`p-2 rounded-lg transition-colors ${isFocusMode ? "bg-[#7c3aed]/30 text-[#d2bbff]" : "text-[#dae2fd] hover:bg-white/10"}`}
+          data-testid="focus-mode-btn"
         >
           <Focus className="h-5 w-5" />
         </button>
       </div>
 
       {/* Entity Type Legend */}
-      {hasNodes && (
+      {hasNodes && !isFocusMode && (
         <div className="absolute bottom-8 left-8 z-30 p-4 bg-slate-900/60 backdrop-blur-xl border border-[#4a4455]/10 rounded-2xl shadow-2xl">
           <h4 className="font-mono text-[10px] uppercase tracking-widest text-slate-500 mb-4">
             Entity Type Filters
@@ -531,7 +556,7 @@ export default function KnowledgeGraphPage() {
       )}
 
       {/* Detail Panel */}
-      {selectedNodeData && (
+      {selectedNodeData && !isFocusMode && (
         <DetailPanel
           node={selectedNodeData}
           onClose={() => setSelectedNode(null)}
