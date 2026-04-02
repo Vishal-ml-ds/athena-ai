@@ -4,14 +4,14 @@ import Link from "next/link";
 import { User, Brain } from "lucide-react";
 import { motion } from "framer-motion";
 
-const FADE_UP = {
+const fadeUp = (delay: number) => ({
   hidden: { opacity: 0, y: 30 },
-  visible: (delay: number) => ({
+  visible: {
     opacity: 1,
     y: 0,
     transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] },
-  }),
-};
+  },
+});
 
 const SCALE_IN = {
   hidden: { opacity: 0, scale: 0.92 },
@@ -35,8 +35,7 @@ export function HeroSection() {
       >
         {/* Status badge */}
         <motion.div
-          variants={FADE_UP}
-          custom={0}
+          variants={fadeUp(0)}
           className="inline-flex items-center space-x-2 bg-surface-container-high/50 px-4 py-1.5 rounded-full border border-outline-variant/10 mb-4"
         >
           <span className="flex h-2 w-2 rounded-full bg-athena-secondary animate-pulse" />
@@ -47,8 +46,7 @@ export function HeroSection() {
 
         {/* Headline */}
         <motion.h1
-          variants={FADE_UP}
-          custom={0.15}
+          variants={fadeUp(0.15)}
           className="text-5xl md:text-8xl font-headline font-bold tracking-tighter text-on-surface leading-[0.9] md:leading-[1.1]"
         >
           The AI Goddess <br />
@@ -59,8 +57,7 @@ export function HeroSection() {
 
         {/* Subheading */}
         <motion.p
-          variants={FADE_UP}
-          custom={0.3}
+          variants={fadeUp(0.3)}
           className="text-xl md:text-2xl text-on-surface-variant max-w-2xl mx-auto font-light leading-relaxed"
         >
           6 specialized AI agents. Voice-first. Browser control. Life
@@ -69,8 +66,7 @@ export function HeroSection() {
 
         {/* CTA buttons */}
         <motion.div
-          variants={FADE_UP}
-          custom={0.45}
+          variants={fadeUp(0.45)}
           className="flex flex-col sm:flex-row gap-6 justify-center mt-12"
         >
           <Link
