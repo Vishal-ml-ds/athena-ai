@@ -83,8 +83,17 @@ export default function DashboardLayout({
       />
 
       {/* Main content: top padding on mobile for top bar, left margin on desktop for sidebar */}
-      <main className="flex flex-1 flex-col overflow-hidden pt-14 md:ml-[280px] md:pt-0">
-        {children}
+      <main className="flex flex-1 flex-col overflow-y-auto pt-14 md:ml-[280px] md:pt-0">
+        <div className="flex-1">{children}</div>
+
+        {/* Dashboard footer */}
+        <footer className="border-t border-white/5 px-6 py-3">
+          <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-slate-600">
+            <span>ATHENA AI</span>
+            <span>v1.0 · Celestial Intelligence</span>
+            <span>© {new Date().getFullYear()}</span>
+          </div>
+        </footer>
       </main>
 
       <NotificationCenter
