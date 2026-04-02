@@ -2,20 +2,20 @@ import Link from "next/link";
 
 const FOOTER_NAV = [
   { label: "Features", href: "#features" },
+  { label: "How It Works", href: "#how-it-works" },
   { label: "Pricing", href: "#pricing" },
-  { label: "Documentation", href: "#" },
 ] as const;
 
 const FOOTER_COMPANY = [
-  { label: "About", href: "#" },
-  { label: "Contact", href: "#" },
-  { label: "LinkedIn", href: "#" },
+  { label: "Sign Up", href: "/signup" },
+  { label: "Login", href: "/login" },
+  { label: "Documentation", href: "#features" },
 ] as const;
 
 const FOOTER_STATUS = [
-  { label: "System Status", href: "#" },
   { label: "Privacy Policy", href: "#" },
   { label: "Terms of Service", href: "#" },
+  { label: "System Status", href: "#" },
 ] as const;
 
 interface FooterColumnProps {

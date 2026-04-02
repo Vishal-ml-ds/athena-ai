@@ -7,6 +7,15 @@ import {
   Mail,
   Search,
   ShoppingCart,
+  MessageSquare,
+  Mic,
+  Brain,
+  FileText,
+  BarChart3,
+  CheckCircle,
+  Zap,
+  Globe,
+  TrendingUp,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { motion, type Variants } from "framer-motion";
@@ -63,7 +72,7 @@ export function HowItWorks() {
 
         {/* Steps */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-16 relative">
-          {/* Step 1 */}
+          {/* Step 1 — Ask Anything */}
           <motion.div
             variants={stepVariants(0)}
             initial="hidden"
@@ -79,8 +88,31 @@ export function HowItWorks() {
                 Ask Anything
               </h4>
             </div>
-            <div className="glass-card rounded-2xl overflow-hidden aspect-[4/3] border border-outline-variant/10">
-              <div className="w-full h-full bg-gradient-to-br from-primary-container/20 via-surface-container to-athena-surface" />
+            {/* Visual: Chat interface mockup */}
+            <div className="glass-card rounded-2xl overflow-hidden border border-outline-variant/10 p-6 space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-8 h-8 rounded-full bg-athena-primary/20 flex items-center justify-center">
+                  <MessageSquare className="w-4 h-4 text-athena-primary" />
+                </div>
+                <span className="text-xs font-mono text-slate-500 uppercase tracking-widest">Chat Interface</span>
+              </div>
+              <div className="bg-surface-container-lowest/50 rounded-xl p-3">
+                <div className="flex items-center gap-2 text-sm text-on-surface-variant">
+                  <Mic className="w-3.5 h-3.5 text-athena-secondary" />
+                  <span className="italic">&ldquo;Plan my morning routine&rdquo;</span>
+                </div>
+              </div>
+              <div className="bg-athena-primary/5 border border-athena-primary/10 rounded-xl p-3">
+                <div className="flex items-start gap-2 text-sm text-athena-primary">
+                  <Brain className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+                  <span>Analyzing intent... routing to Scheduler + Life Coach agents</span>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-athena-primary/10 text-athena-primary">Voice</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-athena-secondary/10 text-athena-secondary">Text</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400">Natural Language</span>
+              </div>
             </div>
             <p className="text-on-surface-variant font-light">
               Initiate via voice or text. No complex prompts needed — ATHENA
@@ -88,7 +120,7 @@ export function HowItWorks() {
             </p>
           </motion.div>
 
-          {/* Step 2 */}
+          {/* Step 2 — Parallel Agency */}
           <motion.div
             variants={stepVariants(1)}
             initial="hidden"
@@ -104,11 +136,11 @@ export function HowItWorks() {
                 Parallel Agency
               </h4>
             </div>
-            <div className="glass-card rounded-2xl overflow-hidden aspect-[4/3] border border-outline-variant/10 flex items-center justify-center p-12">
+            <div className="glass-card rounded-2xl overflow-hidden border border-outline-variant/10 flex items-center justify-center p-12">
               <div className="grid grid-cols-3 gap-6 w-full">
                 {AGENT_ICONS.map(({ icon: Icon, colorClass, shouldPulse }, idx) => (
                   <motion.div
-                    key={Icon.displayName}
+                    key={idx}
                     initial={{ opacity: 0, scale: 0.5 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
@@ -126,7 +158,7 @@ export function HowItWorks() {
             </p>
           </motion.div>
 
-          {/* Step 3 */}
+          {/* Step 3 — Intelligent Results */}
           <motion.div
             variants={stepVariants(2)}
             initial="hidden"
@@ -142,8 +174,32 @@ export function HowItWorks() {
                 Intelligent Results
               </h4>
             </div>
-            <div className="glass-card rounded-2xl overflow-hidden aspect-[4/3] border border-outline-variant/10">
-              <div className="w-full h-full bg-gradient-to-br from-primary-container/20 via-surface-container to-athena-surface" />
+            {/* Visual: Results dashboard mockup */}
+            <div className="glass-card rounded-2xl overflow-hidden border border-outline-variant/10 p-6 space-y-4">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                  <Zap className="w-4 h-4 text-emerald-400" />
+                </div>
+                <span className="text-xs font-mono text-slate-500 uppercase tracking-widest">Results Hub</span>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 bg-surface-container-lowest/50 rounded-lg p-2.5">
+                  <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span className="text-sm text-on-surface-variant">Morning schedule optimized</span>
+                </div>
+                <div className="flex items-center gap-3 bg-surface-container-lowest/50 rounded-lg p-2.5">
+                  <FileText className="w-4 h-4 text-athena-primary shrink-0" />
+                  <span className="text-sm text-on-surface-variant">Grocery list generated</span>
+                </div>
+                <div className="flex items-center gap-3 bg-surface-container-lowest/50 rounded-lg p-2.5">
+                  <BarChart3 className="w-4 h-4 text-athena-secondary shrink-0" />
+                  <span className="text-sm text-on-surface-variant">Budget impact: Rs 450</span>
+                </div>
+              </div>
+              <div className="flex gap-2 pt-1">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400">3 actions</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-athena-primary/10 text-athena-primary">1.2s</span>
+              </div>
             </div>
             <p className="text-on-surface-variant font-light">
               Receive finalized actions, comprehensive reports, or confirmed
