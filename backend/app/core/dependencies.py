@@ -17,6 +17,15 @@ def get_supabase_client() -> Client:
     return create_client(settings.supabase_url, settings.supabase_service_role_key)
 
 
+def get_supabase_admin() -> Client:
+    """Fresh service-role client — NOT cached.
+    Use for auth flows (sign_up, admin.create_user) where supabase-py mutates the
+    client's Authorization header and would poison a singleton for subsequent requests.
+    """
+    settings = get_settings()
+    return create_client(settings.supabase_url, settings.supabase_service_role_key)
+
+
 @lru_cache()
 def get_supabase_anon_client() -> Client:
     """Supabase client using anon key — respects RLS policies.
