@@ -30,6 +30,12 @@ class Settings(BaseSettings):
     openai_api_key: str = ""
     openai_base_url: str = "https://api.openai.com/v1"
 
+    # Neo4j AuraDB — optional real knowledge graph; falls back to Supabase if unset.
+    neo4j_uri: str = ""
+    neo4j_username: str = ""
+    neo4j_password: str = ""
+    neo4j_database: str = "neo4j"
+
     # Tavily (web search for Researcher agent)
     tavily_api_key: str = ""
 

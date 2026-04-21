@@ -1,13 +1,20 @@
-"""Browser automation router — AI Task Planner via SSE.
+"""Browser automation router — real Playwright headless Chromium on Modal.
 
-Generates a realistic step-by-step execution plan for browser tasks
-and streams them as SSE events. Transparent to the user about what
-it is: an AI Task Planner, not a real browser automation (for now)."""
+Given a natural-language task the user wants done in a browser, we:
+  1. Ask the LLM to pick a target URL + a short rationale.
+  2. Drive a real headless browser to that URL.
+  3. Stream back the navigation status, a PNG screenshot, extracted text.
+  4. Ask the LLM for a final answer grounded in the extracted page content.
+
+Each task runs in its own Playwright context — no shared browser state,
+safe for Modal's stateless function model.
+"""
 
 from __future__ import annotations
 
-import asyncio
 import json
+import logging
+import urllib.parse
 import uuid
 from typing import AsyncGenerator
 
@@ -15,46 +22,42 @@ import httpx
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-from supabase import Client
 
+from app.agents.tools.real_browser import run_browser_task
 from app.core.config import get_settings
-from app.core.dependencies import get_supabase_client
 from app.core.security import get_current_user
 from app.models.common import ApiResponse, TenantContext
 
+logger = logging.getLogger(__name__)
+
 router = APIRouter(prefix="/api/v1/browser", tags=["browser"])
 
-# --- Pydantic Models ---
 
 class ExecuteTaskRequest(BaseModel):
     task: str
 
 
-# --- Helpers ---
+PLAN_PROMPT = """You are a browser agent's planner. Given a user's natural-language task, pick the single best starting URL and explain briefly what you will look for.
 
-STEP_DELAY = 0.4  # seconds between steps for dramatic effect
+Return ONLY valid JSON like:
+{"url": "https://example.com/path", "wait_selector": "optional CSS selector or null", "goal": "1-sentence description"}
 
-SYSTEM_PROMPT = """You are an AI Task Planner for ATHENA. Given a browser task, generate a realistic step-by-step execution plan.
-
-Output a JSON array of steps. Each step:
-{
-  "action": "navigate" | "click" | "type" | "scroll" | "screenshot" | "extract" | "wait" | "complete",
-  "description": "Human-readable description of what's happening",
-  "url": "optional — include for navigate actions",
-  "element": "optional — CSS selector or description for click/type",
-  "value": "optional — text to type or value to set"
-}
-
-Keep it realistic: 5-10 steps. Start with navigation, end with "complete".
-Return ONLY the JSON array — no markdown, no explanation."""
+Rules:
+- Always return a real, well-formed https URL.
+- If the task mentions a specific site, use that site's homepage or the most relevant page.
+- For general lookups, use a search engine URL such as https://duckduckgo.com/?q=YOUR+QUERY.
+- wait_selector is optional; set to null if unknown.
+"""
 
 
-async def _generate_task_plan(task: str) -> list[dict]:
-    """Ask the LLM to create a browser task execution plan."""
+SUMMARIZE_PROMPT = """You are ATHENA's Browser Agent. A real headless browser just visited the user's target page and captured visible text. Answer the user's task using ONLY the captured text; cite the final URL. If the text does not answer the task, say so honestly."""
+
+
+async def _plan_task(task: str) -> dict:
+    """Ask the LLM to pick a starting URL + optional wait selector for the task."""
     settings = get_settings()
-
     try:
-        async with httpx.AsyncClient(timeout=20) as client:
+        async with httpx.AsyncClient(timeout=15) as client:
             response = await client.post(
                 f"{settings.euri_base_url}/chat/completions",
                 headers={
@@ -64,68 +67,109 @@ async def _generate_task_plan(task: str) -> list[dict]:
                 json={
                     "model": settings.default_model,
                     "messages": [
-                        {"role": "system", "content": SYSTEM_PROMPT},
+                        {"role": "system", "content": PLAN_PROMPT},
                         {"role": "user", "content": f"Task: {task}"},
                     ],
-                    "temperature": 0.3,
-                    "max_tokens": 800,
+                    "temperature": 0.2,
+                    "max_tokens": 300,
                 },
             )
+            if response.status_code == 200:
+                content = response.json()["choices"][0]["message"]["content"]
+                content = content.strip().removeprefix("```json").removesuffix("```").strip()
+                plan = json.loads(content)
+                if isinstance(plan, dict) and plan.get("url", "").startswith("http"):
+                    return plan
+    except Exception as exc:
+        logger.warning("Plan LLM failed: %s", str(exc)[:200])
 
-            if response.status_code != 200:
-                return _fallback_plan(task)
-
-            content = response.json()["choices"][0]["message"]["content"]
-            content = content.strip().removeprefix("```json").removesuffix("```").strip()
-            steps = json.loads(content)
-
-            if isinstance(steps, list) and steps:
-                return steps
-
-    except Exception:
-        pass
-
-    return _fallback_plan(task)
-
-
-def _fallback_plan(task: str) -> list[dict]:
-    """Return a generic plan when LLM fails."""
-    return [
-        {"action": "navigate", "description": "Opening browser and navigating to target", "url": "https://google.com"},
-        {"action": "type", "description": f"Searching for: {task[:80]}", "element": "search input", "value": task},
-        {"action": "click", "description": "Submitting search query", "element": "search button"},
-        {"action": "extract", "description": "Analyzing search results and relevant content"},
-        {"action": "complete", "description": "Task planning complete. Results ready for review."},
-    ]
+    return {
+        "url": f"https://duckduckgo.com/?q={urllib.parse.quote(task)}",
+        "wait_selector": None,
+        "goal": f"Search the web for: {task}",
+    }
 
 
-async def _stream_steps(task_id: str, steps: list[dict]) -> AsyncGenerator[str, None]:
-    """Stream SSE events for each step with a delay between them."""
-    yield f"data: {json.dumps({'type': 'start', 'task_id': task_id, 'total_steps': len(steps)})}\n\n"
+async def _summarize(task: str, page_text: str, final_url: str, title: str) -> str:
+    settings = get_settings()
+    try:
+        async with httpx.AsyncClient(timeout=30) as client:
+            response = await client.post(
+                f"{settings.euri_base_url}/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {settings.euri_api_key}",
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "model": settings.default_model,
+                    "messages": [
+                        {"role": "system", "content": SUMMARIZE_PROMPT},
+                        {
+                            "role": "user",
+                            "content": (
+                                f"Task: {task}\n"
+                                f"Page title: {title}\n"
+                                f"Final URL: {final_url}\n"
+                                f"Captured text:\n{page_text[:3500]}"
+                            ),
+                        },
+                    ],
+                    "temperature": 0.3,
+                    "max_tokens": 400,
+                },
+            )
+            if response.status_code == 200:
+                return response.json()["choices"][0]["message"]["content"]
+    except Exception as exc:
+        logger.warning("Summarize LLM failed: %s", str(exc)[:200])
 
-    for i, step in enumerate(steps):
-        await asyncio.sleep(STEP_DELAY)
-        yield f"data: {json.dumps({'type': 'step', 'step_index': i, **step})}\n\n"
-
-    await asyncio.sleep(0.3)
-    yield f"data: {json.dumps({'type': 'done', 'task_id': task_id})}\n\n"
+    return f"Visited {final_url} but could not synthesize a final answer."
 
 
-# --- Endpoints ---
+def _sse(event: dict) -> str:
+    return f"data: {json.dumps(event)}\n\n"
+
+
+async def _stream_task(task: str) -> AsyncGenerator[str, None]:
+    task_id = str(uuid.uuid4())
+    yield _sse({"type": "start", "task_id": task_id})
+
+    yield _sse({"type": "status", "message": "planning: picking best URL..."})
+    plan = await _plan_task(task)
+    yield _sse({"type": "plan", **plan})
+
+    page_text = ""
+    final_url = plan["url"]
+    page_title = ""
+
+    async for event in run_browser_task(plan["url"], task, plan.get("wait_selector")):
+        yield _sse(event)
+        if event.get("type") == "extract":
+            page_text = event.get("content", "")
+            final_url = event.get("final_url", plan["url"])
+            page_title = event.get("title", "")
+
+    yield _sse({"type": "status", "message": "synthesizing answer..."})
+    answer = await _summarize(task, page_text, final_url, page_title)
+    yield _sse({"type": "answer", "content": answer, "final_url": final_url})
+    yield _sse({"type": "done", "task_id": task_id})
+
 
 @router.post("/execute", response_model=ApiResponse[dict])
 async def execute_task(
     body: ExecuteTaskRequest,
     ctx: TenantContext = Depends(get_current_user),
-    supabase: Client = Depends(get_supabase_client),
 ):
-    """Submit a browser task — returns a task_id for the SSE stream."""
+    """Submit a browser task — returns a task_id. The frontend should use /stream for SSE."""
     task_id = str(uuid.uuid4())
-    return ApiResponse(success=True, data={
-        "task_id": task_id,
-        "task": body.task,
-        "message": "Task queued. Connect to /stream/{task_id} for real-time steps.",
-    })
+    return ApiResponse(
+        success=True,
+        data={
+            "task_id": task_id,
+            "task": body.task,
+            "message": "Task queued. Connect to /stream with the same body for real-time events.",
+        },
+    )
 
 
 @router.post("/stream")
@@ -133,15 +177,9 @@ async def stream_task(
     body: ExecuteTaskRequest,
     ctx: TenantContext = Depends(get_current_user),
 ):
-    """Generate an AI task plan and stream it as SSE.
-
-    The frontend should call this directly (not /execute first).
-    Returns a text/event-stream of step events."""
-    task_id = str(uuid.uuid4())
-    steps = await _generate_task_plan(body.task)
-
+    """Run a real browser task and stream progress as SSE."""
     return StreamingResponse(
-        _stream_steps(task_id, steps),
+        _stream_task(body.task),
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",

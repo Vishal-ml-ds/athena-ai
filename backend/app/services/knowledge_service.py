@@ -1,7 +1,10 @@
 """Knowledge graph service — entity extraction and relationship mapping.
 
-Uses Supabase tables instead of Neo4j for Sprint 7 MVP.
-Neo4j integration can be added later for graph-native queries."""
+Dual-writes to Supabase (source of truth) and Neo4j AuraDB (graph-native).
+Neo4j is optional — if NEO4J_URI is not set, the service silently skips the
+graph write and everything keeps working off Supabase.
+
+Reads prefer Neo4j when available, falling back to Supabase."""
 
 from __future__ import annotations
 
@@ -13,6 +16,7 @@ import httpx
 from supabase import Client
 
 from app.core.config import get_settings
+from app.services import neo4j_client
 
 
 async def extract_entities(
@@ -76,6 +80,14 @@ Return [] if no notable entities found. Max 5 entities."""
                         "description": entity.get("description", ""),
                         "metadata": {},
                     }, on_conflict="user_id,name").execute()
+                    # Mirror into Neo4j if configured.
+                    await neo4j_client.upsert_node(
+                        user_id=user_id,
+                        tenant_id=tenant_id,
+                        name=entity["name"],
+                        node_type=entity.get("type", "topic"),
+                        description=entity.get("description", ""),
+                    )
                     stored.append(entity)
                 except Exception:
                     pass
@@ -178,6 +190,14 @@ async def add_relationship(
             "relationship": relationship,
             "metadata": {},
         }).execute()
+        # Mirror into Neo4j if configured.
+        await neo4j_client.upsert_edge(
+            user_id=user_id,
+            tenant_id=tenant_id,
+            source_name=source_name,
+            target_name=target_name,
+            relationship=relationship,
+        )
         return True
     except Exception:
         return False
