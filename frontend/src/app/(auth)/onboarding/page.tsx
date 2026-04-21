@@ -48,7 +48,6 @@ export default function OnboardingPage() {
 
   // Step 1: Identity
   const [displayName, setDisplayName] = useState("");
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   // Step 2: Preferences
   const [preferences, setPreferences] = useState<{
@@ -123,9 +122,7 @@ export default function OnboardingPage() {
           {currentStep === 1 && (
             <StepIdentity
               displayName={displayName}
-              avatarFile={avatarFile}
               onDisplayNameChange={setDisplayName}
-              onAvatarChange={setAvatarFile}
               onContinue={goToNextStep}
             />
           )}

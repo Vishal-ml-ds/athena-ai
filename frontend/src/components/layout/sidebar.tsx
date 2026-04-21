@@ -9,7 +9,6 @@ import {
   MessageCircle,
   Trash2,
   Settings,
-  HelpCircle,
   Heart,
   FileText,
   Globe,
@@ -233,13 +232,6 @@ export function Sidebar({ onNotificationClick, isOpen, onClose }: SidebarProps) 
 
         {/* Footer */}
         <div className="mt-auto space-y-1 border-t border-white/5 p-4">
-          <a
-            href="#"
-            className="flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm text-slate-400 transition-colors hover:text-white"
-          >
-            <HelpCircle className="h-4 w-4" />
-            <span className="font-headline tracking-tight">Help Center</span>
-          </a>
           <Link
             href="/settings"
             onClick={handleNavClick}
