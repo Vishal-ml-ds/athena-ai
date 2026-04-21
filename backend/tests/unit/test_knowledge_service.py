@@ -25,7 +25,7 @@ class TestGetKnowledgeGraph:
         """Nodes must have 'label' field (not 'name') for the frontend."""
         from app.services.knowledge_service import get_knowledge_graph
 
-        raw_nodes = [{"id": "n1", "name": "Vishal", "node_type": "person", "description": ""}]
+        raw_nodes = [{"id": "n1", "name": "Author", "node_type": "person", "description": ""}]
         raw_edges = []
 
         call_count = 0
@@ -40,7 +40,7 @@ class TestGetKnowledgeGraph:
 
         result = await get_knowledge_graph("user-1", mock_supabase)
         node = result["nodes"][0]
-        assert node["label"] == "Vishal", "Should map 'name' → 'label'"
+        assert node["label"] == "Author", "Should map 'name' → 'label'"
         assert "name" not in node, "Raw 'name' field should not leak through"
 
     @pytest.mark.asyncio
@@ -48,7 +48,7 @@ class TestGetKnowledgeGraph:
         """Nodes must have 'type' field (not 'node_type')."""
         from app.services.knowledge_service import get_knowledge_graph
 
-        raw_nodes = [{"id": "n1", "name": "Vishal", "node_type": "person", "description": ""}]
+        raw_nodes = [{"id": "n1", "name": "Author", "node_type": "person", "description": ""}]
 
         call_count = 0
         def execute_side_effect():

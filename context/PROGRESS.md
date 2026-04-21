@@ -22,7 +22,7 @@
 ### Infrastructure
 - Modal secret `athena-secrets` now includes: `OPENAI_API_KEY`, `NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD`, `NEO4J_DATABASE`. All other existing keys preserved.
 - RLS re-enabled on `tenants` + `profiles` (emergency `DISABLE` workaround reverted via migration `010_restore_rls_after_signup_fix.sql`).
-- Demo user (vishalprasad2442002@gmail.com) tenant+profile recreated; `scripts/seed_demo.py` ran — 4 habits, 3 goals, 10 finance, 15 health, 7 memories, 8 knowledge nodes, 9 edges.
+- Demo user tenant+profile recreated; `scripts/seed_demo.py` ran — 4 habits, 3 goals, 10 finance, 15 health, 7 memories, 8 knowledge nodes, 9 edges.
 - Vercel is NOT git-integrated — every merge requires a manual `vercel --prod` from `frontend/`. Consider wiring Git integration in the Vercel dashboard.
 
 ### In this session's final PR (pending)

@@ -154,4 +154,4 @@ athena-ai/
 
 ---
 
-Built by **Vishal Prasad** | [GitHub](https://github.com/Vishal-ml-ds)
+ATHENA is an open-source Personal AI Operating System.

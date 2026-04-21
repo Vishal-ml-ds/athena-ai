@@ -2,7 +2,7 @@
 
 **Version:** 1.0
 **Date:** 2026-03-29
-**Author:** Vishal Prasad
+**Author:** ATHENA Team
 **Status:** Draft
 
 ---
@@ -597,11 +597,11 @@ The following features are explicitly excluded from the current roadmap:
 
 | Dependency | Owner | Status |
 |------------|-------|--------|
-| UI/UX design specs | Vishal (via Stitch/manual) | Pending |
-| Architecture document (HLD) | Vishal + Claude | Pending |
-| Database schema (LLD) | Vishal + Claude | Pending |
-| API specification (LLD) | Vishal + Claude | Pending |
-| Sprint planning | Vishal + Claude | Pending |
+| UI/UX design specs | Author (via Stitch/manual) | Pending |
+| Architecture document (HLD) | Team + Claude | Pending |
+| Database schema (LLD) | Team + Claude | Pending |
+| API specification (LLD) | Team + Claude | Pending |
+| Sprint planning | Team + Claude | Pending |
 
 ---
 

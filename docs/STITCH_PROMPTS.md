@@ -452,7 +452,7 @@ PRICING section:
 FOOTER:
 - ATHENA logo + tagline
 - Links: Features, Pricing, About, Contact
-- "Built by Vishal Prasad"
+- "Built by ATHENA Team"
 
 Colors: Background #0F172A, cards #1E293B, primary #7C3AED, accent #F59E0B
 Framework: React + Tailwind CSS

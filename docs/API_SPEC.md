@@ -71,7 +71,7 @@ Create a new account (creates tenant + profile).
 {
   "email": "user@example.com",
   "password": "securepassword123",
-  "display_name": "Vishal Prasad"
+  "display_name": "ATHENA Team"
 }
 
 // Response 201
@@ -138,7 +138,7 @@ Get current user profile.
     "id": "uuid",
     "tenant_id": "uuid",
     "email": "user@example.com",
-    "display_name": "Vishal Prasad",
+    "display_name": "ATHENA Team",
     "avatar_url": "https://...",
     "preferences": {
       "timezone": "Asia/Kolkata",
@@ -157,7 +157,7 @@ Update profile or preferences.
 ```json
 // Request
 {
-  "display_name": "Vishal",
+  "display_name": "Author",
   "preferences": { "timezone": "Asia/Kolkata", "theme": "dark" }
 }
 
@@ -169,7 +169,7 @@ Complete onboarding.
 ```json
 // Request
 {
-  "display_name": "Vishal",
+  "display_name": "Author",
   "timezone": "Asia/Kolkata",
   "interests": ["coding", "finance", "health"]
 }

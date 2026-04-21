@@ -3,7 +3,7 @@
 **Product:** ATHENA — Personal AI Operating System
 **Format:** 18 slides, optimized for Gamma.app import
 **Audience:** Technical interviewers, hiring managers, AI Architect panels
-**Author:** Vishal Prasad
+**Author:** ATHENA Team
 **Date:** 2026-03-29
 
 ---
@@ -15,7 +15,7 @@
 **Content:**
 - ATHENA: The AI Goddess That Runs Your Life
 - Personal AI Operating System | Multi-Agent SaaS Platform
-- Built by Vishal Prasad | 2026
+- Built by ATHENA Team | 2026
 
 **Speaker Notes:** ATHENA is named after the Greek goddess of wisdom and strategy. It is a multi-tenant SaaS platform that acts as a personal AI operating system — not another chatbot, not another wrapper. It orchestrates six specialized AI agents to manage your entire digital life through natural language and voice. I designed and built this solo in 8 weeks to demonstrate production-grade AI architecture at scale.
 
@@ -316,12 +316,12 @@
 
 ## Slide 18: About + Roadmap
 
-**Visual:** Left half: Vishal's profile — photo placeholder, name, title, key stats (built solo, 8 weeks, 10 modules, 6 agents). Right half: Three-phase roadmap as a timeline with milestones. Clean, professional layout.
+**Visual:** Left half: Author's profile — photo placeholder, name, title, key stats (built solo, 8 weeks, 10 modules, 6 agents). Right half: Three-phase roadmap as a timeline with milestones. Clean, professional layout.
 
 **Content:**
 
-**Built by Vishal Prasad**
-- Junior Software Engineer at NBC (Remunance), Goa
+**Built by ATHENA Team**
+- Software Engineer
 - Designed and built ATHENA solo in 8 weeks
 - Full-stack: Next.js + FastAPI + Supabase + LangGraph + Modal
 - Architecture: modular monolith, multi-tenant, production-grade security
