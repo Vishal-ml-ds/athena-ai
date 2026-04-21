@@ -3,7 +3,7 @@
 **Product**: ATHENA - Personal AI Operating System
 **Version**: 1.0
 **Date**: 2026-03-29
-**Author**: Vishal Prasad
+**Author**: ATHENA Team
 **Status**: Draft
 
 ---
@@ -377,8 +377,8 @@ Angelina is the closest known competitor attempting a similar "AI OS" positionin
 
 | Role | Name | Date | Status |
 |------|------|------|--------|
-| Product Owner | Vishal Prasad | 2026-03-29 | Pending |
-| Technical Lead | Vishal Prasad | 2026-03-29 | Pending |
+| Product Owner | ATHENA Team | 2026-03-29 | Pending |
+| Technical Lead | ATHENA Team | 2026-03-29 | Pending |
 
 ---
 

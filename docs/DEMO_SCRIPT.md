@@ -91,7 +91,7 @@ Then type: `What tasks should I focus on this week to hit my goal of launching A
 
 **What you do:**
 1. Open **Knowledge** page
-2. 8 nodes are visible in circular layout: Vishal, ATHENA, FastAPI, Next.js, Supabase, NBC, LangGraph, AI Architect Mastery
+2. 8 nodes are visible in circular layout: Author, ATHENA, FastAPI, Next.js, Supabase, NBC, LangGraph, AI Architect Mastery
 3. Click on **ATHENA** node → detail panel opens on the right
 4. Show the connections: "ATHENA uses FastAPI, Next.js, Supabase, LangGraph"
 5. Click **Edit** → update description inline → Save

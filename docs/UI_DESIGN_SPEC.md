@@ -2,7 +2,7 @@
 
 **Version:** 1.0
 **Date:** 2026-03-29
-**Author:** Vishal Prasad
+**Author:** ATHENA Team
 **Stack:** Next.js 15 + TypeScript + Tailwind CSS + shadcn/ui + Framer Motion
 **Status:** Draft
 
@@ -218,7 +218,7 @@ The authenticated app uses a sidebar + main content layout. The sidebar is persi
 |  [Voice Mode]  (fab)    |  <- floating action, pulse animation
 |                         |
 |  ~~~~~~~~~~~~~~~~~~~~~~ |
-|  [Avatar] Vishal P.     |
+|  [Avatar] Author P.     |
 |  Free Plan              |
 |  [Upgrade]              |
 +------------------------+
@@ -585,7 +585,7 @@ interface OnboardingData {
 |          | Dashboard                     [Cmd+K]  [Bell]  [Avatar]   |
 |          +------------------------------------------------------------+
 |          |                                                             |
-|          |  Good morning, Vishal.                                     |
+|          |  Good morning, Author.                                     |
 |          |  Here's your day at a glance.                              |
 |          |                                                             |
 |          |  QUICK STATS (4 cards, horizontal)                         |
@@ -1241,8 +1241,8 @@ interface DocumentStore {
 |          |  | ATHENA wants to submit a form on example.com           | |
 |          |  |                                                       | |
 |          |  | Fields to submit:                                     | |
-|          |  |   Name: Vishal Prasad                                 | |
-|          |  |   Email: vishal@example.com                           | |
+|          |  |   Name: ATHENA Team                                 | |
+|          |  |   Email: demo@athena.local                           | |
 |          |  |                                                       | |
 |          |  | [Screenshot of form before submit]                    | |
 |          |  |                                                       | |
@@ -1775,10 +1775,10 @@ interface AnalyticsData {
 |          |  | [Integr.]  | [Current Avatar]  [Change] [Remove]      | |
 |          |  | [API Keys] |                                          | |
 |          |  | [Billing]  | Display Name                             | |
-|          |  | [Account]  | [Vishal Prasad.....................]      | |
+|          |  | [Account]  | [ATHENA Team.....................]      | |
 |          |  |            |                                          | |
 |          |  |            | Email                                    | |
-|          |  |            | vishal@example.com  [Verified]           | |
+|          |  |            | demo@athena.local  [Verified]           | |
 |          |  |            |                                          | |
 |          |  |            | Timezone                                 | |
 |          |  |            | [Asia/Kolkata (IST)              v]      | |

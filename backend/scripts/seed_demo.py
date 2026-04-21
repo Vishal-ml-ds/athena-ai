@@ -1,12 +1,14 @@
 """
 Demo data seeder for ATHENA.
 
-Seeds the demo account (vishalprasad2442002@gmail.com) with realistic data
-so every page looks populated during demos and portfolio reviews.
+Seeds the configured demo account (set ATHENA_DEMO_EMAIL in the environment,
+or fall back to the DEMO_EMAIL constant below) with realistic habits, goals,
+finance, health, memories, and knowledge-graph entries so every page looks
+populated during demos and portfolio reviews.
 
 Usage:
     cd backend
-    python -m scripts.seed_demo
+    ATHENA_DEMO_EMAIL=you@example.com python -m scripts.seed_demo
 
 The script is idempotent — running it twice will not duplicate data.
 It uses the Supabase service role key so RLS is bypassed.
@@ -33,7 +35,7 @@ if env_path.exists():
 from supabase import create_client, Client  # noqa: E402 (after env load)
 
 # ── Config ────────────────────────────────────────────────────────────────────
-DEMO_EMAIL = "vishalprasad2442002@gmail.com"
+DEMO_EMAIL = os.environ.get("ATHENA_DEMO_EMAIL", "demo@athena.local")
 TODAY = date.today()
 
 
