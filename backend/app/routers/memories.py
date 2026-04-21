@@ -1,6 +1,9 @@
 """Memory CRUD + search endpoints."""
 
+from __future__ import annotations
+
 from fastapi import APIRouter, Depends, Query
+from pydantic import BaseModel, Field
 from supabase import Client
 
 from app.core.dependencies import get_supabase_client
@@ -43,22 +46,23 @@ async def list_memories(
     )
 
 
+class MemorySearchRequest(BaseModel):
+    query: str = Field(..., min_length=1, max_length=500)
+    limit: int = Field(default=10, ge=1, le=50)
+
+
 @router.post("/search", response_model=ApiResponse[list])
 async def search_user_memories(
-    body: dict,
+    body: MemorySearchRequest,
     ctx: TenantContext = Depends(get_current_user),
     supabase: Client = Depends(get_supabase_client),
 ):
     """Search memories by text query."""
-    query = body.get("query", "")
-    if not query:
-        return ApiResponse(success=True, data=[])
-
     results = await search_memories(
-        query=query,
+        query=body.query,
         user_id=str(ctx.user_id),
         supabase=supabase,
-        limit=body.get("limit", 10),
+        limit=body.limit,
     )
 
     return ApiResponse(success=True, data=results)

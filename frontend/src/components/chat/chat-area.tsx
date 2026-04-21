@@ -64,10 +64,13 @@ export function ChatArea() {
 
   const handleSend = useCallback(
     async (content: string) => {
-      if (!activeConversationId) {
-        await createConversation("New Chat");
+      let convId = activeConversationId;
+      if (!convId) {
+        convId = await createConversation("New Chat");
       }
-      sendMessage(content);
+      // Use the store's sendMessage which reads activeConversationId from state
+      // createConversation already set it, so sendMessage will pick it up
+      await sendMessage(content);
     },
     [activeConversationId, createConversation, sendMessage]
   );

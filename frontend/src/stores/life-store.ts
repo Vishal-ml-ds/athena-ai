@@ -59,7 +59,9 @@ interface LifeState {
   healthLogs: HealthLog[];
   healthTrends: Record<string, { value: number; unit: string; date: string }[]>;
   isLoading: boolean;
+  error: string | null;
 
+  clearError: () => void;
   fetchHabits: () => Promise<void>;
   createHabit: (data: { name: string; description?: string; category?: string }) => Promise<void>;
   logHabit: (habitId: string) => Promise<void>;
@@ -78,6 +80,9 @@ interface LifeState {
   fetchHealthTrends: () => Promise<void>;
 }
 
+const toErrorMessage = (err: unknown) =>
+  err instanceof Error ? err.message : "Something went wrong";
+
 export const useLifeStore = create<LifeState>((set) => ({
   habits: [],
   goals: [],
@@ -86,13 +91,18 @@ export const useLifeStore = create<LifeState>((set) => ({
   healthLogs: [],
   healthTrends: {},
   isLoading: false,
+  error: null,
+
+  clearError: () => set({ error: null }),
 
   // Habits
   fetchHabits: async () => {
     try {
       const data = await api.get<Habit[]>("/api/v1/life/habits");
       set({ habits: data });
-    } catch { /* empty */ }
+    } catch (err) {
+      set({ error: toErrorMessage(err) });
+    }
   },
 
   createHabit: async (data) => {
@@ -100,7 +110,9 @@ export const useLifeStore = create<LifeState>((set) => ({
       await api.post("/api/v1/life/habits", data);
       const habits = await api.get<Habit[]>("/api/v1/life/habits");
       set({ habits });
-    } catch { /* empty */ }
+    } catch (err) {
+      set({ error: toErrorMessage(err) });
+    }
   },
 
   logHabit: async (habitId) => {
@@ -108,14 +120,18 @@ export const useLifeStore = create<LifeState>((set) => ({
       await api.post(`/api/v1/life/habits/${habitId}/log`);
       const habits = await api.get<Habit[]>("/api/v1/life/habits");
       set({ habits });
-    } catch { /* empty */ }
+    } catch (err) {
+      set({ error: toErrorMessage(err) });
+    }
   },
 
   deleteHabit: async (habitId) => {
     try {
       await api.delete(`/api/v1/life/habits/${habitId}`);
       set((s) => ({ habits: s.habits.filter((h) => h.id !== habitId) }));
-    } catch { /* empty */ }
+    } catch (err) {
+      set({ error: toErrorMessage(err) });
+    }
   },
 
   // Goals
@@ -123,7 +139,9 @@ export const useLifeStore = create<LifeState>((set) => ({
     try {
       const data = await api.get<Goal[]>("/api/v1/life/goals?status=active");
       set({ goals: data });
-    } catch { /* empty */ }
+    } catch (err) {
+      set({ error: toErrorMessage(err) });
+    }
   },
 
   createGoal: async (data) => {
@@ -131,7 +149,9 @@ export const useLifeStore = create<LifeState>((set) => ({
       await api.post("/api/v1/life/goals", data);
       const goals = await api.get<Goal[]>("/api/v1/life/goals?status=active");
       set({ goals });
-    } catch { /* empty */ }
+    } catch (err) {
+      set({ error: toErrorMessage(err) });
+    }
   },
 
   updateGoalProgress: async (goalId, progress) => {
@@ -142,7 +162,9 @@ export const useLifeStore = create<LifeState>((set) => ({
           g.id === goalId ? { ...g, progress, status: progress >= 100 ? "completed" : g.status } : g
         ),
       }));
-    } catch { /* empty */ }
+    } catch (err) {
+      set({ error: toErrorMessage(err) });
+    }
   },
 
   // Finance
@@ -150,7 +172,9 @@ export const useLifeStore = create<LifeState>((set) => ({
     try {
       const data = await api.get<FinanceEntry[]>("/api/v1/life/finance?limit=50");
       set({ financeEntries: data });
-    } catch { /* empty */ }
+    } catch (err) {
+      set({ error: toErrorMessage(err) });
+    }
   },
 
   addFinanceEntry: async (data) => {
@@ -158,14 +182,18 @@ export const useLifeStore = create<LifeState>((set) => ({
       await api.post("/api/v1/life/finance", data);
       const entries = await api.get<FinanceEntry[]>("/api/v1/life/finance?limit=50");
       set({ financeEntries: entries });
-    } catch { /* empty */ }
+    } catch (err) {
+      set({ error: toErrorMessage(err) });
+    }
   },
 
   fetchFinanceSummary: async () => {
     try {
       const data = await api.get<FinanceSummary>("/api/v1/life/finance/summary");
       set({ financeSummary: data });
-    } catch { /* empty */ }
+    } catch (err) {
+      set({ error: toErrorMessage(err) });
+    }
   },
 
   // Health
@@ -176,7 +204,9 @@ export const useLifeStore = create<LifeState>((set) => ({
         : "/api/v1/life/health?limit=30";
       const data = await api.get<HealthLog[]>(url);
       set({ healthLogs: data });
-    } catch { /* empty */ }
+    } catch (err) {
+      set({ error: toErrorMessage(err) });
+    }
   },
 
   logHealth: async (data) => {
@@ -184,7 +214,9 @@ export const useLifeStore = create<LifeState>((set) => ({
       await api.post("/api/v1/life/health", data);
       const logs = await api.get<HealthLog[]>("/api/v1/life/health?limit=30");
       set({ healthLogs: logs });
-    } catch { /* empty */ }
+    } catch (err) {
+      set({ error: toErrorMessage(err) });
+    }
   },
 
   fetchHealthTrends: async () => {
@@ -193,6 +225,8 @@ export const useLifeStore = create<LifeState>((set) => ({
         "/api/v1/life/health/trends"
       );
       set({ healthTrends: data });
-    } catch { /* empty */ }
+    } catch (err) {
+      set({ error: toErrorMessage(err) });
+    }
   },
 }));

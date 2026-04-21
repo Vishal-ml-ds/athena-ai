@@ -1,23 +1,91 @@
 """Life OS endpoints — habits, goals, finance, health."""
 
+from __future__ import annotations
+
 import uuid
 from datetime import datetime, timezone
+from typing import Literal
 
 from fastapi import APIRouter, Depends, Query
+from pydantic import BaseModel, Field, field_validator
 from supabase import Client
 
 from app.core.dependencies import get_supabase_client
-from app.core.exceptions import NotFoundError
 from app.core.security import get_current_user
 from app.models.common import ApiResponse, TenantContext
 
 router = APIRouter(prefix="/api/v1/life", tags=["life"])
 
+
+# ── Request Models ───────────────────────────────────────────
+
+class CreateHabitRequest(BaseModel):
+    name: str = Field(..., min_length=1, max_length=100)
+    description: str = Field(default="", max_length=500)
+    category: str = Field(default="productivity", max_length=50)
+    frequency: dict = Field(default_factory=lambda: {"type": "daily"})
+
+
+class LogHabitRequest(BaseModel):
+    value: float | None = None
+    notes: str = Field(default="", max_length=500)
+
+
+class CreateGoalRequest(BaseModel):
+    title: str = Field(..., min_length=1, max_length=200)
+    description: str = Field(default="", max_length=1000)
+    category: str = Field(default="personal", max_length=50)
+    target_date: str | None = None
+    milestones: list = Field(default_factory=list)
+
+    @field_validator("target_date")
+    @classmethod
+    def validate_date(cls, v: str | None) -> str | None:
+        if v is None:
+            return v
+        try:
+            datetime.fromisoformat(v)
+        except ValueError as exc:
+            raise ValueError("target_date must be ISO format (YYYY-MM-DD)") from exc
+        return v
+
+
+class UpdateGoalProgressRequest(BaseModel):
+    progress: float = Field(..., ge=0, le=100)
+
+
+class AddFinanceRequest(BaseModel):
+    type: Literal["income", "expense", "savings"]
+    amount: float = Field(..., gt=0)
+    currency: str = Field(default="INR", max_length=3)
+    category: str = Field(..., min_length=1, max_length=50)
+    description: str = Field(default="", max_length=500)
+    date: str | None = None
+
+    @field_validator("date")
+    @classmethod
+    def validate_date(cls, v: str | None) -> str | None:
+        if v is None:
+            return v
+        try:
+            datetime.fromisoformat(v)
+        except ValueError as exc:
+            raise ValueError("date must be ISO format (YYYY-MM-DD)") from exc
+        return v
+
+
+class LogHealthRequest(BaseModel):
+    metric_type: str = Field(..., min_length=1, max_length=50)
+    value: float = Field(..., ge=0)
+    unit: str = Field(..., min_length=1, max_length=20)
+    notes: str = Field(default="", max_length=500)
+
+
 # ── HABITS ──────────────────────────────────────────
 
 @router.post("/habits", response_model=ApiResponse[dict], status_code=201)
 async def create_habit(
-    body: dict,
+    body: CreateHabitRequest,
     ctx: TenantContext = Depends(get_current_user),
     supabase: Client = Depends(get_supabase_client),
 ):
@@ -25,10 +93,10 @@ async def create_habit(
         "id": str(uuid.uuid4()),
         "user_id": str(ctx.user_id),
         "tenant_id": str(ctx.tenant_id),
-        "name": body["name"],
-        "description": body.get("description", ""),
-        "category": body.get("category", "productivity"),
-        "frequency": body.get("frequency", {"type": "daily"}),
+        "name": body.name,
+        "description": body.description,
+        "category": body.category,
+        "frequency": body.frequency,
     }).execute()
     return ApiResponse(success=True, data=result.data[0])
 
@@ -38,28 +106,39 @@ async def list_habits(
     ctx: TenantContext = Depends(get_current_user),
     supabase: Client = Depends(get_supabase_client),
 ):
-    result = supabase.table("habits").select("*").eq("user_id", str(ctx.user_id)).eq("is_active", True).execute()
+    result = (
+        supabase.table("habits")
+        .select("*")
+        .eq("user_id", str(ctx.user_id))
+        .eq("is_active", True)
+        .execute()
+    )
     return ApiResponse(success=True, data=result.data)
 
 
 @router.post("/habits/{habit_id}/log", response_model=ApiResponse[dict])
 async def log_habit(
     habit_id: str,
-    body: dict | None = None,
+    body: LogHabitRequest = LogHabitRequest(),
     ctx: TenantContext = Depends(get_current_user),
     supabase: Client = Depends(get_supabase_client),
 ):
-    body = body or {}
     result = supabase.table("habit_logs").insert({
         "habit_id": habit_id,
         "user_id": str(ctx.user_id),
         "tenant_id": str(ctx.tenant_id),
-        "value": body.get("value"),
-        "notes": body.get("notes", ""),
+        "value": body.value,
+        "notes": body.notes,
     }).execute()
 
-    # Update streak
-    supabase.rpc("increment_streak", {"habit_id_param": habit_id}).execute()
+    # Update streak — non-critical, habit log already saved above
+    try:
+        supabase.rpc("increment_streak", {
+            "habit_id_param": habit_id,
+            "user_id_param": str(ctx.user_id),
+        }).execute()
+    except Exception:
+        pass  # Streak update is non-critical
 
     return ApiResponse(success=True, data=result.data[0] if result.data else {})
 
@@ -78,7 +157,7 @@ async def delete_habit(
 
 @router.post("/goals", response_model=ApiResponse[dict], status_code=201)
 async def create_goal(
-    body: dict,
+    body: CreateGoalRequest,
     ctx: TenantContext = Depends(get_current_user),
     supabase: Client = Depends(get_supabase_client),
 ):
@@ -86,11 +165,11 @@ async def create_goal(
         "id": str(uuid.uuid4()),
         "user_id": str(ctx.user_id),
         "tenant_id": str(ctx.tenant_id),
-        "title": body["title"],
-        "description": body.get("description", ""),
-        "category": body.get("category", "personal"),
-        "target_date": body.get("target_date"),
-        "milestones": body.get("milestones", []),
+        "title": body.title,
+        "description": body.description,
+        "category": body.category,
+        "target_date": body.target_date,
+        "milestones": body.milestones,
     }).execute()
     return ApiResponse(success=True, data=result.data[0])
 
@@ -101,20 +180,25 @@ async def list_goals(
     ctx: TenantContext = Depends(get_current_user),
     supabase: Client = Depends(get_supabase_client),
 ):
-    result = supabase.table("goals").select("*").eq("user_id", str(ctx.user_id)).eq("status", status).execute()
+    result = (
+        supabase.table("goals")
+        .select("*")
+        .eq("user_id", str(ctx.user_id))
+        .eq("status", status)
+        .execute()
+    )
     return ApiResponse(success=True, data=result.data)
 
 
 @router.patch("/goals/{goal_id}/progress", response_model=ApiResponse[dict])
 async def update_goal_progress(
     goal_id: str,
-    body: dict,
+    body: UpdateGoalProgressRequest,
     ctx: TenantContext = Depends(get_current_user),
     supabase: Client = Depends(get_supabase_client),
 ):
-    progress = body.get("progress", 0)
-    updates = {"progress": progress}
-    if progress >= 100:
+    updates: dict = {"progress": body.progress}
+    if body.progress >= 100:
         updates["status"] = "completed"
 
     supabase.table("goals").update(updates).eq("id", goal_id).eq("user_id", str(ctx.user_id)).execute()
@@ -125,7 +209,7 @@ async def update_goal_progress(
 
 @router.post("/finance", response_model=ApiResponse[dict], status_code=201)
 async def add_finance_entry(
-    body: dict,
+    body: AddFinanceRequest,
     ctx: TenantContext = Depends(get_current_user),
     supabase: Client = Depends(get_supabase_client),
 ):
@@ -133,12 +217,12 @@ async def add_finance_entry(
         "id": str(uuid.uuid4()),
         "user_id": str(ctx.user_id),
         "tenant_id": str(ctx.tenant_id),
-        "type": body["type"],
-        "amount": body["amount"],
-        "currency": body.get("currency", "INR"),
-        "category": body["category"],
-        "description": body.get("description", ""),
-        "date": body.get("date", datetime.now(timezone.utc).strftime("%Y-%m-%d")),
+        "type": body.type,
+        "amount": body.amount,
+        "currency": body.currency,
+        "category": body.category,
+        "description": body.description,
+        "date": body.date or datetime.now(timezone.utc).strftime("%Y-%m-%d"),
     }).execute()
     return ApiResponse(success=True, data=result.data[0])
 
@@ -165,13 +249,18 @@ async def finance_summary(
     ctx: TenantContext = Depends(get_current_user),
     supabase: Client = Depends(get_supabase_client),
 ):
-    result = supabase.table("finance_entries").select("type, amount, category").eq("user_id", str(ctx.user_id)).execute()
+    result = (
+        supabase.table("finance_entries")
+        .select("type, amount, category")
+        .eq("user_id", str(ctx.user_id))
+        .execute()
+    )
 
     income = sum(float(e["amount"]) for e in result.data if e["type"] == "income")
     expenses = sum(float(e["amount"]) for e in result.data if e["type"] == "expense")
     savings = sum(float(e["amount"]) for e in result.data if e["type"] == "savings")
 
-    categories = {}
+    categories: dict[str, float] = {}
     for e in result.data:
         if e["type"] == "expense":
             cat = e["category"]
@@ -190,7 +279,7 @@ async def finance_summary(
 
 @router.post("/health", response_model=ApiResponse[dict], status_code=201)
 async def log_health(
-    body: dict,
+    body: LogHealthRequest,
     ctx: TenantContext = Depends(get_current_user),
     supabase: Client = Depends(get_supabase_client),
 ):
@@ -198,10 +287,10 @@ async def log_health(
         "id": str(uuid.uuid4()),
         "user_id": str(ctx.user_id),
         "tenant_id": str(ctx.tenant_id),
-        "metric_type": body["metric_type"],
-        "value": body["value"],
-        "unit": body["unit"],
-        "notes": body.get("notes", ""),
+        "metric_type": body.metric_type,
+        "value": body.value,
+        "unit": body.unit,
+        "notes": body.notes,
     }).execute()
     return ApiResponse(success=True, data=result.data[0])
 
@@ -225,9 +314,16 @@ async def health_trends(
     ctx: TenantContext = Depends(get_current_user),
     supabase: Client = Depends(get_supabase_client),
 ):
-    result = supabase.table("health_logs").select("metric_type, value, unit, logged_at").eq("user_id", str(ctx.user_id)).order("logged_at", desc=True).limit(100).execute()
+    result = (
+        supabase.table("health_logs")
+        .select("metric_type, value, unit, logged_at")
+        .eq("user_id", str(ctx.user_id))
+        .order("logged_at", desc=True)
+        .limit(100)
+        .execute()
+    )
 
-    trends = {}
+    trends: dict[str, list] = {}
     for log in result.data:
         mt = log["metric_type"]
         if mt not in trends:

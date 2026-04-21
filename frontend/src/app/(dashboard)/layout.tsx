@@ -1,18 +1,151 @@
 "use client";
 
+import { useState, useEffect, useCallback } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { Menu, Bell, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { Sidebar } from "@/components/layout/sidebar";
+import { NotificationCenter } from "@/components/notification-center";
+import { CommandPalette } from "@/components/command-palette";
+import { useConversationStore } from "@/stores/conversation-store";
+import { useLifeStore } from "@/stores/life-store";
+import { createClient } from "@/lib/supabase/client";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [authStatus, setAuthStatus] = useState<"checking" | "signed-in" | "signed-out">(
+    "checking",
+  );
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    let cancelled = false;
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (cancelled) return;
+      setAuthStatus(data.session ? "signed-in" : "signed-out");
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (cancelled) return;
+      setAuthStatus(session ? "signed-in" : "signed-out");
+    });
+
+    return () => {
+      cancelled = true;
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (authStatus === "signed-out") {
+      const next = encodeURIComponent(pathname || "/chat");
+      router.replace(`/login?next=${next}`);
+    }
+  }, [authStatus, pathname, router]);
+
+  const conversationError = useConversationStore((s) => s.error);
+  const clearConversationError = useConversationStore((s) => s.clearError);
+  const lifeError = useLifeStore((s) => s.error);
+  const clearLifeError = useLifeStore((s) => s.clearError);
+
+  useEffect(() => {
+    if (conversationError) {
+      toast.error(conversationError);
+      clearConversationError();
+    }
+  }, [conversationError, clearConversationError]);
+
+  useEffect(() => {
+    if (lifeError) {
+      toast.error(lifeError);
+      clearLifeError();
+    }
+  }, [lifeError, clearLifeError]);
+
+  const toggleNotifications = () => {
+    setIsNotificationOpen((prev) => !prev);
+  };
+
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    if ((event.ctrlKey || event.metaKey) && event.key === "k") {
+      event.preventDefault();
+      setIsCommandPaletteOpen((prev) => !prev);
+    }
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
+
+  if (authStatus !== "signed-in") {
+    return (
+      <div className="flex h-screen items-center justify-center bg-athena-background">
+        <Loader2 className="h-8 w-8 animate-spin text-athena-primary" />
+      </div>
+    );
+  }
+
   return (
-    <div className="flex h-screen overflow-hidden bg-[#0b1326]">
-      <Sidebar />
-      <main className="flex flex-1 flex-col overflow-hidden ml-[280px]">
-        {children}
+    <div className="flex h-screen overflow-hidden bg-athena-background">
+      {/* Mobile top bar — visible only on small screens */}
+      <div className="fixed left-0 right-0 top-0 z-30 flex items-center justify-between bg-surface-container-low/80 px-4 py-3 backdrop-blur-xl md:hidden">
+        <button
+          onClick={() => setIsSidebarOpen(true)}
+          data-testid="mobile-menu-button"
+          className="rounded-lg p-2 text-slate-400 transition-colors hover:text-white"
+        >
+          <Menu className="h-6 w-6" />
+        </button>
+        <span className="font-headline text-lg font-bold uppercase tracking-widest text-white">
+          ATHENA
+        </span>
+        <button
+          onClick={toggleNotifications}
+          className="relative rounded-full p-2 text-violet-400 transition-colors hover:text-amber-400"
+        >
+          <Bell className="h-5 w-5" />
+          <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-amber-500" />
+        </button>
+      </div>
+
+      <Sidebar
+        onNotificationClick={toggleNotifications}
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
+
+      {/* Main content: top padding on mobile for top bar, left margin on desktop for sidebar */}
+      <main className="flex flex-1 flex-col overflow-y-auto pt-14 md:ml-[280px] md:pt-0">
+        <div className="flex-1">{children}</div>
+
+        {/* Dashboard footer */}
+        <footer className="border-t border-white/5 px-6 py-3">
+          <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-slate-600">
+            <span>ATHENA AI</span>
+            <span>v1.0 · Celestial Intelligence</span>
+            <span>© {new Date().getFullYear()}</span>
+          </div>
+        </footer>
       </main>
+
+      <NotificationCenter
+        isOpen={isNotificationOpen}
+        onClose={() => setIsNotificationOpen(false)}
+      />
+      <CommandPalette
+        isOpen={isCommandPaletteOpen}
+        onClose={() => setIsCommandPaletteOpen(false)}
+      />
     </div>
   );
 }

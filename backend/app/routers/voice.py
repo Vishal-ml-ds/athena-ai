@@ -3,16 +3,24 @@
 Sprint 4: Basic voice pipeline (transcribe audio → agent → TTS response).
 Full WebSocket real-time voice comes later."""
 
+from __future__ import annotations
+
 import json
 
 import httpx
 from fastapi import APIRouter, Depends, UploadFile, File
+from pydantic import BaseModel, Field
 from supabase import Client
 
 from app.core.config import get_settings
 from app.core.dependencies import get_supabase_client
 from app.core.security import get_current_user
 from app.models.common import ApiResponse, TenantContext
+
+
+class SynthesizeRequest(BaseModel):
+    text: str = Field(..., min_length=1, max_length=4096)
+    voice: str = Field(default="alloy", max_length=20)
 
 router = APIRouter(prefix="/api/v1/voice", tags=["voice"])
 
@@ -57,19 +65,13 @@ async def transcribe_audio(
 
 @router.post("/synthesize", response_model=ApiResponse[dict])
 async def synthesize_speech(
-    body: dict,
+    body: SynthesizeRequest,
     ctx: TenantContext = Depends(get_current_user),
 ):
     """Convert text to speech using Euri AI TTS."""
     settings = get_settings()
-    text = body.get("text", "")
-    voice = body.get("voice", "alloy")
-
-    if not text:
-        return ApiResponse(
-            success=False,
-            error={"code": "VALIDATION_ERROR", "message": "Text is required"},
-        )
+    text = body.text
+    voice = body.voice
 
     try:
         async with httpx.AsyncClient(timeout=30) as client:

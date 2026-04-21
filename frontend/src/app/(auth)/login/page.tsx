@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Brain, Loader2, Lock, ShieldCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -39,8 +40,29 @@ export default function LoginPage() {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    try {
+      const supabase = createClient();
+      const { error: oauthError } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/chat`,
+        },
+      });
+      if (oauthError) {
+        toast.error("Google login failed", {
+          description: oauthError.message,
+        });
+      }
+    } catch {
+      toast.error("Google login unavailable", {
+        description: "Please use email and password for now.",
+      });
+    }
+  };
+
   return (
-    <div className="bg-mesh font-[var(--font-body)] text-on-surface min-h-screen flex items-center justify-center p-6">
+    <div className="bg-mesh font-body text-on-surface min-h-screen flex items-center justify-center p-6">
       <main className="w-full max-w-[420px] relative">
         {/* Background Ambient Glow */}
         <div className="absolute -top-24 -left-24 w-64 h-64 bg-primary-container/20 rounded-full blur-[100px] pointer-events-none" />
@@ -53,7 +75,7 @@ export default function LoginPage() {
             <div className="w-12 h-12 rounded-full bg-primary-container flex items-center justify-center shadow-[0_0_20px_rgba(124,58,237,0.4)] mb-4">
               <Brain className="w-6 h-6 text-white" />
             </div>
-            <h1 className="font-[var(--font-headline)] text-2xl font-bold text-white tracking-tight">
+            <h1 className="font-headline text-2xl font-bold text-white tracking-tight">
               Welcome back
             </h1>
             <p className="text-on-surface-variant text-sm mt-1">
@@ -64,7 +86,9 @@ export default function LoginPage() {
           {/* Google OAuth */}
           <button
             type="button"
+            onClick={handleGoogleLogin}
             className="w-full h-12 flex items-center justify-center gap-3 rounded-lg border border-outline-variant/30 bg-white/5 hover:bg-white/10 transition-all duration-300 text-sm font-medium text-on-surface group"
+            data-testid="login-google"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
@@ -90,7 +114,7 @@ export default function LoginPage() {
           {/* Divider */}
           <div className="flex items-center gap-4 my-8">
             <div className="h-[1px] flex-1 bg-outline-variant/20" />
-            <span className="font-[var(--font-mono-jb)] text-[10px] uppercase tracking-widest text-outline">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-outline">
               OR
             </span>
             <div className="h-[1px] flex-1 bg-outline-variant/20" />
@@ -99,7 +123,7 @@ export default function LoginPage() {
           {/* Login Form */}
           <form onSubmit={handleLogin} className="space-y-5">
             <div>
-              <label className="block font-[var(--font-mono-jb)] text-[10px] uppercase tracking-widest text-outline mb-2 ml-1">
+              <label className="block font-mono text-[10px] uppercase tracking-widest text-outline mb-2 ml-1">
                 Email Address
               </label>
               <div className="relative group">
@@ -118,12 +142,12 @@ export default function LoginPage() {
 
             <div>
               <div className="flex justify-between items-center mb-2 ml-1">
-                <label className="font-[var(--font-mono-jb)] text-[10px] uppercase tracking-widest text-outline">
+                <label className="font-mono text-[10px] uppercase tracking-widest text-outline">
                   Password
                 </label>
                 <a
                   href="#"
-                  className="font-[var(--font-mono-jb)] text-[10px] uppercase tracking-widest text-athena-primary hover:text-athena-primary/80 transition-colors"
+                  className="font-mono text-[10px] uppercase tracking-widest text-athena-primary hover:text-athena-primary/80 transition-colors"
                 >
                   Forgot?
                 </a>
@@ -181,13 +205,13 @@ export default function LoginPage() {
         <div className="mt-8 flex items-center justify-center gap-6 opacity-40">
           <div className="flex items-center gap-2">
             <Lock className="w-4 h-4" />
-            <span className="font-[var(--font-mono-jb)] text-[10px] uppercase tracking-tighter">
+            <span className="font-mono text-[10px] uppercase tracking-tighter">
               End-to-End Encrypted
             </span>
           </div>
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4" />
-            <span className="font-[var(--font-mono-jb)] text-[10px] uppercase tracking-tighter">
+            <span className="font-mono text-[10px] uppercase tracking-tighter">
               SOC2 Compliant
             </span>
           </div>

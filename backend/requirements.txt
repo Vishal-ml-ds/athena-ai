@@ -1,7 +1,7 @@
 # Core
 fastapi==0.115.6
 uvicorn[standard]==0.34.0
-pydantic==2.10.4
+pydantic[email]==2.10.4
 pydantic-settings==2.7.1
 python-dotenv==1.0.1
 python-multipart==0.0.19
@@ -30,6 +30,12 @@ httpx==0.28.1
 # Utils
 orjson==3.10.13
 tenacity==9.0.0
+
+# Document processing
+pymupdf==1.25.5
+
+# Deployment
+modal>=1.0.0
 
 # Testing
 pytest==8.3.4

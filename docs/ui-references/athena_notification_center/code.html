@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ATHENA AI - Notification Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "on-primary-container": "#ede0ff",
+                "error-container": "#93000a",
+                "background": "#0b1326",
+                "on-tertiary-fixed": "#191c1e",
+                "on-secondary": "#472a00",
+                "primary-fixed": "#eaddff",
+                "on-background": "#dae2fd",
+                "tertiary-fixed-dim": "#c4c7c9",
+                "on-secondary-fixed-variant": "#653e00",
+                "on-primary-fixed": "#25005a",
+                "tertiary-container": "#646769",
+                "surface-bright": "#31394d",
+                "primary-container": "#7c3aed",
+                "outline-variant": "#4a4455",
+                "surface-container-high": "#222a3d",
+                "tertiary-fixed": "#e0e3e5",
+                "surface-tint": "#d2bbff",
+                "surface-container-low": "#131b2e",
+                "on-secondary-fixed": "#2a1700",
+                "on-secondary-container": "#5b3800",
+                "inverse-primary": "#732ee4",
+                "surface-container": "#171f33",
+                "on-primary": "#3f008e",
+                "secondary-container": "#ee9800",
+                "on-error": "#690005",
+                "on-surface": "#dae2fd",
+                "secondary-fixed": "#ffddb8",
+                "on-error-container": "#ffdad6",
+                "inverse-on-surface": "#283044",
+                "surface": "#0b1326",
+                "primary": "#d2bbff",
+                "error": "#ffb4ab",
+                "secondary-fixed-dim": "#ffb95f",
+                "on-tertiary-container": "#e4e6e8",
+                "surface-container-highest": "#2d3449",
+                "inverse-surface": "#dae2fd",
+                "on-primary-fixed-variant": "#5a00c6",
+                "primary-fixed-dim": "#d2bbff",
+                "outline": "#958da1",
+                "on-tertiary-fixed-variant": "#444749",
+                "surface-dim": "#0b1326",
+                "surface-container-lowest": "#060e20",
+                "on-tertiary": "#2d3133",
+                "secondary": "#ffb95f",
+                "surface-variant": "#2d3449",
+                "on-surface-variant": "#ccc3d8",
+                "tertiary": "#c4c7c9"
+              },
+              fontFamily: {
+                "headline": ["Space Grotesk"],
+                "body": ["Inter"],
+                "label": ["Inter"],
+                "mono": ["JetBrains Mono"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body overflow-hidden">
+<!-- Background Content Mockup -->
+<main class="fixed inset-0 grid grid-cols-12 gap-6 p-8 opacity-20 pointer-events-none select-none">
+<div class="col-span-8 space-y-8">
+<div class="h-64 rounded-xl bg-surface-container-low"></div>
+<div class="grid grid-cols-3 gap-6">
+<div class="h-40 rounded-xl bg-surface-container"></div>
+<div class="h-40 rounded-xl bg-surface-container"></div>
+<div class="h-40 rounded-xl bg-surface-container"></div>
+</div>
+<div class="h-96 rounded-xl bg-surface-container-lowest"></div>
+</div>
+<div class="col-span-4 space-y-6">
+<div class="h-full rounded-xl bg-surface-container-high"></div>
+</div>
+</main>
+<!-- SideNavBar (Shared Component) -->
+<nav class="h-screen w-64 fixed left-0 top-0 z-50 flex flex-col h-full py-6 px-4 bg-slate-900/60 backdrop-blur-xl shadow-[0_20px_40px_-12px_rgba(124,58,237,0.12)] font-['Space_Grotesk'] tracking-tight">
+<div class="mb-10 px-4">
+<span class="text-2xl font-bold bg-gradient-to-br from-violet-500 to-violet-300 bg-clip-text text-transparent">Celestial OS</span>
+<p class="text-[10px] font-mono text-slate-500 tracking-[0.2em] mt-1">V-4.2 INTELLIGENCE</p>
+</div>
+<div class="flex flex-col gap-2 flex-grow">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-violet-500/10 text-violet-400 font-semibold active:scale-[0.98] transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+                Neural Hub
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="database">database</span>
+                Knowledge Base
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="folder_open">folder_open</span>
+                System Assets
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+                Temporal Logs
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                Core Settings
+            </a>
+</div>
+<button class="mt-auto mx-2 bg-gradient-to-br from-primary-container to-primary text-on-primary font-semibold py-3 px-4 rounded-xl shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity">
+            Synthesize New Mode
+        </button>
+</nav>
+<!-- Overlay Backdrop -->
+<div class="fixed inset-0 bg-background/40 backdrop-blur-sm z-50"></div>
+<!-- Notification Center Panel -->
+<aside class="fixed right-0 top-0 h-full w-[400px] bg-surface-container/60 backdrop-blur-xl z-[60] flex flex-col shadow-2xl border-l border-outline-variant/10">
+<!-- Header -->
+<header class="p-6 flex flex-col gap-6">
+<div class="flex items-center justify-between">
+<h2 class="font-headline text-2xl font-medium tracking-tight text-on-surface">Notifications</h2>
+<button class="p-2 hover:bg-surface-container-high rounded-full transition-colors group">
+<span class="material-symbols-outlined text-outline group-hover:text-on-surface" data-icon="close">close</span>
+</button>
+</div>
+<div class="flex items-center justify-between">
+<!-- Filter Tabs -->
+<div class="flex gap-2 p-1 bg-surface-container-lowest/50 rounded-full">
+<button class="px-4 py-1.5 text-xs font-medium rounded-full bg-primary text-on-primary shadow-sm">All</button>
+<button class="px-4 py-1.5 text-xs font-medium rounded-full text-outline hover:text-on-surface transition-colors">Nudges</button>
+<button class="px-4 py-1.5 text-xs font-medium rounded-full text-outline hover:text-on-surface transition-colors">Reminders</button>
+<button class="px-4 py-1.5 text-xs font-medium rounded-full text-outline hover:text-on-surface transition-colors">System</button>
+</div>
+<button class="text-xs font-medium text-primary/60 hover:text-primary transition-colors">Mark all read</button>
+</div>
+</header>
+<!-- Notification List -->
+<div class="flex-grow overflow-y-auto hide-scrollbar px-6 pb-12 space-y-4">
+<!-- Nudge Item (Amber) -->
+<div class="group relative p-4 rounded-xl bg-surface-container-low hover:bg-surface-container-high transition-all duration-300 cursor-pointer">
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-secondary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="bolt">bolt</span>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-semibold text-sm text-on-surface leading-tight truncate">Health Check-in</h3>
+<span class="font-mono text-[10px] text-outline uppercase tracking-wider">3m ago</span>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">You haven't exercised in 3 days. Athena suggests a light 15-minute mobility flow.</p>
+<div class="mt-3 flex gap-2">
+<button class="px-3 py-1 text-[11px] font-semibold bg-surface-container-highest rounded-md hover:bg-primary/20 hover:text-primary transition-colors">Start Session</button>
+</div>
+</div>
+<div class="w-2 h-2 rounded-full bg-primary mt-1.5 flex-shrink-0"></div>
+</div>
+</div>
+<!-- Reminder Item (Purple) -->
+<div class="group relative p-4 rounded-xl bg-surface-container-low hover:bg-surface-container-high transition-all duration-300 cursor-pointer">
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="notifications_active">notifications_active</span>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-semibold text-sm text-on-surface leading-tight truncate">Call Mom at 5:00 PM</h3>
+<span class="font-mono text-[10px] text-outline uppercase tracking-wider">1h ago</span>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">Scheduled follow-up regarding the weekend travel plans.</p>
+</div>
+<div class="w-2 h-2 rounded-full bg-primary mt-1.5 flex-shrink-0"></div>
+</div>
+</div>
+<!-- Achievement Item (Green) -->
+<div class="group relative p-4 rounded-xl bg-surface-container-low hover:bg-surface-container-high transition-all duration-300 cursor-pointer border border-transparent hover:border-emerald-500/20">
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-emerald-400" data-icon="military_tech">military_tech</span>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-semibold text-sm text-on-surface leading-tight truncate">7-day streak!</h3>
+<span class="font-mono text-[10px] text-outline uppercase tracking-wider">5h ago</span>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">Consistency is key. You've completed your core focus tasks every day this week.</p>
+</div>
+</div>
+</div>
+<!-- System Item (Blue) -->
+<div class="group relative p-4 rounded-xl bg-surface-container-low hover:bg-surface-container-high transition-all duration-300 cursor-pointer">
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-sky-500/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-sky-400" data-icon="analytics">analytics</span>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-semibold text-sm text-on-surface leading-tight truncate">Weekly report ready</h3>
+<span class="font-mono text-[10px] text-outline uppercase tracking-wider">12h ago</span>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">Your productivity insights for Oct 14-21 have been synthesized and are ready for review.</p>
+</div>
+<div class="w-2 h-2 rounded-full bg-primary mt-1.5 flex-shrink-0"></div>
+</div>
+</div>
+<!-- Older Notifications Spacer -->
+<div class="pt-4 pb-2">
+<span class="font-mono text-[10px] text-outline uppercase tracking-[0.2em] px-2">Yesterday</span>
+</div>
+<!-- Achievement (Old) -->
+<div class="group relative p-4 rounded-xl bg-surface-container-low/50 hover:bg-surface-container-high transition-all duration-300 cursor-pointer opacity-70">
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-emerald-500/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-emerald-400/60" data-icon="stars">stars</span>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-semibold text-sm text-on-surface/80 leading-tight truncate">Skill Level Up</h3>
+<span class="font-mono text-[10px] text-outline/60 uppercase tracking-wider">1d ago</span>
+</div>
+<p class="text-sm text-on-surface-variant/70 leading-relaxed">Athena has detected improvement in your 'Deep Work' sessions.</p>
+</div>
+</div>
+</div>
+<!-- Nudge (Old) -->
+<div class="group relative p-4 rounded-xl bg-surface-container-low/50 hover:bg-surface-container-high transition-all duration-300 cursor-pointer opacity-70">
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-secondary-container/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary/60" data-icon="lightbulb">lightbulb</span>
+</div>
+<div class="flex-grow min-w-0">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-semibold text-sm text-on-surface/80 leading-tight truncate">Hydration Reminder</h3>
+<span class="font-mono text-[10px] text-outline/60 uppercase tracking-wider">1d ago</span>
+</div>
+<p class="text-sm text-on-surface-variant/70 leading-relaxed">It's been 3 hours since your last logged water intake.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer / Bottom Action -->
+<footer class="p-6 border-t border-outline-variant/5 bg-surface-container-high/40 mt-auto">
+<button class="w-full py-3 px-4 rounded-xl bg-surface-container-highest hover:bg-surface-bright text-on-surface text-sm font-semibold transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="settings">settings</span>
+                Manage Notification Settings
+            </button>
+</footer>
+</aside>
+<!-- TopNavBar (Shared Component) -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 z-40 bg-slate-950/40 backdrop-blur-md flex justify-between items-center px-8 w-full h-full font-['JetBrains_Mono'] text-sm tracking-widest uppercase gap-6">
+<div class="flex items-center gap-4 flex-grow max-w-xl">
+<div class="w-full flex items-center bg-slate-900/40 rounded-full px-4 py-1.5 border border-outline-variant/10 focus-within:ring-1 focus-within:ring-violet-500/40 transition-all">
+<span class="material-symbols-outlined text-slate-500 text-sm mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-xs w-full text-slate-200 placeholder-slate-500 lowercase" placeholder="Execute command..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="relative text-violet-400 hover:text-amber-400 transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute -top-1 -right-1 w-2 h-2 bg-amber-500 rounded-full"></span>
+</button>
+<button class="text-slate-400 hover:text-amber-400 transition-colors">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+<button class="bg-violet-500/10 text-violet-400 px-6 py-2 rounded-full font-bold hover:bg-violet-500 hover:text-white transition-all">
+                Execute Command
+            </button>
+</div>
+</header>
+</body></html>

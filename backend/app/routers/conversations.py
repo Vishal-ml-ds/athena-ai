@@ -241,6 +241,7 @@ async def send_message(
             tenant_id=str(ctx.tenant_id),
             conversation_history=conversation_history,
             memory_context=memories,
+            supabase=supabase,
         ):
             event_type = event["type"]
 
@@ -286,6 +287,18 @@ async def send_message(
                     )
                 except Exception:
                     pass  # Memory extraction is non-critical
+
+                # Extract knowledge graph entities (async, non-blocking)
+                try:
+                    from app.services.knowledge_service import extract_entities
+                    await extract_entities(
+                        text=full_content,
+                        user_id=str(ctx.user_id),
+                        tenant_id=str(ctx.tenant_id),
+                        supabase=supabase,
+                    )
+                except Exception:
+                    pass  # Entity extraction is non-critical
 
                 yield f"data: {json.dumps({'type': 'done', 'message_id': assistant_message_id, 'total_tokens': tokens_used})}\n\n"
             else:
