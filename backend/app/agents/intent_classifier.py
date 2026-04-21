@@ -60,16 +60,16 @@ AGENT_INTENTS = {
         "what does this error mean",
     ],
     "browser": [
-        "go to this website",
-        "search on amazon",
-        "fill out this form",
-        "book a flight on",
-        "check the price of",
-        "open this link",
-        "find the cheapest",
-        "compare prices on",
-        "buy this online",
-        "scrape data from",
+        "log into this website for me",
+        "fill out this form on the site",
+        "book a flight on expedia",
+        "add this to my cart and check out",
+        "click through these pages",
+        "scrape data from this specific page",
+        "automate this web task",
+        "navigate to the dashboard and click export",
+        "sign up on this site for me",
+        "download every file from this page",
     ],
     "finance": [
         "track my expenses",
@@ -111,13 +111,15 @@ async def classify_intent(message: str) -> dict:
 Available agents: {agent_list}, general
 
 Agent descriptions:
-- researcher: finding information, searching, explaining topics, summarizing
+- researcher: find information, web search, news, latest trends, current facts, compare options, explain topics, summarize, "what is", "who is", "look up", anything that needs up-to-date info from the internet
 - scheduler: calendar, reminders, meetings, time management
 - life_coach: habits, goals, health, motivation, weekly reports, progress tracking
 - coder: writing code, debugging, code review, technical implementation
-- browser: web browsing, online shopping, form filling, price comparison
+- browser: actions that REQUIRE controlling a real browser on the user's behalf — logging in, filling forms, clicking through pages, checking out carts, scraping a specific page. If the user just wants information FROM the web, use researcher instead.
 - finance: expenses, budgets, income, savings, financial analysis
 - general: casual conversation, greetings, questions about ATHENA itself
+
+Key rule: "search the web", "find news", "look up X", "what are the latest X", "top headlines", "compare prices" → researcher (not browser).
 
 User message: "{message}"
 

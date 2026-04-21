@@ -86,12 +86,12 @@ export default function LoginPage() {
                 <label className="font-mono text-[10px] uppercase tracking-widest text-outline">
                   Password
                 </label>
-                <a
-                  href="#"
+                <Link
+                  href="/forgot-password"
                   className="font-mono text-[10px] uppercase tracking-widest text-athena-primary hover:text-athena-primary/80 transition-colors"
                 >
                   Forgot?
-                </a>
+                </Link>
               </div>
               <div className="relative group">
                 <input

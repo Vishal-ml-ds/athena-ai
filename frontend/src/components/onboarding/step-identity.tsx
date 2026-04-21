@@ -1,37 +1,19 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { Camera, Plus } from "lucide-react";
+import { Brain } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface StepIdentityProps {
   displayName: string;
-  avatarFile: File | null;
   onDisplayNameChange: (name: string) => void;
-  onAvatarChange: (file: File | null) => void;
   onContinue: () => void;
 }
 
 export function StepIdentity({
   displayName,
-  avatarFile,
   onDisplayNameChange,
-  onAvatarChange,
   onContinue,
 }: StepIdentityProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    onAvatarChange(file);
-    const reader = new FileReader();
-    reader.onload = (e) => setAvatarPreview(e.target?.result as string);
-    reader.readAsDataURL(file);
-  };
-
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (!displayName.trim()) return;
@@ -50,50 +32,16 @@ export function StepIdentity({
       </header>
 
       <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Avatar Upload */}
+        {/* Brand icon */}
         <div className="flex flex-col items-center gap-4">
           <div
-            className="group relative cursor-pointer"
-            onClick={() => fileInputRef.current?.click()}
+            className={cn(
+              "flex h-[100px] w-[100px] items-center justify-center rounded-full",
+              "border border-[#7c3aed]/30 bg-[#131b2e]",
+              "shadow-[0_0_40px_rgba(124,58,237,0.25)]"
+            )}
           >
-            <div
-              className={cn(
-                "flex h-[100px] w-[100px] flex-col items-center justify-center overflow-hidden rounded-full",
-                "border-2 border-dashed border-[#7c3aed] bg-[#131b2e]",
-                "transition-colors duration-300 hover:bg-[#171f33] group-hover:border-[#d2bbff]"
-              )}
-            >
-              {avatarPreview ? (
-                <img
-                  src={avatarPreview}
-                  alt="Avatar preview"
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <>
-                  <Camera className="mb-1 h-8 w-8 text-[#d2bbff]" />
-                  <span className="font-mono text-[9px] uppercase tracking-tighter text-[#958da1]">
-                    Upload
-                  </span>
-                </>
-              )}
-            </div>
-            <div
-              className={cn(
-                "absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full",
-                "border-2 border-[#0b1326] bg-[#7c3aed] text-white"
-              )}
-            >
-              <Plus className="h-4 w-4" />
-            </div>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleFileSelect}
-              className="hidden"
-              data-testid="avatar-upload-input"
-            />
+            <Brain className="h-12 w-12 text-[#d2bbff]" />
           </div>
         </div>
 
@@ -138,9 +86,6 @@ export function StepIdentity({
           >
             Continue to Neural Mapping
           </button>
-          <p className="mt-6 text-center font-mono text-[10px] uppercase tracking-widest text-[#4a4455]">
-            Process secured by celestial encryption v2.0
-          </p>
         </div>
       </form>
     </section>
