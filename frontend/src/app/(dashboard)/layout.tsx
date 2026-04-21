@@ -1,22 +1,56 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Menu, Bell } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
+import { Menu, Bell, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Sidebar } from "@/components/layout/sidebar";
 import { NotificationCenter } from "@/components/notification-center";
 import { CommandPalette } from "@/components/command-palette";
 import { useConversationStore } from "@/stores/conversation-store";
 import { useLifeStore } from "@/stores/life-store";
+import { createClient } from "@/lib/supabase/client";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [authStatus, setAuthStatus] = useState<"checking" | "signed-in" | "signed-out">(
+    "checking",
+  );
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    let cancelled = false;
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (cancelled) return;
+      setAuthStatus(data.session ? "signed-in" : "signed-out");
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (cancelled) return;
+      setAuthStatus(session ? "signed-in" : "signed-out");
+    });
+
+    return () => {
+      cancelled = true;
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (authStatus === "signed-out") {
+      const next = encodeURIComponent(pathname || "/chat");
+      router.replace(`/login?next=${next}`);
+    }
+  }, [authStatus, pathname, router]);
 
   const conversationError = useConversationStore((s) => s.error);
   const clearConversationError = useConversationStore((s) => s.clearError);
@@ -52,6 +86,14 @@ export default function DashboardLayout({
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyDown]);
+
+  if (authStatus !== "signed-in") {
+    return (
+      <div className="flex h-screen items-center justify-center bg-athena-background">
+        <Loader2 className="h-8 w-8 animate-spin text-athena-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen overflow-hidden bg-athena-background">

@@ -1,16 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  X,
-  Zap,
-  Bell,
-  Trophy,
-  BarChart3,
-  Star,
-  Lightbulb,
-  Settings,
-} from "lucide-react";
+import { X, Zap, Bell, Trophy, BarChart3, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // ── Types ──────────────────────────────────────────────────────────
@@ -46,79 +37,9 @@ const TYPE_STYLES: Record<
   system: { bg: "bg-sky-500/10", text: "text-sky-400", icon: BarChart3 },
 };
 
-const OLD_ICON_MAP: Record<string, React.ElementType> = {
-  "notif-6": Star,
-  "notif-7": Lightbulb,
-};
-
-// ── Mock data ──────────────────────────────────────────────────────
-
-const MOCK_NOTIFICATIONS: Notification[] = [
-  {
-    id: "notif-1",
-    type: "nudge",
-    title: "Health Check-in",
-    description:
-      "You haven't exercised in 3 days. Athena suggests a light 15-minute mobility flow.",
-    time: "3m ago",
-    isRead: false,
-    actionLabel: "Start Session",
-  },
-  {
-    id: "notif-2",
-    type: "reminder",
-    title: "Call Mom at 5:00 PM",
-    description: "Scheduled follow-up regarding the weekend travel plans.",
-    time: "1h ago",
-    isRead: false,
-  },
-  {
-    id: "notif-3",
-    type: "achievement",
-    title: "7-day streak!",
-    description:
-      "Consistency is key. You've completed your core focus tasks every day this week.",
-    time: "5h ago",
-    isRead: true,
-  },
-  {
-    id: "notif-4",
-    type: "system",
-    title: "Weekly report ready",
-    description:
-      "Your productivity insights for this week have been synthesized and are ready for review.",
-    time: "12h ago",
-    isRead: false,
-  },
-  {
-    id: "notif-5",
-    type: "nudge",
-    title: "Focus session available",
-    description:
-      "Your calendar is clear for the next 2 hours. Perfect time for deep work.",
-    time: "14h ago",
-    isRead: true,
-  },
-  {
-    id: "notif-6",
-    type: "achievement",
-    title: "Skill Level Up",
-    description:
-      "Athena has detected improvement in your 'Deep Work' sessions.",
-    time: "1d ago",
-    isRead: true,
-    isOld: true,
-  },
-  {
-    id: "notif-7",
-    type: "nudge",
-    title: "Hydration Reminder",
-    description: "It's been 3 hours since your last logged water intake.",
-    time: "1d ago",
-    isRead: true,
-    isOld: true,
-  },
-];
+// Notifications are loaded from the backend in a future sprint.
+// Empty array = the panel renders its "No notifications to show" empty state.
+const INITIAL_NOTIFICATIONS: Notification[] = [];
 
 const FILTER_TABS: { key: FilterTab; label: string }[] = [
   { key: "all", label: "All" },
@@ -131,7 +52,7 @@ const FILTER_TABS: { key: FilterTab; label: string }[] = [
 
 export function NotificationCenter({ isOpen, onClose }: NotificationCenterProps) {
   const [activeFilter, setActiveFilter] = useState<FilterTab>("all");
-  const [notifications, setNotifications] = useState(MOCK_NOTIFICATIONS);
+  const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS);
 
   const filtered =
     activeFilter === "all"
@@ -256,9 +177,7 @@ export function NotificationCenter({ isOpen, onClose }: NotificationCenterProps)
 
 function NotificationItem({ notification }: { notification: Notification }) {
   const style = TYPE_STYLES[notification.type];
-  const Icon = notification.isOld
-    ? OLD_ICON_MAP[notification.id] ?? style.icon
-    : style.icon;
+  const Icon = style.icon;
 
   return (
     <div
