@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { Brain, Loader2, Lock, ShieldCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { toast } from "sonner";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -40,27 +39,6 @@ export default function LoginPage() {
     }
   };
 
-  const handleGoogleLogin = async () => {
-    try {
-      const supabase = createClient();
-      const { error: oauthError } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/chat`,
-        },
-      });
-      if (oauthError) {
-        toast.error("Google login failed", {
-          description: oauthError.message,
-        });
-      }
-    } catch {
-      toast.error("Google login unavailable", {
-        description: "Please use email and password for now.",
-      });
-    }
-  };
-
   return (
     <div className="bg-mesh font-body text-on-surface min-h-screen flex items-center justify-center p-6">
       <main className="w-full max-w-[420px] relative">
@@ -81,43 +59,6 @@ export default function LoginPage() {
             <p className="text-on-surface-variant text-sm mt-1">
               Sign in to your ATHENA account
             </p>
-          </div>
-
-          {/* Google OAuth */}
-          <button
-            type="button"
-            onClick={handleGoogleLogin}
-            className="w-full h-12 flex items-center justify-center gap-3 rounded-lg border border-outline-variant/30 bg-white/5 hover:bg-white/10 transition-all duration-300 text-sm font-medium text-on-surface group"
-            data-testid="login-google"
-          >
-            <svg className="w-5 h-5" viewBox="0 0 24 24">
-              <path
-                d="M12 5.04c1.94 0 3.51.66 4.87 1.97L20.51 3.4C18.15 1.3 15.28 0 12 0 7.31 0 3.25 2.69 1.19 6.6l4.08 3.16c.97-2.9 3.66-4.72 6.73-4.72z"
-                fill="#EA4335"
-              />
-              <path
-                d="M23.49 12.27c0-.8-.07-1.56-.19-2.27H12v4.51h6.47c-.28 1.48-1.13 2.74-2.4 3.58l3.92 3.04c2.28-2.11 3.5-5.21 3.5-8.86z"
-                fill="#4285F4"
-              />
-              <path
-                d="M5.27 14.26c-.25-.74-.39-1.53-.39-2.26 0-.73.14-1.52.39-2.26L1.19 6.6C.43 8.22 0 10.06 0 12c0 1.94.43 3.78 1.19 5.4l4.08-3.14z"
-                fill="#FBBC05"
-              />
-              <path
-                d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.92-3.04c-1.1.74-2.51 1.17-4.01 1.17-3.07 0-5.76-2.08-6.73-4.88L1.19 17.4C3.25 21.31 7.31 24 12 24z"
-                fill="#34A853"
-              />
-            </svg>
-            Continue with Google
-          </button>
-
-          {/* Divider */}
-          <div className="flex items-center gap-4 my-8">
-            <div className="h-[1px] flex-1 bg-outline-variant/20" />
-            <span className="font-mono text-[10px] uppercase tracking-widest text-outline">
-              OR
-            </span>
-            <div className="h-[1px] flex-1 bg-outline-variant/20" />
           </div>
 
           {/* Login Form */}
