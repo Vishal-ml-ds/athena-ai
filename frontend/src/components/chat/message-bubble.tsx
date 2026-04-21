@@ -2,6 +2,7 @@
 
 import { Brain } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ListenButton } from "./listen-button";
 
 interface MessageBubbleProps {
   role: "user" | "assistant" | "system" | "tool";
@@ -125,6 +126,11 @@ function AssistantMessage({
             <span className="ml-1 inline-block h-5 w-1 animate-pulse rounded-full bg-[#d2bbff]" />
           )}
         </div>
+        {!isStreaming && content.trim().length > 0 && (
+          <div className="mt-4 flex items-center gap-2">
+            <ListenButton text={content} />
+          </div>
+        )}
       </div>
     </div>
   );
