@@ -26,6 +26,10 @@ class Settings(BaseSettings):
     euri_api_key: str
     euri_base_url: str = "https://api.euron.one/api/v1/euri"
 
+    # OpenAI native — used for audio (TTS + Whisper); Euri doesn't expose those.
+    openai_api_key: str = ""
+    openai_base_url: str = "https://api.openai.com/v1"
+
     # Tavily (web search for Researcher agent)
     tavily_api_key: str = ""
 
