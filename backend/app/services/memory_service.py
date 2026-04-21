@@ -200,9 +200,38 @@ async def search_memories(
 
 
 async def _generate_embedding(text: str) -> list[float] | None:
-    """Generate embedding via Euri AI (OpenAI-compatible)."""
+    """Generate a 1536-dim embedding.
+
+    Prefers OpenAI native (text-embedding-3-small) because the Euri gateway's
+    embedding endpoint returned very low-quality vectors in practice — identical
+    semantic queries scored below 0.1 similarity against the stored chunks.
+
+    Falls back to the Euri gateway if OPENAI_API_KEY is not configured, so the
+    feature still functions (just with worse recall) on setups that don't have
+    the OpenAI key.
+    """
     settings = get_settings()
 
+    if settings.openai_api_key:
+        try:
+            async with httpx.AsyncClient(timeout=10) as client:
+                response = await client.post(
+                    f"{settings.openai_base_url}/embeddings",
+                    headers={
+                        "Authorization": f"Bearer {settings.openai_api_key}",
+                        "Content-Type": "application/json",
+                    },
+                    json={
+                        "model": settings.embedding_model,
+                        "input": text[:8000],
+                    },
+                )
+                if response.status_code == 200:
+                    return response.json()["data"][0]["embedding"]
+        except Exception:
+            pass
+
+    # Fallback: Euri gateway
     try:
         async with httpx.AsyncClient(timeout=10) as client:
             response = await client.post(
@@ -213,13 +242,11 @@ async def _generate_embedding(text: str) -> list[float] | None:
                 },
                 json={
                     "model": settings.embedding_model,
-                    "input": text[:8000],  # Max input limit
+                    "input": text[:8000],
                 },
             )
-
             if response.status_code == 200:
                 return response.json()["data"][0]["embedding"]
-
     except Exception:
         pass
 

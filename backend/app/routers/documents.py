@@ -275,7 +275,7 @@ async def query_documents(
         "query_embedding": embedding,
         "match_user_id": str(ctx.user_id),
         "match_count": body.top_k,
-        "match_threshold": 0.3,
+        "match_threshold": 0.1,
     }).execute()
 
     chunks = chunks_result.data or []
