@@ -3,18 +3,19 @@
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 import { StepIndicator } from "@/components/onboarding/step-indicator";
 import { StepIdentity } from "@/components/onboarding/step-identity";
 import { StepPreferences } from "@/components/onboarding/step-preferences";
 import { StepInterests } from "@/components/onboarding/step-interests";
-import { api } from "@/lib/api/client";
+import { api, ApiError } from "@/lib/api/client";
 
 const TOTAL_STEPS = 3;
 const FIRST_STEP = 1;
 
 interface OnboardingPayload {
-  displayName: string;
-  avatarUrl: string | null;
+  display_name: string;
+  avatar_url: string | null;
   timezone: string;
   language: string;
   theme: "dark" | "light";
@@ -76,42 +77,26 @@ export default function OnboardingPage() {
     setIsSubmitting(true);
     try {
       const payload: OnboardingPayload = {
-        displayName: displayName.trim(),
-        avatarUrl: null,
+        display_name: displayName.trim(),
+        avatar_url: null,
         timezone: preferences.timezone,
         language: preferences.language,
         theme: preferences.theme,
         voice: preferences.voice,
-        interests: selectedInterests,
+        interests: selectedInterests.slice(0, 10),
       };
-
-      // Upload avatar first if one was selected
-      if (avatarFile) {
-        const formData = new FormData();
-        formData.append("file", avatarFile);
-        try {
-          const uploadResult = await api.post<{ url: string }>(
-            "/api/v1/auth/avatar",
-            formData
-          );
-          payload.avatarUrl = uploadResult.url;
-        } catch {
-          // Continue without avatar if upload fails
-        }
-      }
 
       await api.post("/api/v1/auth/onboarding", payload);
       router.push("/chat");
-    } catch {
+    } catch (err) {
+      const message =
+        err instanceof ApiError
+          ? err.message
+          : "Could not complete onboarding. Please try again.";
+      toast.error("Onboarding failed", { description: message });
       setIsSubmitting(false);
     }
-  }, [
-    displayName,
-    avatarFile,
-    preferences,
-    selectedInterests,
-    router,
-  ]);
+  }, [displayName, preferences, selectedInterests, router]);
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#0b1326] px-6 py-24">
