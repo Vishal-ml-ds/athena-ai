@@ -1,7 +1,46 @@
 # ATHENA — Progress Tracker
 
+## Current Phase: Feature parity push (Sprint 1 polish)
+## Last Updated: 2026-04-21
+
+## 2026-04-21 Session Log
+
+### Shipped (production live)
+- **Signup service-role pollution fix** (#2): `supabase.auth.sign_up()` was mutating the cached service-role client's Authorization header, so subsequent `.table().insert()` calls during the same request ran under the new user's JWT and failed RLS. Switched to `admin.create_user()` + isolated fresh admin clients for signup/login/refresh.
+- **Frontend auth guard** (#3): `/chat`, `/life`, `/memory`, `/documents`, `/browser`, `/knowledge`, `/report`, `/agents`, `/insights`, `/settings` now redirect to `/login?next=<path>` when signed out; spinner while checking.
+- **Signup single source** (#3): removed the double-create bug — signup now calls only the backend and installs returned tokens via `supabase.auth.setSession()`.
+- **Notification empty state** (#3): removed hardcoded "Call Mom at 5 PM / 7-day streak" mock data.
+- **Onboarding snake_case fix** (#4): `/auth/onboarding` was 422-ing because the frontend sent camelCase payload. Fixed + clamped interests to backend's max_length=10.
+- **Voice on OpenAI native** (#5): Euri gateway doesn't expose `/audio/speech` or `/audio/transcriptions`. Routed TTS + Whisper through `https://api.openai.com/v1` with the new `OPENAI_API_KEY` secret. Verified 20KB MP3 returned.
+- **Google OAuth buttons removed** (#6): Google provider wasn't enabled in Supabase; buttons errored on click. Email/password is the only auth path now.
+- **Classifier routing fix** (#7): web-search intents ("search the web for X") now correctly route to the `researcher` agent instead of the simulated `browser` agent. Verified with confidence 0.95.
+- **Forgot/Reset password** (#7): new `/forgot-password` + `/reset-password` pages wired to `resetPasswordForEmail` / `updateUser`. Login "Forgot?" link now real.
+- **Onboarding avatar upload removed** (#7): was visually functional but file was never sent anywhere. Replaced with decorative icon.
+- **Sidebar Help Center link removed** (#7): `href="#"` dead link cleaned up.
+- **RAG upgrade** (#8): switched embeddings from Euri gateway (near-random vectors — "secret password" scored <0.1 against the matching chunk) to OpenAI native `text-embedding-3-small`. Lowered match threshold 0.3 → 0.1. Verified: 4/4 paraphrased document queries return cited answers at similarity 0.25-0.46.
+
+### Infrastructure
+- Modal secret `athena-secrets` now includes: `OPENAI_API_KEY`, `NEO4J_URI`, `NEO4J_USERNAME`, `NEO4J_PASSWORD`, `NEO4J_DATABASE`. All other existing keys preserved.
+- RLS re-enabled on `tenants` + `profiles` (emergency `DISABLE` workaround reverted via migration `010_restore_rls_after_signup_fix.sql`).
+- Demo user (vishalprasad2442002@gmail.com) tenant+profile recreated; `scripts/seed_demo.py` ran — 4 habits, 3 goals, 10 finance, 15 health, 7 memories, 8 knowledge nodes, 9 edges.
+- Vercel is NOT git-integrated — every merge requires a manual `vercel --prod` from `frontend/`. Consider wiring Git integration in the Vercel dashboard.
+
+### In this session's final PR (pending)
+- Real **Playwright browser agent** replacing the earlier simulation — Chromium on Modal, real navigate + screenshot + text extraction + grounded LLM summary.
+- **Neo4j AuraDB** dual-write for the knowledge graph — `neo4j_client.py` + mirrored upserts in `knowledge_service.py`. Falls back to Supabase silently if `NEO4J_URI` is missing.
+- Modal image now installs `playwright` + `chromium` via `run_commands("playwright install --with-deps chromium")`.
+
+### Known not-yet-done (lower priority)
+- Tavily occasionally under-used by the researcher agent — prompt doesn't strictly enforce "ground your answer in the search results, never use training data for current facts".
+- Older document chunks uploaded with Euri embeddings still have low-recall; users re-uploading get the upgraded embeddings.
+- No CI/CD — pushes do not auto-deploy.
+
+---
+
+## Historical context (before 2026-04-21)
+
 ## Current Phase: UI Overhaul + Production Fixes
-## Last Updated: 2026-04-02
+## Original Last Updated: 2026-04-02
 ## GitHub: https://github.com/Vishal-ml-ds/athena-ai (PRIVATE)
 
 ---

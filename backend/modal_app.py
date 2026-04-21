@@ -6,6 +6,8 @@ image = (
     modal.Image.debian_slim(python_version="3.11")
     .apt_install("libmupdf-dev", "libfreetype-dev")
     .pip_install_from_requirements("requirements.txt")
+    # Install Chromium + its OS-level runtime deps for Playwright
+    .run_commands("playwright install --with-deps chromium")
     .add_local_python_source("app")
 )
 
