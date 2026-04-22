@@ -1,0 +1,177 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img" aria-label="ATHENA data model">
+  <defs>
+    <linearGradient id="bg4" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1326"/>
+      <stop offset="100%" stop-color="#131b2e"/>
+    </linearGradient>
+    <marker id="arrow4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#d2bbff"/>
+    </marker>
+    <style>
+      .t   { font: 600 22px 'Space Grotesk', system-ui, sans-serif; fill: #dae2fd; }
+      .s   { font: 400 12px 'JetBrains Mono', monospace; fill: #958da1; letter-spacing: .08em; text-transform: uppercase; }
+      .tbl { fill: rgba(23,31,51,0.9); stroke: #7c3aed; stroke-width: 1.4; }
+      .tbl-core { fill: rgba(255,185,95,0.08); stroke: #ffb95f; stroke-width: 1.8; }
+      .tblname { font: 600 13px 'JetBrains Mono', monospace; fill: #d2bbff; letter-spacing: .02em; }
+      .col { font: 400 10px 'JetBrains Mono', monospace; fill: #958da1; }
+      .pk  { font: 600 10px 'JetBrains Mono', monospace; fill: #ffb95f; }
+      .fk  { font: 400 10px 'JetBrains Mono', monospace; fill: #d2bbff; }
+      .edge { stroke: #7c3aed; stroke-width: 1.4; fill: none; opacity: 0.8; }
+      .edgetxt { font: 400 10px 'JetBrains Mono', monospace; fill: #958da1; }
+      .group-lbl { font: 600 11px 'JetBrains Mono', monospace; fill: #ffb95f; letter-spacing: .15em; text-transform: uppercase; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="700" fill="url(#bg4)"/>
+
+  <text x="600" y="40" text-anchor="middle" class="t">Data Model — Tenants · Users · Their World</text>
+  <text x="600" y="62" text-anchor="middle" class="s">17 tables · RLS on every user-owned row · pgvector for semantic search</text>
+
+  <!-- Core column (center) -->
+  <g>
+    <!-- tenants -->
+    <rect x="510" y="100" width="180" height="70" rx="8" class="tbl-core"/>
+    <text x="600" y="120" text-anchor="middle" class="tblname">tenants</text>
+    <text x="525" y="140" class="pk">id  PK</text>
+    <text x="525" y="154" class="col">name  plan  settings</text>
+
+    <!-- profiles -->
+    <rect x="510" y="220" width="180" height="90" rx="8" class="tbl-core"/>
+    <text x="600" y="240" text-anchor="middle" class="tblname">profiles</text>
+    <text x="525" y="260" class="pk">id  PK  (= auth.users.id)</text>
+    <text x="525" y="274" class="fk">tenant_id  FK</text>
+    <text x="525" y="288" class="col">display_name  preferences</text>
+    <text x="525" y="302" class="col">onboarding_completed</text>
+
+    <!-- tenants → profiles -->
+    <line x1="600" y1="170" x2="600" y2="218" class="edge" marker-end="url(#arrow4)"/>
+    <text x="608" y="196" class="edgetxt">1..*</text>
+  </g>
+
+  <!-- Conversations + messages -->
+  <g>
+    <rect x="750" y="100" width="180" height="80" rx="8" class="tbl"/>
+    <text x="840" y="120" text-anchor="middle" class="tblname">conversations</text>
+    <text x="765" y="140" class="pk">id  PK</text>
+    <text x="765" y="154" class="fk">user_id  FK</text>
+    <text x="765" y="168" class="col">title  agent_type</text>
+
+    <rect x="960" y="100" width="200" height="80" rx="8" class="tbl"/>
+    <text x="1060" y="120" text-anchor="middle" class="tblname">messages</text>
+    <text x="975" y="140" class="pk">id  PK</text>
+    <text x="975" y="154" class="fk">conversation_id  FK</text>
+    <text x="975" y="168" class="col">role  content  created_at</text>
+
+    <rect x="960" y="195" width="200" height="66" rx="8" class="tbl"/>
+    <text x="1060" y="215" text-anchor="middle" class="tblname">agent_executions</text>
+    <text x="975" y="232" class="pk">id  PK</text>
+    <text x="975" y="247" class="col">agent  tokens  latency_ms</text>
+
+    <line x1="690" y1="260" x2="748" y2="150" class="edge" marker-end="url(#arrow4)"/>
+    <line x1="930" y1="140" x2="958" y2="140" class="edge" marker-end="url(#arrow4)"/>
+    <line x1="930" y1="160" x2="958" y2="220" class="edge" marker-end="url(#arrow4)"/>
+  </g>
+
+  <!-- Memory + documents -->
+  <g>
+    <text x="60" y="96" class="group-lbl">Memory + RAG</text>
+    <rect x="40" y="110" width="200" height="66" rx="8" class="tbl"/>
+    <text x="140" y="130" text-anchor="middle" class="tblname">memories</text>
+    <text x="55" y="148" class="pk">id  PK</text>
+    <text x="55" y="162" class="col">content  importance  embedding</text>
+
+    <rect x="40" y="200" width="200" height="66" rx="8" class="tbl"/>
+    <text x="140" y="220" text-anchor="middle" class="tblname">documents</text>
+    <text x="55" y="238" class="pk">id  PK</text>
+    <text x="55" y="252" class="col">filename  status  chunk_count</text>
+
+    <rect x="40" y="290" width="200" height="74" rx="8" class="tbl"/>
+    <text x="140" y="310" text-anchor="middle" class="tblname">document_chunks</text>
+    <text x="55" y="328" class="pk">id  PK</text>
+    <text x="55" y="342" class="fk">document_id  FK</text>
+    <text x="55" y="356" class="col">content  embedding (1536)</text>
+
+    <line x1="240" y1="143" x2="508" y2="260" class="edge" marker-end="url(#arrow4)"/>
+    <line x1="240" y1="233" x2="508" y2="265" class="edge" marker-end="url(#arrow4)"/>
+    <line x1="140" y1="266" x2="140" y2="288" class="edge" marker-end="url(#arrow4)"/>
+  </g>
+
+  <!-- Life OS -->
+  <g>
+    <text x="60" y="400" class="group-lbl">Life OS</text>
+    <rect x="40" y="414" width="180" height="60" rx="8" class="tbl"/>
+    <text x="130" y="432" text-anchor="middle" class="tblname">habits</text>
+    <text x="55" y="450" class="col">name  streak_current</text>
+    <text x="55" y="464" class="col">frequency  category</text>
+
+    <rect x="40" y="488" width="180" height="52" rx="8" class="tbl"/>
+    <text x="130" y="506" text-anchor="middle" class="tblname">habit_logs</text>
+    <text x="55" y="524" class="col">habit_id  value  logged_at</text>
+
+    <rect x="40" y="556" width="180" height="58" rx="8" class="tbl"/>
+    <text x="130" y="574" text-anchor="middle" class="tblname">goals</text>
+    <text x="55" y="592" class="col">title  category  target_date</text>
+    <text x="55" y="606" class="col">progress  status</text>
+
+    <rect x="240" y="414" width="180" height="60" rx="8" class="tbl"/>
+    <text x="330" y="432" text-anchor="middle" class="tblname">finance_entries</text>
+    <text x="255" y="450" class="col">type  amount  category</text>
+    <text x="255" y="464" class="col">currency  date</text>
+
+    <rect x="240" y="488" width="180" height="52" rx="8" class="tbl"/>
+    <text x="330" y="506" text-anchor="middle" class="tblname">health_logs</text>
+    <text x="255" y="524" class="col">metric_type  value  unit</text>
+
+    <rect x="240" y="556" width="180" height="58" rx="8" class="tbl"/>
+    <text x="330" y="574" text-anchor="middle" class="tblname">weekly_reports</text>
+    <text x="255" y="592" class="col">week_start  insights</text>
+    <text x="255" y="606" class="col">metrics_snapshot</text>
+
+    <!-- habits → habit_logs -->
+    <line x1="130" y1="474" x2="130" y2="488" class="edge" marker-end="url(#arrow4)"/>
+    <!-- profiles → Life OS  (just show two reference arrows) -->
+    <line x1="510" y1="282" x2="220" y2="444" class="edge"/>
+    <line x1="510" y1="296" x2="420" y2="520" class="edge"/>
+  </g>
+
+  <!-- Knowledge graph -->
+  <g>
+    <text x="770" y="290" class="group-lbl">Knowledge Graph</text>
+    <rect x="750" y="300" width="200" height="66" rx="8" class="tbl"/>
+    <text x="850" y="320" text-anchor="middle" class="tblname">knowledge_nodes</text>
+    <text x="765" y="338" class="col">name  type  description</text>
+    <text x="765" y="352" class="col">(mirrored to Neo4j)</text>
+
+    <rect x="960" y="300" width="200" height="66" rx="8" class="tbl"/>
+    <text x="1060" y="320" text-anchor="middle" class="tblname">knowledge_edges</text>
+    <text x="975" y="338" class="col">source_name  target_name</text>
+    <text x="975" y="352" class="col">relationship</text>
+
+    <line x1="950" y1="330" x2="958" y2="330" class="edge" marker-end="url(#arrow4)"/>
+    <line x1="690" y1="288" x2="748" y2="320" class="edge" marker-end="url(#arrow4)"/>
+  </g>
+
+  <!-- Platform -->
+  <g>
+    <text x="770" y="400" class="group-lbl">Platform</text>
+    <rect x="750" y="414" width="180" height="60" rx="8" class="tbl"/>
+    <text x="840" y="432" text-anchor="middle" class="tblname">api_keys</text>
+    <text x="765" y="450" class="col">hashed_key  scopes</text>
+    <text x="765" y="464" class="col">rate_limit_tier</text>
+
+    <rect x="750" y="488" width="180" height="52" rx="8" class="tbl"/>
+    <text x="840" y="506" text-anchor="middle" class="tblname">audit_logs</text>
+    <text x="765" y="524" class="col">action  resource  ip · time</text>
+
+    <rect x="960" y="414" width="200" height="60" rx="8" class="tbl"/>
+    <text x="1060" y="432" text-anchor="middle" class="tblname">reports</text>
+    <text x="975" y="450" class="col">payload  generated_at</text>
+    <text x="975" y="464" class="col">(weekly summary cache)</text>
+  </g>
+
+  <!-- RLS note -->
+  <rect x="40" y="640" width="1120" height="46" rx="10" class="tbl"/>
+  <text x="60" y="660" class="group-lbl">RLS</text>
+  <text x="100" y="660" class="col" style="fill:#dae2fd">Every user-owned table enforces row-level security.</text>
+  <text x="100" y="676" class="col">A user's JWT can only read or write rows where user_id = auth.uid(). Service-role key bypasses for server-side writes. Tested end-to-end with two isolated users.</text>
+</svg>

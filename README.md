@@ -24,46 +24,7 @@ A multi-tenant Personal AI OS with true multi-agent orchestration, voice-first i
 
 ## System Architecture
 
-```mermaid
-flowchart LR
-    User([User's Browser])
-
-    subgraph Vercel[Vercel Edge]
-        Frontend[Next.js 15<br/>App Router + Tailwind + shadcn/ui]
-    end
-
-    subgraph Modal[Modal Serverless]
-        Backend[FastAPI Backend]
-        Chromium[Headless Chromium<br/>Playwright]
-    end
-
-    subgraph Supabase[Supabase]
-        Auth[GoTrue Auth]
-        Postgres[(PostgreSQL<br/>+ pgvector)]
-        Storage[Object Storage]
-    end
-
-    subgraph LLMs[LLM / AI Services]
-        Euri[Euri AI Gateway<br/>gpt-4o-mini, embeddings]
-        OpenAI[OpenAI Native<br/>TTS + Whisper + embeddings]
-        Tavily[Tavily<br/>Web Search]
-    end
-
-    Upstash[(Upstash Redis<br/>Rate limit + cache)]
-    Neo4j[(Neo4j AuraDB<br/>Knowledge graph)]
-
-    User <--> Frontend
-    Frontend <-->|HTTPS + JWT| Backend
-    Frontend <-->|Supabase SDK| Auth
-    Backend <--> Postgres
-    Backend <--> Auth
-    Backend <--> Upstash
-    Backend <--> Euri
-    Backend <--> OpenAI
-    Backend <--> Tavily
-    Backend --> Chromium
-    Backend --> Neo4j
-```
+![ATHENA system architecture](docs/diagrams/architecture.svg)
 
 **Modular monolith.** One FastAPI app, strict module boundaries: `agents`, `routers`, `services`, `models`, `core`. One Next.js app, App Router, every dashboard route inside an auth-guarded layout group.
 
@@ -71,32 +32,7 @@ flowchart LR
 
 ## Multi-Agent Flow
 
-```mermaid
-flowchart TD
-    Msg[User message] --> Classifier{LLM Intent<br/>Classifier}
-
-    Classifier -->|"search the web"<br/>"latest news"| Researcher
-    Classifier -->|"write code"<br/>"fix bug"| Coder
-    Classifier -->|"my habits"<br/>"weekly report"| LifeCoach[Life Coach]
-    Classifier -->|"log into site"<br/>"fill this form"| Browser
-    Classifier -->|"my expenses"<br/>"budget"| Finance
-    Classifier -->|"schedule call"<br/>"remind me"| Scheduler
-    Classifier -->|everything else| General
-
-    Researcher --> TavilyTool[Tavily search]
-    LifeCoach --> DataTools[Life OS data<br/>habits, goals, finance, health]
-    Finance --> DataTools
-    Browser --> Playwright[Playwright<br/>navigate + screenshot + extract]
-
-    TavilyTool --> Grounded[Grounded LLM response]
-    DataTools --> Grounded
-    Playwright --> Grounded
-    Coder --> Grounded
-    Scheduler --> Grounded
-    General --> Grounded
-
-    Grounded --> SSE[SSE stream<br/>→ frontend]
-```
+![ATHENA multi-agent orchestration](docs/diagrams/multi-agent.svg)
 
 Each agent gets its own system prompt and — critically — **real tool data injected before generation**. The researcher sees Tavily results, the life coach sees the user's actual habits, the browser agent sees the real page text. That grounding is what turns "chatbot" into "assistant".
 
@@ -104,91 +40,13 @@ Each agent gets its own system prompt and — critically — **real tool data in
 
 ## Request Lifecycle — "Ask ATHENA a question"
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant U as User
-    participant F as Next.js
-    participant B as FastAPI
-    participant SB as Supabase
-    participant AI as LLM
-    participant T as Tool (Tavily / Playwright / DB)
-
-    U->>F: Type message + click Send
-    F->>B: POST /conversations/{id}/messages<br/>SSE stream
-    B->>B: Classify intent (LLM)
-    B-->>F: event: classification
-    B->>T: Fetch tool context
-    T-->>B: Results
-    B-->>F: event: tool_result
-    B->>SB: Store user message (RLS)
-    B->>AI: Stream completion with grounded context
-    loop per token
-        AI-->>B: token
-        B-->>F: event: token
-    end
-    B->>SB: Store assistant message + agent_executions row
-    B-->>F: event: done
-    F->>U: Render, show "Listen" button
-```
+![ATHENA request lifecycle](docs/diagrams/request-lifecycle.svg)
 
 ---
 
-## Data Model (simplified)
+## Data Model
 
-```mermaid
-erDiagram
-    tenants ||--o{ profiles : has
-    profiles ||--o{ conversations : owns
-    conversations ||--o{ messages : contains
-    profiles ||--o{ memories : has
-    profiles ||--o{ documents : uploads
-    documents ||--o{ document_chunks : split_into
-    profiles ||--o{ habits : tracks
-    habits ||--o{ habit_logs : logged_to
-    profiles ||--o{ goals : pursues
-    profiles ||--o{ finance_entries : records
-    profiles ||--o{ health_logs : records
-    profiles ||--o{ knowledge_nodes : extracted_from_chat
-    knowledge_nodes ||--o{ knowledge_edges : relates_to
-    profiles ||--o{ agent_executions : tracks
-    profiles ||--o{ audit_logs : writes
-    profiles ||--o{ api_keys : issues
-    profiles ||--o{ weekly_reports : receives
-
-    tenants {
-        uuid id PK
-        text name
-        text plan
-        jsonb settings
-    }
-    profiles {
-        uuid id PK
-        uuid tenant_id FK
-        text display_name
-        jsonb preferences
-        bool onboarding_completed
-    }
-    conversations {
-        uuid id PK
-        uuid user_id FK
-        text title
-        text agent_type
-    }
-    documents {
-        uuid id PK
-        uuid user_id FK
-        text filename
-        text status
-        int chunk_count
-    }
-    document_chunks {
-        uuid id PK
-        uuid document_id FK
-        text content
-        vector embedding
-    }
-```
+![ATHENA data model](docs/diagrams/data-model.svg)
 
 RLS is enforced on every user-owned table — a user's JWT cannot read or write another tenant's rows even at the SQL level.
 

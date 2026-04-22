@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-label="ATHENA multi-agent orchestration">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1326"/>
+      <stop offset="100%" stop-color="#131b2e"/>
+    </linearGradient>
+    <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#d2bbff"/>
+    </marker>
+    <style>
+      .t    { font: 600 22px 'Space Grotesk', system-ui, sans-serif; fill: #dae2fd; }
+      .s    { font: 400 12px 'JetBrains Mono', monospace; fill: #958da1; letter-spacing: .08em; text-transform: uppercase; }
+      .card { fill: rgba(23,31,51,0.8); stroke: rgba(124,58,237,0.25); stroke-width: 1.5; }
+      .agent { fill: rgba(23,31,51,0.85); stroke: #7c3aed; stroke-width: 1.6; }
+      .lbl  { font: 600 14px 'Space Grotesk', system-ui, sans-serif; fill: #dae2fd; }
+      .meta { font: 400 10px 'JetBrains Mono', monospace; fill: #d2bbff; }
+      .note { font: 400 10px 'JetBrains Mono', monospace; fill: #958da1; }
+      .edge { stroke: #7c3aed; stroke-width: 1.5; fill: none; }
+      .grp  { font: 600 11px 'JetBrains Mono', monospace; fill: #ffb95f; letter-spacing: .15em; text-transform: uppercase; }
+      .gold-fill { fill: #ffb95f; }
+      .classifier { fill: rgba(255,185,95,0.12); stroke: #ffb95f; stroke-width: 2; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="720" fill="url(#bg2)"/>
+
+  <text x="600" y="44" text-anchor="middle" class="t">Multi-Agent Orchestration</text>
+  <text x="600" y="68" text-anchor="middle" class="s">user message → classifier → agent + tools → grounded response</text>
+
+  <!-- User message -->
+  <rect x="40" y="310" width="200" height="80" rx="12" class="card"/>
+  <text x="140" y="338" text-anchor="middle" class="grp">Input</text>
+  <text x="140" y="362" text-anchor="middle" class="lbl">User message</text>
+  <text x="140" y="378" text-anchor="middle" class="note">"search the web for X"</text>
+
+  <!-- Classifier -->
+  <rect x="300" y="290" width="210" height="120" rx="14" class="classifier"/>
+  <text x="405" y="318" text-anchor="middle" class="grp" style="fill:#ffb95f">Step 1 — Classify</text>
+  <text x="405" y="344" text-anchor="middle" class="lbl">LLM Intent Classifier</text>
+  <text x="405" y="362" text-anchor="middle" class="note">JSON-mode gpt-4o-mini</text>
+  <text x="405" y="380" text-anchor="middle" class="note">temperature 0.1</text>
+  <text x="405" y="398" text-anchor="middle" class="meta">→ {"primary_agent": ...}</text>
+
+  <!-- User → Classifier -->
+  <line x1="244" y1="350" x2="296" y2="350" class="edge" marker-end="url(#arrow2)"/>
+
+  <!-- Agents grid -->
+  <!-- Researcher -->
+  <rect x="580" y="100" width="220" height="72" rx="10" class="agent"/>
+  <text x="690" y="125" text-anchor="middle" class="lbl">Researcher</text>
+  <text x="690" y="144" text-anchor="middle" class="note">web search · news · facts</text>
+  <text x="690" y="160" text-anchor="middle" class="meta">tool: Tavily</text>
+
+  <!-- Coder -->
+  <rect x="580" y="190" width="220" height="72" rx="10" class="agent"/>
+  <text x="690" y="215" text-anchor="middle" class="lbl">Coder</text>
+  <text x="690" y="234" text-anchor="middle" class="note">write · debug · review</text>
+  <text x="690" y="250" text-anchor="middle" class="meta">tool: LLM knowledge</text>
+
+  <!-- Life Coach -->
+  <rect x="580" y="280" width="220" height="72" rx="10" class="agent"/>
+  <text x="690" y="305" text-anchor="middle" class="lbl">Life Coach</text>
+  <text x="690" y="324" text-anchor="middle" class="note">habits · goals · health</text>
+  <text x="690" y="340" text-anchor="middle" class="meta">tool: user's Life OS data</text>
+
+  <!-- Browser -->
+  <rect x="580" y="370" width="220" height="72" rx="10" class="agent"/>
+  <text x="690" y="395" text-anchor="middle" class="lbl">Browser</text>
+  <text x="690" y="414" text-anchor="middle" class="note">navigate · screenshot · extract</text>
+  <text x="690" y="430" text-anchor="middle" class="meta">tool: Playwright/Chromium</text>
+
+  <!-- Finance -->
+  <rect x="580" y="460" width="220" height="72" rx="10" class="agent"/>
+  <text x="690" y="485" text-anchor="middle" class="lbl">Finance</text>
+  <text x="690" y="504" text-anchor="middle" class="note">expenses · budgets · sums</text>
+  <text x="690" y="520" text-anchor="middle" class="meta">tool: finance summary</text>
+
+  <!-- Scheduler -->
+  <rect x="580" y="550" width="220" height="72" rx="10" class="agent"/>
+  <text x="690" y="575" text-anchor="middle" class="lbl">Scheduler</text>
+  <text x="690" y="594" text-anchor="middle" class="note">calendar · reminders</text>
+  <text x="690" y="610" text-anchor="middle" class="meta">tool: calendar stub</text>
+
+  <!-- General -->
+  <rect x="580" y="640" width="220" height="60" rx="10" class="agent"/>
+  <text x="690" y="662" text-anchor="middle" class="lbl">General (fallback)</text>
+  <text x="690" y="682" text-anchor="middle" class="note">small talk · meta questions</text>
+
+  <!-- Classifier → Agents fan-out -->
+  <path d="M 510 330 Q 540 135 576 135" class="edge" marker-end="url(#arrow2)"/>
+  <path d="M 510 340 Q 540 225 576 225" class="edge" marker-end="url(#arrow2)"/>
+  <path d="M 510 350 Q 540 315 576 315" class="edge" marker-end="url(#arrow2)"/>
+  <path d="M 510 360 Q 540 405 576 405" class="edge" marker-end="url(#arrow2)"/>
+  <path d="M 510 370 Q 540 495 576 495" class="edge" marker-end="url(#arrow2)"/>
+  <path d="M 510 380 Q 540 585 576 585" class="edge" marker-end="url(#arrow2)"/>
+  <path d="M 510 390 Q 540 670 576 670" class="edge" marker-end="url(#arrow2)"/>
+
+  <!-- Grounded response stage -->
+  <rect x="870" y="240" width="260" height="180" rx="14" class="card" style="stroke:#7c3aed;stroke-width:2"/>
+  <text x="1000" y="268" text-anchor="middle" class="grp">Step 2 — Ground</text>
+  <text x="1000" y="294" text-anchor="middle" class="lbl">LLM completion</text>
+  <text x="1000" y="316" text-anchor="middle" class="note">system prompt + tool context</text>
+  <text x="1000" y="332" text-anchor="middle" class="note">+ conversation history</text>
+  <text x="1000" y="348" text-anchor="middle" class="note">+ semantic memories</text>
+  <text x="1000" y="372" text-anchor="middle" class="meta">streams tokens via SSE</text>
+  <text x="1000" y="394" text-anchor="middle" class="meta">grounded. not hallucinated.</text>
+
+  <!-- Agents → grounded -->
+  <path d="M 800 135 Q 840 160 870 290" class="edge" marker-end="url(#arrow2)"/>
+  <path d="M 800 225 Q 840 240 870 310" class="edge" marker-end="url(#arrow2)"/>
+  <path d="M 800 315 L 870 320" class="edge" marker-end="url(#arrow2)"/>
+  <path d="M 800 405 Q 840 380 870 340" class="edge" marker-end="url(#arrow2)"/>
+  <path d="M 800 495 Q 840 420 870 360" class="edge" marker-end="url(#arrow2)"/>
+  <path d="M 800 585 Q 840 460 870 380" class="edge" marker-end="url(#arrow2)"/>
+  <path d="M 800 670 Q 840 500 870 400" class="edge" marker-end="url(#arrow2)"/>
+
+  <!-- Output -->
+  <rect x="870" y="460" width="260" height="80" rx="12" class="card"/>
+  <text x="1000" y="488" text-anchor="middle" class="grp">Step 3 — Stream</text>
+  <text x="1000" y="512" text-anchor="middle" class="lbl">SSE → frontend</text>
+  <text x="1000" y="528" text-anchor="middle" class="note">agent_start · tokens · done</text>
+
+  <line x1="1000" y1="420" x2="1000" y2="458" class="edge" marker-end="url(#arrow2)"/>
+
+  <!-- Footer key rule -->
+  <rect x="40" y="560" width="480" height="100" rx="12" class="card"/>
+  <text x="60" y="588" class="grp">Why this is different</text>
+  <text x="60" y="614" class="note">• Classifier uses an LLM, not keyword matching</text>
+  <text x="60" y="632" class="note">• Each agent's prompt is injected with REAL tool data before generation</text>
+  <text x="60" y="650" class="note">• Models stream tokens — no blocking waits for the user</text>
+</svg>

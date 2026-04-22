@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-label="ATHENA request lifecycle">
+  <defs>
+    <linearGradient id="bg3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1326"/>
+      <stop offset="100%" stop-color="#131b2e"/>
+    </linearGradient>
+    <marker id="arrow3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#d2bbff"/>
+    </marker>
+    <style>
+      .t   { font: 600 22px 'Space Grotesk', system-ui, sans-serif; fill: #dae2fd; }
+      .s   { font: 400 12px 'JetBrains Mono', monospace; fill: #958da1; letter-spacing: .08em; text-transform: uppercase; }
+      .swim { stroke: rgba(124,58,237,0.25); stroke-width: 1; stroke-dasharray: 4 4; }
+      .head { fill: rgba(23,31,51,0.85); stroke: #7c3aed; stroke-width: 1.5; }
+      .headlbl { font: 600 13px 'Space Grotesk', system-ui, sans-serif; fill: #dae2fd; }
+      .headsub { font: 400 10px 'JetBrains Mono', monospace; fill: #958da1; }
+      .flow { stroke: #d2bbff; stroke-width: 1.8; fill: none; }
+      .retflow { stroke: #ffb95f; stroke-width: 1.8; fill: none; stroke-dasharray: 5 3; }
+      .step { font: 400 12px 'Space Grotesk', system-ui, sans-serif; fill: #dae2fd; }
+      .stepn { font: 600 11px 'JetBrains Mono', monospace; fill: #ffb95f; }
+      .note { font: 400 10px 'JetBrains Mono', monospace; fill: #958da1; }
+      .act { fill: rgba(124,58,237,0.12); stroke: #7c3aed; stroke-width: 1.2; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="720" fill="url(#bg3)"/>
+
+  <text x="600" y="44" text-anchor="middle" class="t">Request Lifecycle — "Ask ATHENA something"</text>
+  <text x="600" y="68" text-anchor="middle" class="s">signup-authenticated user sends a chat message · SSE stream back</text>
+
+  <!-- Swim lanes -->
+  <g>
+    <!-- columns: 130, 350, 570, 790, 1020 -->
+    <line x1="130" y1="130" x2="130" y2="690" class="swim"/>
+    <line x1="340" y1="130" x2="340" y2="690" class="swim"/>
+    <line x1="560" y1="130" x2="560" y2="690" class="swim"/>
+    <line x1="780" y1="130" x2="780" y2="690" class="swim"/>
+    <line x1="1010" y1="130" x2="1010" y2="690" class="swim"/>
+    <line x1="1160" y1="130" x2="1160" y2="690" class="swim"/>
+  </g>
+
+  <!-- Headers -->
+  <g>
+    <rect x="50" y="92"  width="160" height="48" rx="8" class="head"/>
+    <text x="130" y="112" text-anchor="middle" class="headlbl">User</text>
+    <text x="130" y="128" text-anchor="middle" class="headsub">browser</text>
+
+    <rect x="260" y="92"  width="160" height="48" rx="8" class="head"/>
+    <text x="340" y="112" text-anchor="middle" class="headlbl">Next.js</text>
+    <text x="340" y="128" text-anchor="middle" class="headsub">Vercel</text>
+
+    <rect x="480" y="92"  width="160" height="48" rx="8" class="head"/>
+    <text x="560" y="112" text-anchor="middle" class="headlbl">FastAPI</text>
+    <text x="560" y="128" text-anchor="middle" class="headsub">Modal</text>
+
+    <rect x="700" y="92"  width="160" height="48" rx="8" class="head"/>
+    <text x="780" y="112" text-anchor="middle" class="headlbl">Supabase</text>
+    <text x="780" y="128" text-anchor="middle" class="headsub">Postgres + RLS</text>
+
+    <rect x="920" y="92"  width="180" height="48" rx="8" class="head"/>
+    <text x="1010" y="112" text-anchor="middle" class="headlbl">Tool</text>
+    <text x="1010" y="128" text-anchor="middle" class="headsub">Tavily/Playwright/etc</text>
+
+    <rect x="1090" y="92" width="100" height="48" rx="8" class="head"/>
+    <text x="1140" y="112" text-anchor="middle" class="headlbl">LLM</text>
+    <text x="1140" y="128" text-anchor="middle" class="headsub">streaming</text>
+  </g>
+
+  <!-- Flow arrows -->
+  <!-- 1. User types + clicks Send -->
+  <circle cx="130" cy="180" r="12" class="act"/>
+  <text x="130" y="184" text-anchor="middle" class="stepn">1</text>
+  <line x1="130" y1="180" x2="338" y2="180" class="flow" marker-end="url(#arrow3)"/>
+  <text x="234" y="172" text-anchor="middle" class="step">type message + Send</text>
+
+  <!-- 2. Frontend → Backend POST SSE -->
+  <circle cx="340" cy="220" r="12" class="act"/>
+  <text x="340" y="224" text-anchor="middle" class="stepn">2</text>
+  <line x1="340" y1="220" x2="558" y2="220" class="flow" marker-end="url(#arrow3)"/>
+  <text x="449" y="212" text-anchor="middle" class="step">POST /conversations/{id}/messages</text>
+  <text x="449" y="240" text-anchor="middle" class="note">Authorization: Bearer &lt;JWT&gt;</text>
+
+  <!-- 3. Backend classify intent -->
+  <circle cx="560" cy="270" r="12" class="act"/>
+  <text x="560" y="274" text-anchor="middle" class="stepn">3</text>
+  <rect x="540" y="286" width="40" height="26" rx="6" class="act"/>
+  <text x="560" y="303" text-anchor="middle" class="note">classify</text>
+  <line x1="580" y1="300" x2="1138" y2="300" class="flow" marker-end="url(#arrow3)"/>
+  <line x1="1138" y1="316" x2="580" y2="316" class="retflow" marker-end="url(#arrow3)"/>
+  <text x="860" y="294" text-anchor="middle" class="step">classify_intent() → primary_agent, confidence</text>
+
+  <!-- event back: classification -->
+  <line x1="560" y1="340" x2="342" y2="340" class="retflow" marker-end="url(#arrow3)"/>
+  <text x="451" y="334" text-anchor="middle" class="step" style="fill:#ffb95f">SSE: classification</text>
+
+  <!-- 4. Fetch tool context -->
+  <circle cx="560" cy="380" r="12" class="act"/>
+  <text x="560" y="384" text-anchor="middle" class="stepn">4</text>
+  <line x1="560" y1="380" x2="918" y2="380" class="flow" marker-end="url(#arrow3)"/>
+  <line x1="918" y1="396" x2="560" y2="396" class="retflow" marker-end="url(#arrow3)"/>
+  <text x="739" y="374" text-anchor="middle" class="step">fetch tool context (search / query / screenshot)</text>
+
+  <!-- event back: tool_result -->
+  <line x1="560" y1="420" x2="342" y2="420" class="retflow" marker-end="url(#arrow3)"/>
+  <text x="451" y="414" text-anchor="middle" class="step" style="fill:#ffb95f">SSE: tool_result</text>
+
+  <!-- 5. Persist user message (RLS) -->
+  <circle cx="560" cy="460" r="12" class="act"/>
+  <text x="560" y="464" text-anchor="middle" class="stepn">5</text>
+  <line x1="560" y1="460" x2="698" y2="460" class="flow" marker-end="url(#arrow3)"/>
+  <text x="629" y="454" text-anchor="middle" class="step">insert messages row (RLS enforced)</text>
+
+  <!-- 6. Stream to LLM -->
+  <circle cx="560" cy="500" r="12" class="act"/>
+  <text x="560" y="504" text-anchor="middle" class="stepn">6</text>
+  <line x1="560" y1="500" x2="1138" y2="500" class="flow" marker-end="url(#arrow3)"/>
+  <text x="849" y="494" text-anchor="middle" class="step">stream(system + tool_ctx + history + user)</text>
+
+  <!-- 7. Per-token back to user -->
+  <circle cx="1140" cy="540" r="12" class="act"/>
+  <text x="1140" y="544" text-anchor="middle" class="stepn">7</text>
+  <line x1="1138" y1="540" x2="562" y2="540" class="retflow" marker-end="url(#arrow3)"/>
+  <line x1="560" y1="540" x2="342" y2="540" class="retflow"/>
+  <line x1="340" y1="540" x2="132" y2="540" class="retflow" marker-end="url(#arrow3)"/>
+  <text x="635" y="534" text-anchor="middle" class="step" style="fill:#ffb95f">SSE: token · token · token ...</text>
+
+  <!-- 8. Persist assistant message + agent_executions -->
+  <circle cx="560" cy="590" r="12" class="act"/>
+  <text x="560" y="594" text-anchor="middle" class="stepn">8</text>
+  <line x1="560" y1="590" x2="698" y2="590" class="flow" marker-end="url(#arrow3)"/>
+  <text x="629" y="584" text-anchor="middle" class="step">insert assistant message + agent_executions</text>
+
+  <!-- 9. done event + Listen button -->
+  <circle cx="560" cy="630" r="12" class="act"/>
+  <text x="560" y="634" text-anchor="middle" class="stepn">9</text>
+  <line x1="560" y1="630" x2="342" y2="630" class="retflow" marker-end="url(#arrow3)"/>
+  <line x1="340" y1="630" x2="132" y2="630" class="retflow" marker-end="url(#arrow3)"/>
+  <text x="234" y="624" text-anchor="middle" class="step" style="fill:#ffb95f">SSE: done</text>
+  <text x="234" y="652" text-anchor="middle" class="note">Render · show Listen button (TTS-ready)</text>
+
+  <!-- Legend -->
+  <rect x="40" y="680" width="16" height="2" fill="#d2bbff"/>
+  <text x="60" y="686" class="note" style="fill:#d2bbff">forward call</text>
+  <rect x="160" y="680" width="16" height="2" fill="#ffb95f"/>
+  <text x="184" y="686" class="note" style="fill:#ffb95f">SSE event back to the browser</text>
+</svg>
