@@ -2,122 +2,342 @@
 
 > **The AI Goddess That Runs Your Life**
 
-A multi-tenant Personal AI OS with true multi-agent orchestration, voice-first interface, browser automation, and full life management. Built to be architecturally superior to every AI assistant on the market.
+A multi-tenant Personal AI OS with true multi-agent orchestration, voice-first interface, real browser automation, semantic memory, and full life management. Built as a modular monolith on FastAPI + Next.js, shipped on Modal + Vercel.
+
+🔗 **Live demo**: [athena-ai-topaz-two.vercel.app](https://athena-ai-topaz-two.vercel.app)
+
+---
 
 ## What Makes ATHENA Different
 
-| Feature | ATHENA | Competitors |
-|---------|--------|-------------|
-| **Multi-Agent** | 7 specialized agents with semantic intent routing | Single chatbot or prompt swapping |
-| **Memory** | Semantic memory with pgvector — remembers across sessions | No memory or basic context |
-| **Life OS** | Habits, goals, finance, health tracking with AI insights | Not attempted |
-| **Voice** | Sub-300ms voice with Whisper + TTS | Basic or none |
-| **Browser** | Playwright automation with screenshots | None |
-| **Knowledge Graph** | Entity extraction and relationship mapping | None |
-| **Multi-Tenant** | RLS on every table from day 1 | Single-user |
+| Dimension | ATHENA | Typical AI assistants |
+|---|---|---|
+| **Multi-agent orchestration** | 7 specialized agents, semantic intent routing via an LLM classifier | One prompt, maybe a persona swap |
+| **Memory** | `pgvector` embeddings — remembers facts across sessions, cites sources | No memory or shallow context window |
+| **Life OS** | Habits + goals + finance + health, each with CRUD, streaks, analytics, and an agent that reads the real data | Not attempted |
+| **Real browser** | Headless Chromium on Modal: navigates, screenshots, extracts text, grounds answers in page content | Simulated steps at best |
+| **Voice** | OpenAI TTS + Whisper round-trip: per-message "Listen" button, mic-ready backend | Optional or external |
+| **Knowledge graph** | Entity extraction from chat → dual-written to Supabase and Neo4j | None |
+| **Multi-tenant from day one** | Row-level security (RLS) on every table, tenant isolation verified end-to-end | Single-user |
+
+---
+
+## System Architecture
+
+```mermaid
+flowchart LR
+    User([User's Browser])
+
+    subgraph Vercel[Vercel Edge]
+        Frontend[Next.js 15<br/>App Router + Tailwind + shadcn/ui]
+    end
+
+    subgraph Modal[Modal Serverless]
+        Backend[FastAPI Backend]
+        Chromium[Headless Chromium<br/>Playwright]
+    end
+
+    subgraph Supabase[Supabase]
+        Auth[GoTrue Auth]
+        Postgres[(PostgreSQL<br/>+ pgvector)]
+        Storage[Object Storage]
+    end
+
+    subgraph LLMs[LLM / AI Services]
+        Euri[Euri AI Gateway<br/>gpt-4o-mini, embeddings]
+        OpenAI[OpenAI Native<br/>TTS + Whisper + embeddings]
+        Tavily[Tavily<br/>Web Search]
+    end
+
+    Upstash[(Upstash Redis<br/>Rate limit + cache)]
+    Neo4j[(Neo4j AuraDB<br/>Knowledge graph)]
+
+    User <--> Frontend
+    Frontend <-->|HTTPS + JWT| Backend
+    Frontend <-->|Supabase SDK| Auth
+    Backend <--> Postgres
+    Backend <--> Auth
+    Backend <--> Upstash
+    Backend <--> Euri
+    Backend <--> OpenAI
+    Backend <--> Tavily
+    Backend --> Chromium
+    Backend --> Neo4j
+```
+
+**Modular monolith.** One FastAPI app, strict module boundaries: `agents`, `routers`, `services`, `models`, `core`. One Next.js app, App Router, every dashboard route inside an auth-guarded layout group.
+
+---
+
+## Multi-Agent Flow
+
+```mermaid
+flowchart TD
+    Msg[User message] --> Classifier{LLM Intent<br/>Classifier}
+
+    Classifier -->|"search the web"<br/>"latest news"| Researcher
+    Classifier -->|"write code"<br/>"fix bug"| Coder
+    Classifier -->|"my habits"<br/>"weekly report"| LifeCoach[Life Coach]
+    Classifier -->|"log into site"<br/>"fill this form"| Browser
+    Classifier -->|"my expenses"<br/>"budget"| Finance
+    Classifier -->|"schedule call"<br/>"remind me"| Scheduler
+    Classifier -->|everything else| General
+
+    Researcher --> TavilyTool[Tavily search]
+    LifeCoach --> DataTools[Life OS data<br/>habits, goals, finance, health]
+    Finance --> DataTools
+    Browser --> Playwright[Playwright<br/>navigate + screenshot + extract]
+
+    TavilyTool --> Grounded[Grounded LLM response]
+    DataTools --> Grounded
+    Playwright --> Grounded
+    Coder --> Grounded
+    Scheduler --> Grounded
+    General --> Grounded
+
+    Grounded --> SSE[SSE stream<br/>→ frontend]
+```
+
+Each agent gets its own system prompt and — critically — **real tool data injected before generation**. The researcher sees Tavily results, the life coach sees the user's actual habits, the browser agent sees the real page text. That grounding is what turns "chatbot" into "assistant".
+
+---
+
+## Request Lifecycle — "Ask ATHENA a question"
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as User
+    participant F as Next.js
+    participant B as FastAPI
+    participant SB as Supabase
+    participant AI as LLM
+    participant T as Tool (Tavily / Playwright / DB)
+
+    U->>F: Type message + click Send
+    F->>B: POST /conversations/{id}/messages<br/>SSE stream
+    B->>B: Classify intent (LLM)
+    B-->>F: event: classification
+    B->>T: Fetch tool context
+    T-->>B: Results
+    B-->>F: event: tool_result
+    B->>SB: Store user message (RLS)
+    B->>AI: Stream completion with grounded context
+    loop per token
+        AI-->>B: token
+        B-->>F: event: token
+    end
+    B->>SB: Store assistant message + agent_executions row
+    B-->>F: event: done
+    F->>U: Render, show "Listen" button
+```
+
+---
+
+## Data Model (simplified)
+
+```mermaid
+erDiagram
+    tenants ||--o{ profiles : has
+    profiles ||--o{ conversations : owns
+    conversations ||--o{ messages : contains
+    profiles ||--o{ memories : has
+    profiles ||--o{ documents : uploads
+    documents ||--o{ document_chunks : split_into
+    profiles ||--o{ habits : tracks
+    habits ||--o{ habit_logs : logged_to
+    profiles ||--o{ goals : pursues
+    profiles ||--o{ finance_entries : records
+    profiles ||--o{ health_logs : records
+    profiles ||--o{ knowledge_nodes : extracted_from_chat
+    knowledge_nodes ||--o{ knowledge_edges : relates_to
+    profiles ||--o{ agent_executions : tracks
+    profiles ||--o{ audit_logs : writes
+    profiles ||--o{ api_keys : issues
+    profiles ||--o{ weekly_reports : receives
+
+    tenants {
+        uuid id PK
+        text name
+        text plan
+        jsonb settings
+    }
+    profiles {
+        uuid id PK
+        uuid tenant_id FK
+        text display_name
+        jsonb preferences
+        bool onboarding_completed
+    }
+    conversations {
+        uuid id PK
+        uuid user_id FK
+        text title
+        text agent_type
+    }
+    documents {
+        uuid id PK
+        uuid user_id FK
+        text filename
+        text status
+        int chunk_count
+    }
+    document_chunks {
+        uuid id PK
+        uuid document_id FK
+        text content
+        vector embedding
+    }
+```
+
+RLS is enforced on every user-owned table — a user's JWT cannot read or write another tenant's rows even at the SQL level.
+
+---
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | Next.js 15 + TypeScript + Tailwind CSS + shadcn/ui |
-| Backend | FastAPI (Python) |
-| Database | Supabase (PostgreSQL + pgvector + Auth + RLS) |
-| AI Gateway | Euri AI (OpenAI-compatible, 40+ models) |
-| Agent Routing | Semantic intent classification via LLM |
-| Cache | Redis (Upstash) |
-| Voice | Whisper (STT) + TTS |
-| Deployment | Vercel (frontend) + Modal (backend) |
+| Layer | Tech |
+|---|---|
+| **Frontend** | Next.js 15 (App Router, Turbopack) · TypeScript strict · Tailwind · shadcn/ui · Zustand |
+| **Backend** | FastAPI · Pydantic v2 · httpx async · Supabase Python SDK |
+| **Database** | Supabase (PostgreSQL 17 + pgvector + RLS + Auth + Storage) |
+| **LLMs** | Euri AI gateway (gpt-4o-mini) for chat · OpenAI native for TTS, Whisper, embeddings |
+| **Web search** | Tavily API (researcher agent) |
+| **Real browser** | Playwright (Chromium) on Modal |
+| **Knowledge graph** | Neo4j AuraDB (dual-write with Supabase fallback) |
+| **Cache / rate limit** | Upstash Redis |
+| **Deployment** | Vercel (frontend) · Modal (backend, serverless + stateless) |
 
-## 7 AI Agents
+---
 
-| Agent | Speciality | Routes To |
-|-------|-----------|-----------|
-| **Researcher** | Web search, topic explanation, summarization | "Find info about...", "Explain..." |
-| **Scheduler** | Calendar, reminders, time management | "Remind me...", "Plan my day" |
-| **Life Coach** | Habits, goals, health, motivation | "Track my habits", "Weekly report" |
-| **Coder** | Code generation, debugging, review | "Write code...", "Fix this bug" |
-| **Browser** | Web automation, form filling, price comparison | "Search on Amazon", "Fill this form" |
-| **Finance** | Expenses, budgets, financial analysis | "Track expenses", "Budget analysis" |
-| **General** | Casual conversation, ATHENA questions | Everything else |
+## The 7 Agents
 
-## Architecture
+| Agent | Tools | Example triggers |
+|---|---|---|
+| **Researcher** | Tavily web search | "search the web", "latest news", "what's the current version of..." |
+| **Scheduler** | Calendar stub | "remind me", "plan my day" |
+| **Life Coach** | Habits + goals + health reads | "how are my habits?", "weekly report" |
+| **Coder** | Code generation | "write a function", "fix this bug" |
+| **Browser** | Real Playwright: navigate, screenshot, extract | "open this URL and tell me X" |
+| **Finance** | Finance entry reads + summary math | "track expenses", "monthly spend" |
+| **General** | Plain chat | everything else |
 
-```
-Frontend (Vercel)  →  FastAPI Backend (Modal)  →  Euri AI Gateway
-                           ↓
-              Supabase (PostgreSQL + pgvector + Auth)
-              Redis (Cache + Rate Limiting)
-```
-
-**Modular Monolith** — single FastAPI app with strict module boundaries. Each module (agents, voice, memory, life, knowledge) has its own router, service, and models.
+---
 
 ## Getting Started
 
 ### Prerequisites
-- Python 3.12+
-- Node.js 20+
-- Supabase account (free)
-- Euri AI key (free tier)
+- Python 3.12+, Node.js 20+
+- Supabase project (free tier fine)
+- Euri AI key (200K tokens/day free) — or swap in any OpenAI-compatible gateway
+- OpenAI key (TTS + embeddings)
+- Optional: Tavily, Neo4j AuraDB, Upstash Redis
 
-### Setup
+### Clone + install
 
 ```bash
-# Clone
 git clone https://github.com/Vishal-ml-ds/athena-ai.git
 cd athena-ai
 
 # Backend
 cd backend
-python -m venv venv
-source venv/Scripts/activate  # Windows
+python -m venv venv && source venv/Scripts/activate
 pip install -r requirements.txt
-cp ../.env.example .env  # Add your keys
+cp ../.env.example .env              # fill in keys
 
 # Frontend
 cd ../frontend
 npm install
-cp .env.example .env.local  # Add your keys
+cp .env.example .env.local           # fill in NEXT_PUBLIC_* keys
 
 # Database
-# Run all SQL files in backend/sql/ via Supabase SQL Editor (in order: 001 → 006)
+# Run backend/sql/001..010 in the Supabase SQL Editor, in order.
 
-# Start
+# Run locally
 cd ../backend && uvicorn app.main:app --port 8005
 cd ../frontend && npm run dev -- --port 3002
 ```
 
-### Environment Variables
+### Deploy to production
 
-**Backend (.env)**
+```bash
+# Frontend → Vercel
+cd frontend && vercel --prod
+
+# Backend → Modal (chromium is baked into the image)
+cd backend && python -m modal deploy modal_app.py
+
+# Seed demo data
+ATHENA_DEMO_EMAIL=you@example.com python -m backend.scripts.seed_demo
+```
+
+### Environment variables
+
+**Backend (`backend/.env`)**
 ```
 SUPABASE_URL=https://xxx.supabase.co
-SUPABASE_ANON_KEY=eyJ...
-SUPABASE_SERVICE_ROLE_KEY=eyJ...
+SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
 DATABASE_URL=postgresql://...
-EURI_API_KEY=euri-...
-REDIS_URL=redis://localhost:6379
+EURI_API_KEY=...
+TAVILY_API_KEY=...
+OPENAI_API_KEY=...
+NEO4J_URI=neo4j+s://....databases.neo4j.io
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=...
+REDIS_URL=rediss://...
+CORS_ORIGINS=https://your-frontend.vercel.app,http://localhost:3000
 ```
 
-**Frontend (.env.local)**
+**Frontend (`frontend/.env.local`)**
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
-NEXT_PUBLIC_API_URL=http://localhost:8005
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+NEXT_PUBLIC_API_URL=https://your-backend.modal.run
 ```
 
-## API Endpoints (26)
+---
 
-| Module | Endpoints |
-|--------|-----------|
-| Auth | signup, login, refresh, onboarding |
-| Users | get/update profile |
-| Conversations | CRUD + SSE streaming messages |
-| Memories | list, search, delete |
-| Life OS | habits, goals, finance, health CRUD + analytics |
-| Voice | transcribe, synthesize |
-| Knowledge | graph visualization |
-| Analytics | usage metrics |
+## API — selected endpoints
+
+```
+Auth              POST   /api/v1/auth/signup
+                  POST   /api/v1/auth/login
+                  POST   /api/v1/auth/refresh
+                  POST   /api/v1/auth/onboarding
+
+Conversations     GET    /api/v1/conversations
+                  POST   /api/v1/conversations
+                  POST   /api/v1/conversations/{id}/messages   ← SSE
+
+Life OS           GET    /api/v1/life/habits         POST   /api/v1/life/habits
+                  POST   /api/v1/life/habits/{id}/log
+                  GET    /api/v1/life/goals          POST   /api/v1/life/goals
+                  PATCH  /api/v1/life/goals/{id}/progress
+                  GET    /api/v1/life/finance        POST   /api/v1/life/finance
+                  GET    /api/v1/life/finance/summary
+                  GET    /api/v1/life/health         POST   /api/v1/life/health
+
+Documents         GET    /api/v1/documents           POST   /api/v1/documents
+                  POST   /api/v1/documents/query                ← RAG
+
+Voice             POST   /api/v1/voice/transcribe             ← Whisper
+                  POST   /api/v1/voice/synthesize              ← OpenAI TTS
+
+Browser agent     POST   /api/v1/browser/stream                ← SSE + PNG frames
+
+Knowledge         GET    /api/v1/knowledge/graph
+
+Analytics         GET    /api/v1/analytics/usage
+                  GET    /api/v1/analytics/agent-distribution
+
+Reports           GET    /api/v1/reports/weekly
+                  GET    /api/v1/reports/history
+```
+
+Full OpenAPI spec is auto-generated at `/docs` on the deployed backend.
+
+---
 
 ## Project Structure
 
@@ -125,33 +345,63 @@ NEXT_PUBLIC_API_URL=http://localhost:8005
 athena-ai/
 ├── backend/
 │   ├── app/
-│   │   ├── agents/          # Multi-agent system
-│   │   ├── core/            # Config, auth, middleware
-│   │   ├── models/          # Pydantic schemas
-│   │   ├── routers/         # API endpoints
-│   │   ├── services/        # Business logic
-│   │   └── main.py          # FastAPI app
-│   └── sql/                 # Database migrations
+│   │   ├── agents/               # Multi-agent system
+│   │   │   ├── supervisor.py     # Orchestration + tool-grounded prompts
+│   │   │   ├── intent_classifier.py
+│   │   │   └── tools/            # web_search, life_tools, real_browser
+│   │   ├── core/                 # Config, dependencies, middleware, security
+│   │   ├── routers/              # auth, conversations, life, documents, voice, browser, ...
+│   │   ├── services/             # memory_service, knowledge_service, neo4j_client, report_service
+│   │   ├── models/               # Pydantic schemas
+│   │   └── main.py               # FastAPI app factory
+│   ├── sql/                      # 10 numbered migrations (tenants → RLS restore)
+│   ├── scripts/seed_demo.py      # Idempotent demo data seeder
+│   ├── requirements.txt
+│   └── modal_app.py              # Modal image + ASGI entrypoint
 ├── frontend/
 │   ├── src/
-│   │   ├── app/             # Next.js pages
-│   │   ├── components/      # React components
-│   │   ├── stores/          # Zustand state
-│   │   └── lib/             # Utils, API client
-│   └── docs/ui-references/  # Stitch design exports
-├── docs/                    # BRD, PRD, Architecture, etc.
-├── context/                 # Progress tracking
-└── sprints/                 # Sprint plans
+│   │   ├── app/
+│   │   │   ├── (auth)/           # login, signup, forgot-password, reset-password, onboarding
+│   │   │   └── (dashboard)/      # chat, life, memory, documents, browser, knowledge, report, agents, insights, settings
+│   │   ├── components/           # Chat bubbles, sidebar, notification center, onboarding steps, ...
+│   │   ├── stores/               # Zustand: conversations, life, documents
+│   │   └── lib/                  # API client, Supabase clients, utils
+│   └── public/
+├── docs/                         # BRD, PRD, Architecture, API spec, UI design spec, demo script
+├── context/PROGRESS.md           # Session-by-session log
+└── sprints/                      # Sprint plans
 ```
+
+---
+
+## Testing and Audits
+
+This repo was built and verified feature-by-feature. Every user-visible flow is exercised end-to-end via real headless Chromium, not just curl.
+
+- **API + CORS surface**: 32/32 pass
+- **UI pages + navigation**: 14/14 pass
+- **Feature clicks** (chat, Life OS, Browser, Voice, Docs): 6/6 pass
+- **Deep workflows** (signup → chat → persist → reload → cross-feature): 18/18 pass
+- **Logic invariants** (two isolated users, tenant isolation, streak math, RAG groundedness, TTS/Whisper round-trip, conversation memory): 25/25 pass
+
+Scripts live outside the repo but the infrastructure that makes this testable (testids, SSE event shapes, stable tenant isolation) is all in-tree.
+
+---
 
 ## Design System
 
 **"Celestial Intelligence"** — a premium dark theme inspired by luxury AI concierge aesthetics.
 
-- **Fonts:** Space Grotesk (headlines), Inter (body), JetBrains Mono (code)
-- **Colors:** Deep obsidian (#0b1326), Nebula purple (#7c3aed / #d2bbff), Solar gold (#ffb95f)
-- **Style:** Glassmorphism, no-line rule (tonal shifts over borders), editorial layout
+- **Fonts**: Space Grotesk (headlines), Inter (body), JetBrains Mono (code)
+- **Colors**: Deep obsidian `#0b1326`, Nebula purple `#7c3aed` / `#d2bbff`, Solar gold `#ffb95f`
+- **Style**: Glassmorphism, tonal shifts over borders, editorial layout
 
 ---
 
-ATHENA is an open-source Personal AI Operating System.
+## License
+
+MIT
+
+---
+
+Built by **Vishal** · [aiwithvishal.com](https://aiwithvishal.com) · [GitHub](https://github.com/Vishal-ml-ds)
